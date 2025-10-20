@@ -44,6 +44,7 @@ def load_wiki():
 
     WIKI_DIR.mkdir(parents=True, exist_ok=True)
 
+    # Fetch and unzip dump
     print("Downloading FEVER Wikipedia dump...")
     res = requests.get(WIKI_URL, stream=True)
     res.raise_for_status()
@@ -55,28 +56,27 @@ def load_wiki():
     with zipfile.ZipFile(ZIP_PATH, "r") as zip_ref:
         zip_ref.extractall(WIKI_DIR)
 
+    # Cleans up unused __MACOSX folder
     ZIP_PATH.unlink()
     macos_dir = WIKI_DIR / "__MACOSX"
     if macos_dir.exists():
         shutil.rmtree(macos_dir, ignore_errors=True)
 
+    # Map 'text' field to 'content' in each JSONL row
     print("Preprocessing JSONL files...")
     for file_path in (PAGES_DIR.glob("*.jsonl")):
-            with open(file_path, "r", encoding="utf-8") as file:
-                lines = file.readlines()
+        with open(file_path, "r", encoding="utf-8") as file:
+            lines = file.readlines()
 
-            with open(file_path, "w", encoding="utf-8") as file:
-                for line in lines:
-                    if not line.strip():
-                        continue
+        with open(file_path, "w", encoding="utf-8") as file:
+            for line in lines:
+                if not line.strip():
+                    continue
 
-                    obj = json.loads(line)
-                    new_obj = {
-                        "id": obj["id"],
-                        "contents": obj["text"]
-                    }
-                    json.dump(new_obj, file)
-                    file.write("\n")
+                obj = json.loads(line)
+                new_obj = {"id": obj["id"], "contents": obj["text"]}
+                json.dump(new_obj, file)
+                file.write("\n")
 
     print(f"Files ready at: {PAGES_DIR}")
 
@@ -90,8 +90,9 @@ def build_index():
         return
 
     if not PAGES_DIR.exists() or not os.listdir(PAGES_DIR):
-        raise FileNotFoundError(f"Expected JSONL files in: {PAGES_DIR}")
+        load_wiki()
 
+    # Copying command-line approach from A1. Probably a function for this.
     cmd = [
         sys.executable, "-m", "pyserini.index.lucene",
         "--collection", "JsonCollection",
@@ -109,7 +110,6 @@ def build_index():
     print(f"Index successfully built at {INDEX_DIR}")
 
 if __name__ == "__main__":
-    load_wiki()
     build_index()
 
     # Test retrieval
