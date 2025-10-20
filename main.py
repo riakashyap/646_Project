@@ -1,8 +1,27 @@
-from datasets import load_dataset
-from src.PipelineHelper import verify_claim
-from src.LLMClients import LlamaCppClient
-from tqdm import tqdm
+"""
+Copyright:
+
+  Copyright © 2025 bdunahu
+  Copyright © 2025 Eric
+  Copyright © 2025 Ria
+
+  You should have received a copy of the MIT license along with this file.
+  If not, see https://mit-license.org/
+
+Commentary:
+
+  This file exercises the full RAGAR pipeline. Do not import this file.
+
+Code:
+"""
+
 from collections import Counter
+from datasets import load_dataset
+from pyserini.search.lucene import LuceneSearcher
+from src.LLMClients import LlamaCppClient
+from src.PipelineHelper import verify_claim
+from src.Retrieval import INDEX_DIR
+from tqdm import tqdm
 
 
 def get_pred(verdict: bool):
@@ -24,6 +43,10 @@ if __name__ == "__main__":
     # E.g. llama-server --reasoning-budget 0 --port 4568 -t 8 -m /path/to/model.gguf
     client = LlamaCppClient()
 
+    # search index
+    searcher = LuceneSearcher(str(INDEX_DIR))
+    searcher.set_bm25(1.2, 0.75)
+
     # Test run on FEVER subset
     num_samples = 5
     split = ds["labelled_dev"].select(range(num_samples))
@@ -35,7 +58,7 @@ if __name__ == "__main__":
         claim = split[i]["claim"]
         label = split[i]["label"].lower()
 
-        result = verify_claim(client, claim, max_iters=3)
+        result = verify_claim(client, searcher, claim, max_iters=3)
         pred = get_pred(result["verdict_bool"])
         result["correct"] = (pred == label)
 

@@ -1,20 +1,29 @@
 """
-Copyright © 2025 Ria
-Copyright © 2025 bdunahu
-Copyright © 2025 Eric
+Copyright:
 
-You should have received a copy of the MIT license along with this file.
-If not, see https://mit-license.org/
+  Copyright © 2025 bdunahu
+  Copyright © 2025 Eric
+  Copyright © 2025 Ria
+
+  You should have received a copy of the MIT license along with this file.
+  If not, see https://mit-license.org/
+
+Commentary:
+
+  This file provides various model clients to interface with a local large
+  language model.
+
+Code:
 """
 
 from abc import ABC, abstractmethod
-from pathlib import Path
 from transformers import AutoModelForCausalLM, AutoTokenizer, AutoConfig
-from typing import Callable, Dict, Optional
+from typing import Dict
 import os
 import re
 import requests
 import torch
+
 
 class ModelClient(ABC):
     _prompts: Dict[str, str] = dict()
@@ -171,4 +180,4 @@ class TransformersLMClient(ModelClient):
         # print(f'request took {time.time() - start} seconds')
 
         output_text = self._tokenizer.decode(outputs[0], skip_special_tokens=True)
-        return output_text[len(context):].strip()
+        return output_text[len(payload):].strip()

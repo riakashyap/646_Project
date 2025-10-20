@@ -1,4 +1,5 @@
 models/
+data/
 
 # Byte-compiled / optimized / compiled files
 __pycache__/
@@ -25,6 +26,7 @@ venv/
 *.bak
 *.swo
 *.dir-locals.el
+*manifest.scm
 
 # OS generated files
 .DS_Store
