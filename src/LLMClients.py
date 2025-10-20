@@ -180,4 +180,4 @@ class TransformersLMClient(ModelClient):
         # print(f'request took {time.time() - start} seconds')
 
         output_text = self._tokenizer.decode(outputs[0], skip_special_tokens=True)
-        return output_text[len(context):].strip()
+        return output_text[len(payload):].strip()

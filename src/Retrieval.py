@@ -102,7 +102,6 @@ def build_index():
         "--threads", "8",
         "--storePositions",
         "--storeDocvectors",
-        "--storeRaw",
         "--storeContents",
     ]
 

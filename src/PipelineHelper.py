@@ -63,8 +63,9 @@ def verify_claim(client: ModelClient,
             doc = searcher.doc(hit.docid)
             contents = doc.get('contents')
             search_results.append(contents)
+
         output = "\n\n".join(search_results)
-        answer = client.send_prompt("answering_agent", [search_results, question]).strip()
+        answer = client.send_prompt("answering_agent", [output, question]).strip()
         qa_pairs.append((question, answer))
 
         done = parse_conclusivity(
