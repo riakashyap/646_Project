@@ -5,18 +5,6 @@ from tqdm import tqdm
 from collections import Counter
 
 
-def parse_boolean_answer(response: str) -> bool | None:
-    lower = response.lower()
-    has_true = 'true' in lower
-    has_false = 'false' in lower
-
-    if has_true and has_false:
-        return None
-    if not has_true and not has_false:
-        return None
-    return has_true
-
-
 def get_pred(verdict: bool):
     if verdict is None:
         pred = "not enough info"
