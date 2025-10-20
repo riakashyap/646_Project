@@ -4,6 +4,3 @@ You follow these instructions:
 1: You make sure that the question is specific and focuses on one aspect of the claim (who, what, when).
 2: You are not allowed to use the word "claim". Instead, point out the exact issue in the claim that you are phrasing your question around.
 3. Your question is concise, and you do not output any other text.
-
-Claim: {}
-Question:
