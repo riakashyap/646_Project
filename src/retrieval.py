@@ -1,9 +1,19 @@
+"""
+Copyright © 2025 bdunahu
+Copyright © 2025 Ria
+Copyright © 2025 Eric
+
+You should have received a copy of the MIT license along with this file.
+If not, see https://mit-license.org/
+"""
+
 import requests
 import zipfile
 import shutil
 import subprocess
 import os
 import json
+import sys
 from pathlib import Path
 from pyserini.search.lucene import LuceneSearcher
 
@@ -28,15 +38,15 @@ def load_wiki():
 
     wiki_dir.mkdir(parents=True, exist_ok=True)
 
-    # Fetch and unzip dump
+    # Fetch dump zip
     print("Downloading FEVER Wikipedia dump...")
     res = requests.get(wiki_url, stream=True)
     res.raise_for_status()
-
     with open(zip_path, "wb") as file:
         for chunk in res.iter_content(chunk_size=8192):
             file.write(chunk)
-
+    
+    # Unzipping
     with zipfile.ZipFile(zip_path, "r") as zip_ref:
         zip_ref.extractall(wiki_dir)
 
@@ -73,12 +83,9 @@ def build_index():
         print(f"Skipping index build, using existing index at: {index_dir}")
         return
 
-    if not pages_dir.exists() or not os.listdir(pages_dir):
-        load_wiki()
-
-    # Copying command-line approach from A1. Probably a function for this.
+    # Copying command-line approach from A1. 
     cmd = [
-        "python", "-m", "pyserini.index.lucene",
+        sys.executable, "-m", "pyserini.index.lucene",
         "--collection", "JsonCollection",
         "--input", str(pages_dir),
         "--index", str(index_dir),
@@ -93,6 +100,7 @@ def build_index():
     print(f"Index successfully built at {index_dir}")
 
 if __name__ == "__main__":
+    load_wiki()
     build_index()
 
     # Test retrieval
