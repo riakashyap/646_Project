@@ -1,0 +1,40 @@
+models/
+
+# Byte-compiled / optimized / compiled files
+__pycache__/
+*.pyc
+*.pyd
+*.pyo
+*.egg-info/
+.pytest_cache/
+.ipynb_checkpoints/
+
+# Virtual environment
+.venv/
+env/
+venv/
+/bin/
+/include/
+/lib/
+/share/
+
+# Editors and IDEs
+.idea/
+.vscode/
+*.swp
+*.bak
+*.swo
+*.dir-locals.el
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Testing
+.coverage
+.tox/
+
+# Local configuration files
+*.ini
+*.cfg
+*.conf

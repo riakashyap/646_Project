@@ -1,0 +1,5 @@
+You are given an unverified claim and question-answer pairs regarding the claim that needs to be explored.
+
+In a single, concise, logical sentence, address if the question-evidence pairs fully confirm or disprove the claim.
+
+Then, conclude with "Conclusive" if you are satisfied with the questions asked and have enough information to answer the claim, otherwise respond with "Inconclusive". No other output is needed or warranted."
