@@ -1,4 +1,0 @@
-Tersely answer this question to the best of your ability. Never ask for more context. Assume you know the answer.
-
-Question: {}
-Answer:

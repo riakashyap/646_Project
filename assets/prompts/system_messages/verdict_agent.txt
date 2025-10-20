@@ -3,9 +3,3 @@ You are given a claim and question-answer pairs regarding the claim that needs t
 In a single, concise, logical sentence, address if the question-evidence pairs fully confirm or disprove the claim.
 
 Then, conclude with "True" or "False" depending on the truthfulness of the claim, otherwise respond with "Inconclusive" if the evidence is inconclusive. No other output is needed or warranted.
-
-Claim: {}
-Question-Answer Pairs:
-{}
-
-Question: 

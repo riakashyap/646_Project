@@ -1,35 +1,62 @@
-import requests
-import re
-import torch
-from transformers import AutoModelForCausalLM, AutoTokenizer, AutoConfig
+"""
+Copyright © 2025 Ria
+Copyright © 2025 bdunahu
+Copyright © 2025 Eric
+
+You should have received a copy of the MIT license along with this file.
+If not, see https://mit-license.org/
+"""
+
 from abc import ABC, abstractmethod
-from typing import Callable, Dict, Optional
 from pathlib import Path
+from transformers import AutoModelForCausalLM, AutoTokenizer, AutoConfig
+from typing import Callable, Dict, Optional
+import os
+import re
+import requests
+import torch
 
 class ModelClient(ABC):
-    _prompts: Dict[str, str]
+    _prompts: Dict[str, str] = dict()
 
     def __init__(self):
-        self._prompts = {}
+        """Initializes ModelClient by reading the available prompts."""
+        base_dir = os.path.dirname(os.path.dirname(__file__))
+        system_dir = os.path.join(base_dir, "assets", "prompts", "system_messages")
+        template_dir = os.path.join(base_dir, "assets", "prompts", "templates")
+
+        for file in os.listdir(system_dir):
+            if file.endswith(".txt"):
+                base_name = os.path.splitext(file)[0]
+
+                system_path = os.path.join(system_dir, file)
+                template_path = os.path.join(template_dir, file)
+
+                if not os.path.exists(template_path):
+                    raise FileNotFoundError(f"Template file not found for: {file}")
+
+                with open(system_path, "r", encoding="utf-8") as sys_file:
+                    system_message = sys_file.read()
+
+                with open(template_path, "r", encoding="utf-8") as tmpl_file:
+                    template_message = tmpl_file.read()
+
+                self._prompts[base_name] = (system_message, template_message)
 
     @abstractmethod
-    def send_query(self, context: str) -> str:
-        """Send a query to the model and return a response."""
+    def send_query(self, system_message: str, user_message: str) -> str:
+        """Send SYSTEM_MESSAGE and USER_MESSAGE to the model and return a response."""
         pass
 
-    def register_prompt(self, key: str, rel_path: str):
-        """Register a prompt file and optional parser."""
-        base_dir = Path(__file__).parent
-        full_path = base_dir / rel_path
-        with open(full_path, "r", encoding="utf-8") as f:
-            content = f.read()
-            self._prompts[key] = content
-
     def send_prompt(self, key: str, args: list[str]):
-        template = self._prompts[key]
-        prompt = template.format(*args)
-        return self.send_query(prompt)
-        
+        """Given KEY, retrieves the system message and constructs the user message,
+        passing it to `send_query'"""
+        # let this throw an error if key is missing
+        system_message = self._prompts[key][0]
+        user_message = self._prompts[key][1].format(*args)
+        return self.send_query(system_message, user_message)
+
+
 class LlamaCppClient(ModelClient):
     """
     The LlamaCppClient utilizes the llama-cpp LLM-inference toolkit as the backend
@@ -42,11 +69,9 @@ class LlamaCppClient(ModelClient):
     api: str
     should_think: bool
     temperature: float
-    system_message: str
 
     def __init__(
         self,
-        system_message: str = "You are a helpful assistant.",
         should_think: bool = False,
         host: str = "127.0.0.1",
         port: int = 4568,
@@ -56,16 +81,16 @@ class LlamaCppClient(ModelClient):
         self.api = f"http://{host}:{port}/v1/chat/completions"
         self.temperature = temperature
         self.should_think = should_think
-        self.system_message = system_message
 
-    def send_query(self, context: str) -> str:
+    def send_query(self, system_message: str, user_message: str) -> str:
         think = "" if self.should_think else "/no_think"
         messages = [
-            {"role": "system", "content": self.system_message + think},
-            {"role": "user", "content": context},
+            {"role": "system", "content": system_message + think},
+            {"role": "user", "content": user_message},
         ]
 
         payload = {
+            # model is ignored
             "model": "local",
             "messages": messages,
             "temperature": self.temperature
@@ -81,6 +106,7 @@ class LlamaCppClient(ModelClient):
             raise requests.RequestException(f"HTTP request to llama-cpp server failed: {e}")
         except (KeyError, IndexError) as e:
             raise requests.KeyError(f"Unexpected response format: {e}")
+
 
 class TransformersLMClient(ModelClient):
     """
@@ -123,12 +149,14 @@ class TransformersLMClient(ModelClient):
         self._model = AutoModelForCausalLM.from_pretrained(model_name, device_map="auto")
         self._config = AutoConfig.from_pretrained(model_name)
 
-    def send_query(self, context: str) -> str:
+    def send_query(self, system_message: str, user_message: str) -> str:
         """
         Given CONTEXT, prompts the loaded model and returns the response.
         """
+        # transformers library does not accept a system message
+        payload = f'{system_message}\n\n{user_message}'
         device = "cuda" if torch.cuda.is_available() else "cpu"
-        inputs = self._tokenizer(context, return_tensors="pt").to(device)
+        inputs = self._tokenizer(payload, return_tensors="pt").to(device)
 
         # start = time.time()
         with torch.no_grad():
