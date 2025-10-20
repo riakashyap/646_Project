@@ -26,6 +26,7 @@ venv/
 *.bak
 *.swo
 *.dir-locals.el
+*manifest.scm
 
 # OS generated files
 .DS_Store

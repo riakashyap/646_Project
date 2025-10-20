@@ -1,21 +1,21 @@
 """
-Copyright © 2025 bdunahu
-Copyright © 2025 Ria
-Copyright © 2025 Eric
+Copyright:
 
-You should have received a copy of the MIT license along with this file.
-If not, see https://mit-license.org/
+  Copyright © 2025 bdunahu
+  Copyright © 2025 Eric
+
+  You should have received a copy of the MIT license along with this file.
+  If not, see https://mit-license.org/
+
+Commentary:
+
+  This file includes helper functions necessary to run the full RAGAR pipeline.
+
+Code:
 """
 
-from collections import Counter
-from datasets import load_dataset
-from tqdm import tqdm
-from typing import Dict
-import json
 from .LLMClients import ModelClient
-import numpy as np
-import textwrap
-import time
+from pyserini.search.lucene import LuceneSearcher
 
 
 def parse_conclusivity(response: str) -> bool | None:
@@ -49,13 +49,22 @@ def parse_boolean_answer(response: str) -> bool | None:
     return has_true
 
 
-def verify_claim(client: ModelClient, claim: str, max_iters: int = 3) -> str | None:
+def verify_claim(client: ModelClient,
+                 searcher: LuceneSearcher,
+                 claim: str,
+                 max_iters: int = 3) -> str | None:
     qa_pairs = []
     question = client.send_prompt("initial_question_agent", [claim])
 
     for _ in range(max_iters):
-        # TODO add the rag stage
-        answer = client.send_prompt("answering_agent", [question, "No evidence, try your best!"]).strip()
+        hits = searcher.search(question, k=3)
+        search_results = []
+        for hit in hits:
+            doc = searcher.doc(hit.docid)
+            contents = doc.get('contents')
+            search_results.append(contents)
+        output = "\n\n".join(search_results)
+        answer = client.send_prompt("answering_agent", [search_results, question]).strip()
         qa_pairs.append((question, answer))
 
         done = parse_conclusivity(
