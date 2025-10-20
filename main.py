@@ -47,13 +47,13 @@ if __name__ == "__main__":
         claim = split[i]["claim"]
         label = split[i]["label"].lower()
 
-        results = verify_claim(client, claim, max_iters=3)
-        pred = get_pred(results["verdict_bool"])
-        results["correct"] = pred == label
+        result = verify_claim(client, claim, max_iters=3)
+        pred = get_pred(result["verdict_bool"])
+        result["correct"] = (pred == label)
 
         preds.append(pred)
         labels.append(label)
-        results.append(results)
+        results.append(result)
 
     accuracy = sum(pred == label for pred, label in zip(preds, labels)) / num_samples
     pred_counts = Counter(preds)
