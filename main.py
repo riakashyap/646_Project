@@ -41,16 +41,12 @@ if __name__ == "__main__":
         usage='%(prog)s [args] -- prog'
     )
 
-    parser.add_argument('-t', '--think',
+    parser.add_argument('-t', '--no_think',
                         help='Whether the model should think before answering. Affects runtime. Only works on Qwen models.',
-                        metavar='',
-                        type=bool,
-                        default=True)
+                        action='store_false')
     parser.add_argument('-r', '--ragar',
                         help='Use the original RAGAR prompts.',
-                        metavar='',
-                        type=bool,
-                        default=False)
+                        action='store_true')
     args = parser.parse_args()
 
     # Download FEVER dataset https://fever.ai/dataset/fever.html
@@ -58,7 +54,7 @@ if __name__ == "__main__":
 
     # Assumes model is downloaded and LCPP server is running on port 4568
     # E.g. llama-server --reasoning-budget 0 --port 4568 -t 8 -m /path/to/model.gguf
-    client = LlamaCppClient(should_think=args.think, use_ragar=args.ragar)
+    client = LlamaCppClient(should_think=args.no_think, use_ragar=args.ragar)
 
     # search index
     searcher = LuceneSearcher(str(INDEX_DIR))
