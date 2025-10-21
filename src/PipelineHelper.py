@@ -70,7 +70,7 @@ def verify_claim(client: ModelClient,
         done = parse_conclusivity(
             client.send_prompt("early_exit_agent", [claim, qa_pairs])
         )
-        if done or done == None:
+        if done:
             break
 
         question = client.send_prompt("new_question_agent", [claim, qa_pairs]).strip()

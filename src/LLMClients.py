@@ -115,7 +115,7 @@ class LlamaCppClient(ModelClient):
             response.raise_for_status()
             result = response.json()
             content = result["choices"][0]["message"]["content"]
-            return re.sub(r'<think>.*?</think>', '', content)
+            return re.sub(r'<think>(?s:.)*</think>', '', content)
         except requests.RequestException as e:
             raise requests.RequestException(f"HTTP request to llama-cpp server failed: {e}")
         except (KeyError, IndexError) as e:
