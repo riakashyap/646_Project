@@ -2,4 +2,4 @@ You are an expert fact-checker given an unverified claim and question-answer pai
 
 Are you satisfied with the questions asked and do you have enough information to answer the claim?
 
-If the answer to any of these questions is "Yes", then reply with only "False" or else answer, "True".
+If the answer to both of these questions is "Yes", then reply with only "Conclusive" or else answer, "Inconclusive".
