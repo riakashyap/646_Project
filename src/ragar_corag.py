@@ -1,3 +1,19 @@
+"""
+Copyright:
+
+  Copyright © 2025 bdunahu
+  Copyright © 2025 Eric
+
+  You should have received a copy of the MIT license along with this file.
+  If not, see https://mit-license.org/
+
+Commentary:
+
+  This file includes a class implementing a RAG CoRAG pipeline.
+
+Code:
+"""
+
 from .corag import Corag
 from .model_clients import ModelClient
 from .retrieval import INDEX_DIR
@@ -34,22 +50,21 @@ class RagarCorag(Corag):
         res = self._mc.send_prompt("stop_check", [claim, qa_pairs]).lower()
 
         # Stops if then model was indecisive or gave a non-binary answer
-        return "true" in res 
+        return "conclusive" in res 
 
     def verdict(self, claim: str, qa_pairs: list[tuple[str, str]]) -> tuple[int, str | None]:
         res = self._mc.send_prompt("verdict", [claim, qa_pairs])
         verdict = None
 
-        # TODO: Ideally need to standardize these (and the stop_check) across the prompts.
         # TODO: define an enum or Verdict class for this
         # TODO: could also use a map, and extract this to a parsers.py file for easier reuse
-        # 0 -> refutes, 1 -> supports, 2 -> not enough evidence
+        # 0 -> false, 1 -> true, 2 -> inconclusive
         lower = res.lower()
-        if "refute" in lower:
+        if "false" in lower:
             verdict = 0
-        elif "support" in lower:
+        elif "true" in lower:
             verdict = 1
-        elif "fail" in lower:
+        elif "inconclusive" in lower:
             verdict = 2
         
         return verdict, res

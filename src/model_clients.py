@@ -1,3 +1,21 @@
+"""
+Copyright:
+
+  Copyright © 2025 bdunahu
+  Copyright © 2025 Eric
+  Copyright © 2025 Ria
+
+  You should have received a copy of the MIT license along with this file.
+  If not, see https://mit-license.org/
+
+Commentary:
+
+  This file provides various model clients to interface with a local large
+  language model.
+
+Code:
+"""
+
 from abc import ABC, abstractmethod
 from typing import Dict
 import os

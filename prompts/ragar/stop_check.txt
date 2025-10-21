@@ -4,6 +4,6 @@ Claim: {}
 Question-Answer Pairs:
 {}
 
-Are you satisfied with the questions asked and do you have enough information to answer the claim?
+Are you satisfied with the questions asked and do you have enough information to answer the claim? 
 
-If the answer to any of these questions is "Yes", then reply with only "False" or else answer, "True".
+If so, reply with only "conclusive" or else answer, "inconclusive."

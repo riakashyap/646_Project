@@ -1,3 +1,20 @@
+"""
+Copyright:
+
+  Copyright © 2025 bdunahu
+  Copyright © 2025 Eric
+
+  You should have received a copy of the MIT license along with this file.
+  If not, see https://mit-license.org/
+
+Commentary:
+
+  This file includes a class abstracting a CoRAG pipeline.
+
+Code:
+"""
+
+
 from abc import ABC, abstractmethod
 
 class Corag(ABC):

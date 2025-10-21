@@ -7,7 +7,7 @@ These are the provided questions and relevant answers to the question to verify 
 Based strictly on the main claim and the question-answers provided (ignoring questions regarding image if they dont have an answer), You have to provide:
 
 - claim: the original claim,
-- rating: the rating for Claim should be "supported" if and only if the Question Answer Pairs specifically support the claim, "refuted" if and only if the Question Answer Pairs specifically refute the claim or "failed": if there is not enough information to answer the claim appropriately.
+- rating: the rating for Claim should be "true" if and only if the Question Answer Pairs specifically support the claim, "false" if and only if the Question Answer Pairs specifically refute the claim or "inconclusive": if there is not enough information to answer the claim appropriately.
 - factcheck: and the detailed and elaborate fact-check paragraph.
 
 please output your response in the demanded json format
