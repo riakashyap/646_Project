@@ -27,9 +27,12 @@ import torch
 
 class ModelClient(ABC):
     _prompts: Dict[str, str] = dict()
+    _use_ragar: bool
 
-    def __init__(self):
+    def __init__(self, use_ragar: bool = False):
         """Initializes ModelClient by reading the available prompts."""
+        self._use_ragar = use_ragar
+
         base_dir = os.path.dirname(os.path.dirname(__file__))
         system_dir = os.path.join(base_dir, "assets", "prompts", "system_messages")
         template_dir = os.path.join(base_dir, "assets", "prompts", "templates")
@@ -61,6 +64,7 @@ class ModelClient(ABC):
         """Given KEY, retrieves the system message and constructs the user message,
         passing it to `send_query'"""
         # let this throw an error if key is missing
+        key = "ragar_" + key if self._use_ragar else key
         system_message = self._prompts[key][0]
         user_message = self._prompts[key][1].format(*args)
         return self.send_query(system_message, user_message)
@@ -82,11 +86,12 @@ class LlamaCppClient(ModelClient):
     def __init__(
         self,
         should_think: bool = False,
+        use_ragar: bool = False,
         host: str = "127.0.0.1",
         port: int = 4568,
         temperature: float = 0.7,
     ):
-        super().__init__()
+        super().__init__(use_ragar)
         self.api = f"http://{host}:{port}/v1/chat/completions"
         self.temperature = temperature
         self.should_think = should_think
@@ -110,7 +115,7 @@ class LlamaCppClient(ModelClient):
             response.raise_for_status()
             result = response.json()
             content = result["choices"][0]["message"]["content"]
-            return re.sub(r'<think>\s*</think>', '', content)
+            return re.sub(r'<think>.*?</think>', '', content)
         except requests.RequestException as e:
             raise requests.RequestException(f"HTTP request to llama-cpp server failed: {e}")
         except (KeyError, IndexError) as e:
@@ -141,13 +146,14 @@ class TransformersLMClient(ModelClient):
     def __init__(
         self,
         model_name: str,
+        use_ragar: bool = False,
         max_to_generate: int = 100,
         top_k: int = 50,
         top_p: float = 1.0,
         temperature: float = 0.7,
         repetition_penalty: float = 1.1
     ) -> None:
-        super().__init__()
+        super().__init__(use_ragar)
         self.model_name = model_name
         self.max_to_generate = max_to_generate
         self.top_k = top_k

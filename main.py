@@ -22,6 +22,7 @@ from src.LLMClients import LlamaCppClient
 from src.PipelineHelper import verify_claim
 from src.Retrieval import INDEX_DIR
 from tqdm import tqdm
+import argparse
 
 
 def get_pred(verdict: bool):
@@ -36,19 +37,35 @@ def get_pred(verdict: bool):
 
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser(
+        usage='%(prog)s [args] -- prog'
+    )
+
+    parser.add_argument('-t', '--think',
+                        help='Whether the model should think before answering. Affects runtime. Only works on Qwen models.',
+                        metavar='',
+                        type=bool,
+                        default=True)
+    parser.add_argument('-r', '--ragar',
+                        help='Use the original RAGAR prompts.',
+                        metavar='',
+                        type=bool,
+                        default=False)
+    args = parser.parse_args()
+
     # Download FEVER dataset https://fever.ai/dataset/fever.html
     ds = load_dataset("fever", "v1.0", trust_remote_code=True)
 
     # Assumes model is downloaded and LCPP server is running on port 4568
     # E.g. llama-server --reasoning-budget 0 --port 4568 -t 8 -m /path/to/model.gguf
-    client = LlamaCppClient()
+    client = LlamaCppClient(should_think=args.think, use_ragar=args.ragar)
 
     # search index
     searcher = LuceneSearcher(str(INDEX_DIR))
     searcher.set_bm25(1.2, 0.75)
 
     # Test run on FEVER subset
-    num_samples = 5
+    num_samples = 2
     split = ds["labelled_dev"].select(range(num_samples))
     labels = []
     preds = []
