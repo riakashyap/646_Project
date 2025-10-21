@@ -56,7 +56,11 @@ def verify_claim(client: ModelClient,
     qa_pairs = []
     question = client.send_prompt("initial_question_agent", [claim])
 
-    for _ in range(max_iters):
+    for i in range(max_iters):
+        if i > 0:
+            question = client.send_prompt("new_question_agent",
+                                          [claim, qa_pairs]).strip()
+
         hits = searcher.search(question, k=3)
         search_results = []
         for hit in hits:
@@ -72,8 +76,6 @@ def verify_claim(client: ModelClient,
         )
         if done:
             break
-
-        question = client.send_prompt("new_question_agent", [claim, qa_pairs]).strip()
 
     verdict_raw = client.send_prompt("verdict_agent", [claim, qa_pairs]).strip()
     verdict_bool = parse_boolean_answer(verdict_raw)

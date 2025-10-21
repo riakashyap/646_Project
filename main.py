@@ -47,6 +47,11 @@ if __name__ == "__main__":
     parser.add_argument('-r', '--ragar',
                         help='Use the original RAGAR prompts.',
                         action='store_true')
+    parser.add_argument('-n', '--num-claims',
+                        help='The number of claims to process.',
+                        metavar='',
+                        type=int,
+                        default=3)
     args = parser.parse_args()
 
     # Download FEVER dataset https://fever.ai/dataset/fever.html
@@ -61,7 +66,7 @@ if __name__ == "__main__":
     searcher.set_bm25(1.2, 0.75)
 
     # Test run on FEVER subset
-    num_samples = 10
+    num_samples = args.num_claims
     split = ds["labelled_dev"].select(range(num_samples))
     labels = []
     preds = []
