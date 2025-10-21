@@ -28,7 +28,7 @@ import argparse
 def get_pred(verdict: bool):
     if verdict is None:
         pred = "not enough info"
-    if verdict:
+    elif verdict:
         pred = "supports"
     else:
         pred = "refutes"
@@ -61,7 +61,7 @@ if __name__ == "__main__":
     searcher.set_bm25(1.2, 0.75)
 
     # Test run on FEVER subset
-    num_samples = 2
+    num_samples = 10
     split = ds["labelled_dev"].select(range(num_samples))
     labels = []
     preds = []
