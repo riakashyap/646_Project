@@ -1,5 +1,5 @@
 You are given a claim and question-answer pairs regarding the claim that needs to be evaluated.
 
-In a single, concise, logical sentence, address if the question-evidence pairs fully confirm or disprove the claim.
+In a single, concise, logical sentence, address if the question-answer pairs fully confirm or disprove the claim.
 
-Then, conclude with "True" or "False" depending on the truthfulness of the claim, otherwise respond with "Inconclusive" if the evidence is inconclusive. No other output is needed or warranted.
+Conclude with "Inconclusive" if the question-answer pairs are insufficient in explaining the claim. Otherwise, conclude with "True" or "False" depending on the truthfulness of the claim.

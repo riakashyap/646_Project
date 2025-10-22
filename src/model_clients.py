@@ -22,6 +22,7 @@ import os
 import re
 import requests
 
+
 class ModelClient(ABC):
     _prompts: Dict[str, str] = dict()
 
@@ -30,14 +31,23 @@ class ModelClient(ABC):
 
         for file_name in os.listdir(user_prompts_dir):
             if file_name.endswith(".txt"):
-                user_prompt_path = os.path.join(base_dir, user_prompts_dir, file_name)
+                user_prompt_path = os.path.join(
+                    base_dir,
+                    user_prompts_dir,
+                    file_name
+                )
                 with open(user_prompt_path, "r", encoding="utf-8") as file:
                     user_prompt = file.read()
 
                 system_prompt = None
                 if system_prompts_dir is not None:
-                    system_prompt_path = os.path.join(base_dir, system_prompts_dir, file_name)
-                    with open(system_prompt_path, "r", encoding="utf-8") as file:
+                    system_prompt_path = os.path.join(
+                        base_dir,
+                        system_prompts_dir,
+                        file_name
+                    )
+                    with open(system_prompt_path, "r", encoding="utf-8") \
+                         as file:
                         system_prompt = file.read()
 
                 key = os.path.splitext(file_name)[0]
@@ -45,7 +55,8 @@ class ModelClient(ABC):
 
     @abstractmethod
     def send_query(self, user_prompt: str, system_prompt: str | None = None) -> str:
-        """Send USER_PROMPT and SYSTEM_PROMPT if given to the model and return a response."""
+        """Send USER_PROMPT and SYSTEM_PROMPT if given to the model and return
+        a response."""
         pass
 
     def add_prompt(self, user_prompt_file: str, system_prompt_file: str | None = None):
@@ -63,11 +74,13 @@ class ModelClient(ABC):
         self._prompts[key] = (user_prompt, system_prompt)
 
     def send_prompt(self, key: str, args: list[str]):
-        """Given KEY, retrieves the system message and constructs the user prompt, passing it to `send_query`"""
+        """Given KEY, retrieves the system message and constructs the user
+        prompt, passing it to `send_query`"""
 
         # Let this throw an error if key is missing
         user_prompt, system_prompt = self._prompts[key]
         return self.send_query(user_prompt.format(*args), system_prompt)
+
 
 class LlamaCppClient(ModelClient):
     """
@@ -99,16 +112,18 @@ class LlamaCppClient(ModelClient):
         self.temperature = temperature
         self.think_mode = "" if think_mode else "/no_think"
 
-    def send_query(self, user_prompt: str, system_prompt: str | None = None) -> str:
+    def send_query(self, user_prompt: str,
+                   system_prompt: str | None = None) -> str:
         messages = [
             {"role": "user", "content": user_prompt}
         ]
 
         if system_prompt is not None:
-            messages.append({"role": "system", "content": system_prompt + self.think_mode})
+            messages.append({"role": "system",
+                             "content": system_prompt + self.think_mode})
 
         payload = {
-            "model": "local", # Ignored
+            "model": "local",  # Ignored
             "messages": messages,
             "temperature": self.temperature
         }
@@ -118,7 +133,7 @@ class LlamaCppClient(ModelClient):
             res.raise_for_status()
             result = res.json()
             content = result["choices"][0]["message"]["content"]
-            return re.sub(r'<think>\s*</think>', '', content)
+            return re.sub(r'<think>(?s:.)*</think>', '', content)
 
         except requests.RequestException as e:
             raise requests.RequestException(f"HTTP request to llama-cpp server failed: {e}")

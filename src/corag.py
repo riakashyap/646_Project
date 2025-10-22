@@ -43,13 +43,13 @@ class Corag(ABC):
         qa_pairs = []
         question = self.init_question(claim)
 
-        for _ in range(max_iters):
+        for i in range(max_iters):
+            if i > 0:
+                question = self.next_question(claim, qa_pairs)
             answer = self.answer(question)
             qa_pairs.append((question, answer))
             if self.stop_check(claim, qa_pairs):
                 break
-
-            question = self.next_question(claim, qa_pairs)
 
         verdict, raw = self.verdict(claim, qa_pairs)
         return {
