@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 """
 Copyright:
 
@@ -17,20 +18,41 @@ Code:
 
 from collections import Counter
 from datasets import load_dataset
-from tqdm import tqdm
+from pprint import pprint
 from src.model_clients import LlamaCppClient
 from src.ragar_corag import RagarCorag
+from tqdm import tqdm
+import argparse
 
 # Test run on FEVER subset
 if __name__ == "__main__":
-    num_samples = 2
+    parser = argparse.ArgumentParser(
+        usage='%(prog)s [args] -- prog'
+    )
+
+    parser.add_argument('-t', '--think',
+                        help='Whether the Qwen model should think before '
+                        'answering. Affects runtime.',
+                        action='store_false')
+    parser.add_argument('-r', '--ragar',
+                        help='Use the original RAGAR prompts.',
+                        action='store_true')
+    parser.add_argument('-n', '--num-claims',
+                        help='The number of claims to process.',
+                        metavar='',
+                        type=int,
+                        default=3)
+    args = parser.parse_args()
+
     ds = load_dataset("fever", "v1.0", trust_remote_code=True)
-    split = ds["labelled_dev"].select(range(num_samples))
-    fever_labels = ["REFUTES", "SUPPORTS", "NOT ENOUGH EVIDENCE"]
+    split = ds["labelled_dev"].select(range(args.num_claims))
+    fever_labels = ["REFUTES", "SUPPORTS", "NOT ENOUGH INFO"]
 
     # Setup CoRAG system here
-    mc = LlamaCppClient("prompts/ragar")
-    # mc = LlamaCppClient("prompts/custom/user", "prompts/custom/system")
+    mc = LlamaCppClient("prompts/ragar", think_mode=args.think) if args.ragar \
+        else LlamaCppClient("prompts/custom/user",
+                            "prompts/custom/system",
+                            think_mode=args.think)
     corag = RagarCorag(mc)
 
     labels = []
@@ -48,12 +70,13 @@ if __name__ == "__main__":
         labels.append(label)
         outputs.append(result)
 
-    accuracy = sum(pred == label for pred, label in zip(preds, labels)) / num_samples
+    accuracy = sum(pred == label for pred, label in zip(preds, labels)) / \
+        args.num_claims
     pred_counts = Counter(preds)
     label_counts = Counter(labels)
 
     print()
-    print(outputs)
+    pprint(outputs)
     print(f"Accuracy: {accuracy:.3f}")
     print("Pred labels:", pred_counts)
     print("True labels:", label_counts)
