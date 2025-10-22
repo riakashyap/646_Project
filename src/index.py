@@ -74,7 +74,7 @@ def load_wiki():
                     continue
 
                 obj = json.loads(line)
-                new_obj = {"id": obj["id"], "contents": obj["text"]}
+                new_obj = {"id": obj["id"], "contents": obj["text"], "lines": obj["lines"]}
                 json.dump(new_obj, file)
                 file.write("\n")
 
