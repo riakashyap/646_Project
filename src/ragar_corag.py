@@ -16,7 +16,7 @@ Code:
 
 from .corag import Corag
 from .model_clients import ModelClient
-from .retrieval import INDEX_DIR
+from .index import INDEX_DIR
 from pyserini.search.lucene import LuceneSearcher
 
 class RagarCorag(Corag):
