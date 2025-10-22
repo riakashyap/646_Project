@@ -17,66 +17,46 @@ Code:
 
 from collections import Counter
 from datasets import load_dataset
-from pyserini.search.lucene import LuceneSearcher
-from src.LLMClients import LlamaCppClient
-from src.PipelineHelper import verify_claim
-from src.Retrieval import INDEX_DIR
 from tqdm import tqdm
+from src.model_clients import LlamaCppClient
+from src.ragar_corag import RagarCorag
 
-
-def get_pred(verdict: bool):
-    if verdict is None:
-        pred = "not enough info"
-    if verdict:
-        pred = "supports"
-    else:
-        pred = "refutes"
-
-    return pred
-
-
+# Test run on FEVER subset
 if __name__ == "__main__":
-    # Download FEVER dataset https://fever.ai/dataset/fever.html
+    num_samples = 2
     ds = load_dataset("fever", "v1.0", trust_remote_code=True)
-
-    # Assumes model is downloaded and LCPP server is running on port 4568
-    # E.g. llama-server --reasoning-budget 0 --port 4568 -t 8 -m /path/to/model.gguf
-    client = LlamaCppClient()
-
-    # search index
-    searcher = LuceneSearcher(str(INDEX_DIR))
-    searcher.set_bm25(1.2, 0.75)
-
-    # Test run on FEVER subset
-    num_samples = 5
     split = ds["labelled_dev"].select(range(num_samples))
+    fever_labels = ["REFUTES", "SUPPORTS", "NOT ENOUGH EVIDENCE"]
+
+    # Setup CoRAG system here
+    mc = LlamaCppClient("prompts/ragar")
+    # mc = LlamaCppClient("prompts/custom/user", "prompts/custom/system")
+    corag = RagarCorag(mc)
+
     labels = []
     preds = []
-    results = []
-
+    outputs = []
     for i in tqdm(range(len(split))):
         claim = split[i]["claim"]
-        label = split[i]["label"].lower()
+        label = split[i]["label"]
 
-        result = verify_claim(client, searcher, claim, max_iters=3)
-        pred = get_pred(result["verdict_bool"])
-        result["correct"] = (pred == label)
+        result = corag.run(claim)
+        verdict = result["verdict"]
+        pred = None if verdict is None else fever_labels[verdict]
 
         preds.append(pred)
         labels.append(label)
-        results.append(result)
+        outputs.append(result)
 
     accuracy = sum(pred == label for pred, label in zip(preds, labels)) / num_samples
     pred_counts = Counter(preds)
     label_counts = Counter(labels)
 
     print()
-    import pprint
-    pprint.pprint(results)
-    print()
+    print(outputs)
     print(f"Accuracy: {accuracy:.3f}")
-    print(pred_counts)
-    print(label_counts)
+    print("Pred labels:", pred_counts)
+    print("True labels:", label_counts)
 
 # Local Variables:
 # compile-command: "guix shell -m manifest.scm -- python3 ./main.py"

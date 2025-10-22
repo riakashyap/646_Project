@@ -89,9 +89,6 @@ def build_index():
         print(f"Skipping index build, using existing index at: {INDEX_DIR}")
         return
 
-    if not PAGES_DIR.exists() or not os.listdir(PAGES_DIR):
-        load_wiki()
-
     # Copying command-line approach from A1. Probably a function for this.
     cmd = [
         sys.executable, "-m", "pyserini.index.lucene",
@@ -109,6 +106,7 @@ def build_index():
     print(f"Index successfully built at {INDEX_DIR}")
 
 if __name__ == "__main__":
+    load_wiki()
     build_index()
 
     # Test retrieval
