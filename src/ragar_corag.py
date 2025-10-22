@@ -30,7 +30,7 @@ class RagarCorag(Corag):
         self._searcher.set_bm25(1.2, 0.75)
 
     def init_question(self, claim: str) -> str:
-        return self._mc.send_prompt("init_question", [claim])
+        return self._mc.send_prompt("init_question", [claim]).strip()
 
     def answer(self, question: str) -> str:
         hits = self._searcher.search(question, k=3)
@@ -41,16 +41,16 @@ class RagarCorag(Corag):
             search_results.append(contents)
 
         output = "\n\n".join(search_results)
-        return self._mc.send_prompt("answer", [output, question])
+        return self._mc.send_prompt("answer", [output, question]).strip()
 
     def next_question(self, claim: str, qa_pairs: list[tuple[str, str]]) -> str:
-        return self._mc.send_prompt("next_question", [claim, qa_pairs])
+        return self._mc.send_prompt("next_question", [claim, qa_pairs]).strip()
 
     def stop_check(self, claim: str, qa_pairs: list[tuple[str, str]]) -> bool:
         res = self._mc.send_prompt("stop_check", [claim, qa_pairs]).lower()
 
         # Stops if then model was indecisive or gave a non-binary answer
-        return "conclusive" in res 
+        return "conclusive" in res
 
     def verdict(self, claim: str, qa_pairs: list[tuple[str, str]]) -> tuple[int, str | None]:
         res = self._mc.send_prompt("verdict", [claim, qa_pairs])
@@ -66,5 +66,5 @@ class RagarCorag(Corag):
             verdict = 1
         elif "inconclusive" in lower:
             verdict = 2
-        
+
         return verdict, res
