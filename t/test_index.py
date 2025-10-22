@@ -29,11 +29,11 @@ class TestIndex(unittest.TestCase):
         super().setUpClass()
 
         if not (PAGES_DIR.exists() and os.listdir(PAGES_DIR)):
-            print(f'Downloading the wiki data to {PAGES_DIR}')
+            print(f'Downloading the wiki data to {PAGES_DIR}...')
             load_wiki()
 
         if not (INDEX_DIR.exists() and os.listdir(INDEX_DIR)):
-            print(f'Populating the index to {INDEX_DIR}')
+            print(f'Populating the index to {INDEX_DIR}...')
             build_index()
 
         self.reader = LuceneIndexReader(str(INDEX_DIR))
