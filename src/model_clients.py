@@ -25,7 +25,7 @@ import requests
 class ModelClient(ABC):
     _prompts: Dict[str, str] = dict()
 
-    def __init__(self, user_prompts_dir: str, system_prompts_dir: str | None = None):        
+    def __init__(self, user_prompts_dir: str, system_prompts_dir: str | None = None):
         base_dir = os.path.dirname(os.path.dirname(__file__))
 
         for file_name in os.listdir(user_prompts_dir):
@@ -87,25 +87,25 @@ class LlamaCppClient(ModelClient):
 
     def __init__(
         self,
-        user_prompts_dir: str, 
+        user_prompts_dir: str,
         system_prompts_dir: str | None = None,
-        should_think: bool = False,
+        think_mode: bool = False,
         host: str = "127.0.0.1",
         port: int = 4568,
         temperature: float = 0.7,
-    ):
+     ):
         super().__init__(user_prompts_dir, system_prompts_dir)
         self.api = f"http://{host}:{port}/v1/chat/completions"
         self.temperature = temperature
-        self.think_mode = "" if should_think else "/no_think"
+        self.think_mode = "" if think_mode else "/no_think"
 
-    def send_query(self, user_prompt: str, system_prompt: str | None = None) -> str:        
+    def send_query(self, user_prompt: str, system_prompt: str | None = None) -> str:
         messages = [
             {"role": "user", "content": user_prompt}
         ]
 
         if system_prompt is not None:
-            messages.append({"role": "system", "content": system_prompt})
+            messages.append({"role": "system", "content": system_prompt + self.think_mode})
 
         payload = {
             "model": "local", # Ignored
@@ -119,9 +119,9 @@ class LlamaCppClient(ModelClient):
             result = res.json()
             content = result["choices"][0]["message"]["content"]
             return re.sub(r'<think>\s*</think>', '', content)
-        
+
         except requests.RequestException as e:
             raise requests.RequestException(f"HTTP request to llama-cpp server failed: {e}")
-        
+
         except (KeyError, IndexError) as e:
             raise requests.KeyError(f"Unexpected response format: {e}")
