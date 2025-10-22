@@ -49,8 +49,10 @@ if __name__ == "__main__":
     fever_labels = ["REFUTES", "SUPPORTS", "NOT ENOUGH INFO"]
 
     # Setup CoRAG system here
-    mc = LlamaCppClient("prompts/ragar") if args.ragar else \
-        LlamaCppClient("prompts/custom/user", "prompts/custom/system")
+    mc = LlamaCppClient("prompts/ragar", think_mode=args.think) if args.ragar \
+        else LlamaCppClient("prompts/custom/user",
+                            "prompts/custom/system",
+                            think_mode=args.think)
     corag = RagarCorag(mc)
 
     labels = []
