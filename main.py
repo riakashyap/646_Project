@@ -21,6 +21,7 @@ from datasets import load_dataset
 from pprint import pprint
 from src.model_clients import LlamaCppClient
 from src.ragar_corag import RagarCorag
+from src.utils import PROMPTS_DIR
 from tqdm import tqdm
 import argparse
 
@@ -48,11 +49,17 @@ if __name__ == "__main__":
     split = ds["labelled_dev"].select(range(args.num_claims))
     fever_labels = ["REFUTES", "SUPPORTS", "NOT ENOUGH INFO"]
 
+    user_prompts_dir = PROMPTS_DIR / "ragar"
+    sys_prompts_dir = None
+    if not args.ragar:
+        user_prompts_dir = PROMPTS_DIR / "custom" / "user"
+        sys_prompts_dir = PROMPTS_DIR  / "custom" / "system"
+
     # Setup CoRAG system here
-    mc = LlamaCppClient("prompts/ragar", think_mode=args.think) if args.ragar \
-        else LlamaCppClient("prompts/custom/user",
-                            "prompts/custom/system",
-                            think_mode=args.think)
+    mc = LlamaCppClient(user_prompts_dir,
+                        sys_prompts_dir,
+                        think_mode=args.think)
+
     corag = RagarCorag(mc)
 
     labels = []

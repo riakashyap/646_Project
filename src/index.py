@@ -20,15 +20,14 @@ import subprocess
 import os
 import sys
 import json
-from pathlib import Path
-from pyserini.search.lucene import LuceneSearcher
+from .utils import (
+    WIKI_DIR,
+    ZIP_PATH,
+    INDEX_DIR,
+    PAGES_DIR,
+    WIKI_DIR,
+)
 
-SCRIPT_DIR = Path(__file__).resolve().parent
-DATA_DIR = SCRIPT_DIR.parent / "data"
-WIKI_DIR = DATA_DIR / "wiki"
-ZIP_PATH = DATA_DIR / "wiki-pages.zip"
-INDEX_DIR = WIKI_DIR / "index"
-PAGES_DIR = WIKI_DIR / "wiki-pages"
 WIKI_URL = "https://fever.ai/download/fever/wiki-pages.zip"
 
 def load_wiki():
@@ -38,9 +37,9 @@ def load_wiki():
     The 'text' field is renamed to 'contents' in place to match Pyserini's expected format.
     """
 
-    if PAGES_DIR.exists() and os.listdir(PAGES_DIR):
-        print(f"Skipping wiki download, using existing data at: {PAGES_DIR}")
-        return
+    if WIKI_DIR.exists():
+        # clean
+        shutil.rmtree(WIKI_DIR)
 
     WIKI_DIR.mkdir(parents=True, exist_ok=True)
 
@@ -78,15 +77,12 @@ def load_wiki():
                 json.dump(new_obj, file)
                 file.write("\n")
 
-    print(f"Files ready at: {PAGES_DIR}")
-
 def build_index():
     """
     Builds the index from the Wikipedia dump using PySerini, as done in A1.
     """
 
-    if INDEX_DIR.exists() and os.listdir(INDEX_DIR):
-        print(f"Skipping index build, using existing index at: {INDEX_DIR}")
+    if INDEX_DIR.exists():
         return
 
     # Copying command-line approach from A1. Probably a function for this.
@@ -104,16 +100,3 @@ def build_index():
 
     subprocess.run(cmd, check=True)
     print(f"Index successfully built at {INDEX_DIR}")
-
-if __name__ == "__main__":
-    load_wiki()
-    build_index()
-
-    # Test retrieval
-    searcher = LuceneSearcher(str(INDEX_DIR))
-    searcher.set_bm25(1.2, 0.75)
-    query = "Who was the first president of the United States?"
-    hits = searcher.search(query, k=5)
-    for hit in hits:
-        doc = searcher.doc(hit.docid)
-        print(f"{hit.docid} ({hit.score:.3f})")
