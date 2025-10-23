@@ -4,7 +4,7 @@ import sys
 
 if __name__ == '__main__':
 
-    sys.path.append('t/')
+    sys.path.append('tests/')
     sys.path.append('src/')
     t_loader = unittest.defaultTestLoader
     t_runner = unittest.TextTestRunner(verbosity=2)
