@@ -34,7 +34,7 @@ if __name__ == "__main__":
     parser.add_argument('-t', '--think',
                         help='Whether the Qwen model should think before '
                         'answering. Affects runtime.',
-                        action='store_false')
+                        action='store_true')
     parser.add_argument('-r', '--ragar',
                         help='Use the original RAGAR prompts.',
                         action='store_true')
@@ -58,7 +58,7 @@ if __name__ == "__main__":
     # Setup CoRAG system here
     mc = LlamaCppClient(user_prompts_dir,
                         sys_prompts_dir,
-                        think_mode=args.think)
+                        think_mode_bool=args.think)
 
     corag = RagarCorag(mc)
 

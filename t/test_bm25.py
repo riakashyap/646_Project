@@ -11,7 +11,7 @@ Commentary:
   This file tests the efficacy of the BM25 retrieval stage by using mean
   average precision.
 
-  Some of this was adapted from materials presented in the course curriculum
+  General approach adapted from materials presented in the course curriculum
   COMPSCI646, UMass Amherst, Fall 2025.
 
 Code:

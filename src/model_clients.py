@@ -79,7 +79,7 @@ class LlamaCppClient(ModelClient):
         self,
         user_prompts_dir: str,
         system_prompts_dir: str | None = None,
-        think_mode: bool = False,
+        think_mode_bool: bool = False,
         host: str = "127.0.0.1",
         port: int = 4568,
         temperature: float = 0.7,
@@ -87,17 +87,16 @@ class LlamaCppClient(ModelClient):
         super().__init__(user_prompts_dir, system_prompts_dir)
         self.api = f"http://{host}:{port}/v1/chat/completions"
         self.temperature = temperature
-        self.think_mode = "" if think_mode else "/no_think"
+        self.think_mode = "" if think_mode_bool else "/no_think"
+        if think_mode_bool:
+            print(f'{type(self).__name__} will think!')
 
     def send_query(self, user_prompt: str,
-                   system_prompt: str | None = None) -> str:
+                   system_prompt: str = "You are a helpful assistant.") -> str:
         messages = [
-            {"role": "user", "content": user_prompt}
+            {"role": "user", "content": user_prompt},
+            {"role": "system", "content": system_prompt + self.think_mode},
         ]
-
-        if system_prompt is not None:
-            messages.append({"role": "system",
-                             "content": system_prompt + self.think_mode})
 
         payload = {
             "model": "local",  # Ignored
