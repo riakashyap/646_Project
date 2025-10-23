@@ -14,7 +14,7 @@ Code:
 """
 
 from pyserini.index.lucene import LuceneIndexReader
-from src.utils import INDEX_DIR, PAGES_DIR, WIKI_DIR
+from src.config import INDEX_DIR, PAGES_DIR, WIKI_DIR
 from src.index import load_wiki, build_index
 import unittest
 import itertools

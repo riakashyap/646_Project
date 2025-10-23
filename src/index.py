@@ -20,7 +20,7 @@ import subprocess
 import os
 import sys
 import json
-from .utils import (
+from .config import (
     WIKI_DIR,
     ZIP_PATH,
     INDEX_DIR,
