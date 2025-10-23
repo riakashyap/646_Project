@@ -21,7 +21,7 @@ from datasets import load_dataset
 from pprint import pprint
 from src.model_clients import LlamaCppClient
 from src.ragar_corag import RagarCorag
-from src.utils import PROMPTS_DIR
+from src.config import PROMPTS_DIR
 from tqdm import tqdm
 import argparse
 
