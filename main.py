@@ -25,7 +25,7 @@ from src.config import PROMPTS_DIR
 from tqdm import tqdm
 import argparse
 import time
-from datasets import load_dataset, Dataset
+from datasets import load_dataset, Dataset, concatenate_datasets
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
@@ -43,16 +43,19 @@ if __name__ == "__main__":
                         help='The number of claims to process.',
                         metavar='',
                         type=int,
-                        default=300)
+                        default=100)
     args = parser.parse_args()
 
     fever_labels = ["REFUTES", "SUPPORTS", "NOT ENOUGH INFO"]
-
     ds = load_dataset("fever", "v1.0", trust_remote_code=True)
+
+    # Split into unique 50 'REFUTES' and 50 'SUPPORTS'
     split = ds["train"]
     split = Dataset.from_pandas(split.to_pandas().drop_duplicates(subset="claim"))
-    split = split.select(range(args.num_claims))
-
+    supports = split.filter(lambda row: row["label"] == "SUPPORTS").select(range(int(args.num_claims / 2)))
+    refutes = split.filter(lambda row: row["label"] == "REFUTES").select(range(int(args.num_claims / 2)))
+    split = concatenate_datasets([supports, refutes])
+    
     user_prompts_dir = PROMPTS_DIR / "ragar"
     sys_prompts_dir = None
     if not args.ragar:
