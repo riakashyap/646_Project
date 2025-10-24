@@ -49,8 +49,14 @@ class RagarCorag(Corag):
     def stop_check(self, claim: str, qa_pairs: list[tuple[str, str]]) -> bool:
         res = self._mc.send_prompt("stop_check", [claim, qa_pairs]).lower()
 
-        # Stops if then model was indecisive or gave a non-binary answer
-        return "conclusive" in res
+        has_inconclusive = "inconclusive" in res
+        has_conclusive = "conclusive" in res and not has_inconclusive
+
+        # Stop if the model was indecisive or gave an invalid answer
+        if (has_conclusive and has_inconclusive) or (not has_conclusive and not has_inconclusive):
+            return True
+        
+        return not has_inconclusive
 
     def verdict(self, claim: str, qa_pairs: list[tuple[str, str]]) -> tuple[int, str | None]:
         res = self._mc.send_prompt("verdict", [claim, qa_pairs])
