@@ -21,6 +21,7 @@ from datasets import load_dataset
 from pprint import pprint
 from src.model_clients import LlamaCppClient
 from src.ragar_corag import RagarCorag
+from src.config import PROMPTS_DIR
 from tqdm import tqdm
 import argparse
 
@@ -33,7 +34,7 @@ if __name__ == "__main__":
     parser.add_argument('-t', '--think',
                         help='Whether the Qwen model should think before '
                         'answering. Affects runtime.',
-                        action='store_false')
+                        action='store_true')
     parser.add_argument('-r', '--ragar',
                         help='Use the original RAGAR prompts.',
                         action='store_true')
@@ -48,11 +49,17 @@ if __name__ == "__main__":
     split = ds["labelled_dev"].select(range(args.num_claims))
     fever_labels = ["REFUTES", "SUPPORTS", "NOT ENOUGH INFO"]
 
+    user_prompts_dir = PROMPTS_DIR / "ragar"
+    sys_prompts_dir = None
+    if not args.ragar:
+        user_prompts_dir = PROMPTS_DIR / "custom" / "user"
+        sys_prompts_dir = PROMPTS_DIR  / "custom" / "system"
+
     # Setup CoRAG system here
-    mc = LlamaCppClient("prompts/ragar", think_mode=args.think) if args.ragar \
-        else LlamaCppClient("prompts/custom/user",
-                            "prompts/custom/system",
-                            think_mode=args.think)
+    mc = LlamaCppClient(user_prompts_dir,
+                        sys_prompts_dir,
+                        think_mode_bool=args.think)
+
     corag = RagarCorag(mc)
 
     labels = []

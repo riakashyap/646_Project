@@ -27,25 +27,16 @@ class ModelClient(ABC):
     _prompts: Dict[str, str] = dict()
 
     def __init__(self, user_prompts_dir: str, system_prompts_dir: str | None = None):
-        base_dir = os.path.dirname(os.path.dirname(__file__))
 
         for file_name in os.listdir(user_prompts_dir):
             if file_name.endswith(".txt"):
-                user_prompt_path = os.path.join(
-                    base_dir,
-                    user_prompts_dir,
-                    file_name
-                )
+                user_prompt_path = user_prompts_dir / file_name
                 with open(user_prompt_path, "r", encoding="utf-8") as file:
                     user_prompt = file.read()
 
                 system_prompt = None
                 if system_prompts_dir is not None:
-                    system_prompt_path = os.path.join(
-                        base_dir,
-                        system_prompts_dir,
-                        file_name
-                    )
+                    system_prompt_path = system_prompts_dir / file_name
                     with open(system_prompt_path, "r", encoding="utf-8") \
                          as file:
                         system_prompt = file.read()
@@ -58,20 +49,6 @@ class ModelClient(ABC):
         """Send USER_PROMPT and SYSTEM_PROMPT if given to the model and return
         a response."""
         pass
-
-    def add_prompt(self, user_prompt_file: str, system_prompt_file: str | None = None):
-        user_prompt_path = os.path.join(self._prompts_dir, user_prompt_file)
-        with open(user_prompt_path, "r", encoding="utf-8") as f:
-            user_prompt = f.read()
-
-        system_prompt = None
-        if system_prompt_file is not None:
-            system_prompt_path = os.path.join(self._prompts_dir, system_prompt_file)
-            with open(system_prompt_path, "r", encoding="utf-8") as f:
-                system_prompt = f.read()
-
-        key = os.path.splitext(os.path.basename(user_prompt_file))[0]
-        self._prompts[key] = (user_prompt, system_prompt)
 
     def send_prompt(self, key: str, args: list[str]):
         """Given KEY, retrieves the system message and constructs the user
@@ -102,7 +79,7 @@ class LlamaCppClient(ModelClient):
         self,
         user_prompts_dir: str,
         system_prompts_dir: str | None = None,
-        think_mode: bool = False,
+        think_mode_bool: bool = False,
         host: str = "127.0.0.1",
         port: int = 4568,
         temperature: float = 0.7,
@@ -110,17 +87,16 @@ class LlamaCppClient(ModelClient):
         super().__init__(user_prompts_dir, system_prompts_dir)
         self.api = f"http://{host}:{port}/v1/chat/completions"
         self.temperature = temperature
-        self.think_mode = "" if think_mode else "/no_think"
+        self.think_mode = "" if think_mode_bool else "/no_think"
+        if think_mode_bool:
+            print(f'{type(self).__name__} will think!')
 
     def send_query(self, user_prompt: str,
-                   system_prompt: str | None = None) -> str:
+                   system_prompt: str = "You are an expert fact-checker.") -> str:
         messages = [
-            {"role": "user", "content": user_prompt}
+            {"role": "user", "content": user_prompt},
+            {"role": "system", "content": system_prompt + self.think_mode},
         ]
-
-        if system_prompt is not None:
-            messages.append({"role": "system",
-                             "content": system_prompt + self.think_mode})
 
         payload = {
             "model": "local",  # Ignored
