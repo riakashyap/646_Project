@@ -92,7 +92,10 @@ class LlamaCppClient(ModelClient):
             print(f'{type(self).__name__} will think!')
 
     def send_query(self, user_prompt: str,
-                   system_prompt: str = "You are an expert fact-checker.") -> str:
+                   system_prompt: str | None = None) -> str:
+
+        system_prompt = system_prompt if system_prompt is not None else \
+            "You are an expert fact-checker."
         messages = [
             {"role": "user", "content": user_prompt},
             {"role": "system", "content": system_prompt + self.think_mode},
