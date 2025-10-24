@@ -90,7 +90,7 @@ if __name__ == "__main__":
     # pprint(outputs)
     print(f"Accuracy: {accuracy:.8f}")
     print("Pred labels:", preds)
-    print("True labels:", label)
+    print("True labels:", labels)
     print(f"Time: {elapsed:8f}")
 
 # Local Variables:
