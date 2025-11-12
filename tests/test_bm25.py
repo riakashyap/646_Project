@@ -77,6 +77,56 @@ class TestBM25(unittest.TestCase):
         self.assertGreater(len(hits), 0, "BM25 search returned no documents.")
 
     def test_fever_evaluation(self):
+        def test_fever_evaluation(self):
+        def compute_madr(qrels: dict[str, dict[str, int]], 
+                        ranklists: dict[str, dict[str, float]], 
+                        cutoffs: list[int]) -> dict[str, float]:
+            """
+            Compute Mean Average Document Rank (MADR) at different cutoffs.
+            
+            For each query, computes the average rank of relevant documents
+            that appear in the top-k results. Then averages across all queries.
+            
+            Lower MADR is better (relevant docs appear earlier).
+            """
+            madr_results = {f"MADR_{k}": 0.0 for k in cutoffs}
+            
+            for query_id, relevant_docs in qrels.items():
+                if query_id not in ranklists:
+                    continue
+                    
+                # Get ranked list of retrieved docs (sorted by score descending)
+                retrieved = ranklists[query_id]
+                ranked_docids = sorted(retrieved.keys(), 
+                                     key=lambda d: retrieved[d], 
+                                     reverse=True)
+                
+                for cutoff in cutoffs:
+                    # Consider only top-k documents
+                    top_k_docs = ranked_docids[:cutoff]
+                    
+                    # Find ranks (1-based) of relevant docs in top-k
+                    relevant_ranks = []
+                    for rank, docid in enumerate(top_k_docs, start=1):
+                        if docid in relevant_docs and relevant_docs[docid] > 0:
+                            relevant_ranks.append(rank)
+                    
+                    # Average document rank for this query
+                    if relevant_ranks:
+                        adr = sum(relevant_ranks) / len(relevant_ranks)
+                    else:
+                        # No relevant docs found in top-k: assign penalty rank
+                        adr = cutoff + 1
+                    
+                    madr_results[f"MADR_{cutoff}"] += adr
+            
+            # Average across all queries
+            num_queries = len(qrels)
+            for key in madr_results:
+                madr_results[key] /= num_queries
+                
+            return madr_results
+
         def eval_on_fever() -> dict[str, float]:
             """
             Evaluate BM25 retrieval results using pytrec_eval.
@@ -109,6 +159,9 @@ class TestBM25(unittest.TestCase):
 
             num_queries = len(self.fever_ranklists)
 
+            # Compute MADR at cutoffs 3, 5, 10
+            madr_scores = compute_madr(self.qrels, self.fever_ranklists, [3, 5, 10])
+
             return {
                 "P_3": P_3 / num_queries,
                 "P_5": P_5 / num_queries,
@@ -119,6 +172,9 @@ class TestBM25(unittest.TestCase):
                 "MAP_3": MAP_3 / num_queries,
                 "MAP_5": MAP_5 / num_queries,
                 "MAP_10": MAP_10 / num_queries,
+                "MADR_3": madr_scores["MADR_3"],
+                "MADR_5": madr_scores["MADR_5"],
+                "MADR_10": madr_scores["MADR_10"],
             }
 
         expected = {
@@ -131,6 +187,9 @@ class TestBM25(unittest.TestCase):
             "MAP_3": 0.257,
             "MAP_5": 0.273,
             "MAP_10": 0.286,
+            "MADR_3": 3.125,
+            "MADR_5": 4.293,
+            "MADR_10": 6.808,
         }
         actual = eval_on_fever()
         actual = {key: round(value, 3) for key, value in actual.items()}

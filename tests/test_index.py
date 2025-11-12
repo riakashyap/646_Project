@@ -13,7 +13,7 @@ Commentary:
 Code:
 """
 
-from pyserini.index.lucene import LuceneIndexReader
+from pyserini.index.lucene import IndexReader
 from src.config import INDEX_DIR, PAGES_DIR, WIKI_DIR
 from src.index import load_wiki, build_index
 import unittest
@@ -22,7 +22,7 @@ import os
 
 class TestIndex(unittest.TestCase):
 
-    reader: LuceneIndexReader
+    reader: IndexReader
 
     @classmethod
     def setUpClass(self):
@@ -36,7 +36,7 @@ class TestIndex(unittest.TestCase):
             print(f'Populating the index to {INDEX_DIR}...')
             build_index()
 
-        self.reader = LuceneIndexReader(str(INDEX_DIR))
+        self.reader = IndexReader(str(INDEX_DIR))
 
     def test_index_stats(self):
         expected = {
