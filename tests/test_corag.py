@@ -125,8 +125,8 @@ class TestCorag(unittest.TestCase):
         self.ragar_client.set_ret(expected_res)
         verdict, res = self.ragar.verdict(self.claim, self.qa_pairs)
 
-        self.assertEquals(0, verdict)
-        self.assertEquals(expected_res, res)
+        self.assertEqual(0, verdict)
+        self.assertEqual(expected_res, res)
 
     def test_ragar_verdict_true(self):
         expected_res = "...true..."
@@ -134,8 +134,8 @@ class TestCorag(unittest.TestCase):
         self.ragar_client.set_ret(expected_res)
         verdict, res = self.ragar.verdict(self.claim, self.qa_pairs)
 
-        self.assertEquals(1, verdict)
-        self.assertEquals(expected_res, res)
+        self.assertEqual(1, verdict)
+        self.assertEqual(expected_res, res)
 
     def test_ragar_verdict_nei(self):
         expected_res = "...inconclusive..."
@@ -143,8 +143,8 @@ class TestCorag(unittest.TestCase):
         self.ragar_client.set_ret(expected_res)
         verdict, res = self.ragar.verdict(self.claim, self.qa_pairs)
 
-        self.assertEquals(2, verdict)
-        self.assertEquals(expected_res, res)
+        self.assertEqual(2, verdict)
+        self.assertEqual(expected_res, res)
 
     def test_ragar_verdict_KO(self):
         expected_res = "...neither..."
@@ -153,7 +153,7 @@ class TestCorag(unittest.TestCase):
         verdict, res = self.ragar.verdict(self.claim, self.qa_pairs)
 
         self.assertIsNone(verdict)
-        self.assertEquals(expected_res, res)
+        self.assertEqual(expected_res, res)
 
     def test_ragar_run(self):
         response = "abc"
@@ -163,7 +163,7 @@ class TestCorag(unittest.TestCase):
         from pprint import pprint
 
         self.assertIsNone(results["verdict"])
-        self.assertEquals(response, results["verdict_raw"])
-        self.assertEquals(self.claim, results["claim"])
-        self.assertEquals(3, len(results["qa_pairs"]))
-        self.assertEquals((response, response), results["qa_pairs"][0])
+        self.assertEqual(response, results["verdict_raw"])
+        self.assertEqual(self.claim, results["claim"])
+        self.assertEqual(3, len(results["qa_pairs"]))
+        self.assertEqual((response, response), results["qa_pairs"][0])
