@@ -42,6 +42,7 @@ class ModelClient(ABC):
                         system_prompt = file.read()
 
                 key = os.path.splitext(file_name)[0]
+                print(system_prompt)
                 self._prompts[key] = (user_prompt, system_prompt)
 
     @abstractmethod
