@@ -67,10 +67,9 @@ class TestCorag(unittest.TestCase):
             self.get_expected_prompts(self.ragar_client, key, ["", self.question])
         actual_user, actual_system = self.ragar_client.get_prompts()
 
-        # assert expected is a TRUE SUBSTRING of actual
-        # TODO implementation is wrong!
-        # self.assertIn(expected_user, actual_user, "Self.Question format missing from prompt!")
-        self.assertLess(len(expected_user), len(actual_user))
+        expected_split = expected_user.splitlines()
+        for line in expected_split:
+            self.assertIn(line, actual_user, "Question format missing from prompt!")
 
     def test_ragar_next_question(self):
         key = "next_question"
@@ -104,7 +103,7 @@ class TestCorag(unittest.TestCase):
 
     def test_ragar_stop_check_neither(self):
         self.ragar_client.set_ret("...neither...")
-        # self.assertFalse(self.ragar.stop_check(self.claim, self.qa_pairs))
+        self.assertFalse(self.ragar.stop_check(self.claim, self.qa_pairs))
 
     def test_ragar_stop_check_both(self):
         self.ragar_client.set_ret("...conclusive...inconclusive...")
@@ -128,7 +127,6 @@ class TestCorag(unittest.TestCase):
 
         self.assertEquals(0, verdict)
         self.assertEquals(expected_res, res)
-
 
     def test_ragar_verdict_true(self):
         expected_res = "...true..."
@@ -167,6 +165,5 @@ class TestCorag(unittest.TestCase):
         self.assertIsNone(results["verdict"])
         self.assertEquals(response, results["verdict_raw"])
         self.assertEquals(self.claim, results["claim"])
-        # self.assertEquals(3, len(results["qa_pairs"]))
+        self.assertEquals(3, len(results["qa_pairs"]))
         self.assertEquals((response, response), results["qa_pairs"][0])
-        pprint(results)
