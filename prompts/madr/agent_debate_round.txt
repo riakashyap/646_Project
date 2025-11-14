@@ -1,0 +1,24 @@
+You are Agent {} in a multi-agent fact-checking debate.
+
+Claim: {}
+
+Retrieved Evidence:
+{}
+
+Your previous position:
+  Verdict: {}
+  Reasoning: {}
+  Confidence: {}
+
+Other agents' positions:
+{}
+
+Consider the other agents' arguments. You may:
+- Maintain your position if you find their arguments unconvincing
+- Adjust your verdict if they present compelling evidence or reasoning
+- Increase/decrease your confidence based on consensus or disagreement
+
+Provide your refined analysis:
+VERDICT: [your verdict]
+REASONING: [your reasoning, addressing key points from other agents]
+CONFIDENCE: [your confidence score]

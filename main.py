@@ -21,6 +21,7 @@ from datasets import load_dataset
 from pprint import pprint
 from src.model_clients import LlamaCppClient
 from src.ragar_corag import RagarCorag
+from src.madr_corag import MadrCorag
 from src.config import PROMPTS_DIR
 from tqdm import tqdm
 import argparse
@@ -38,6 +39,19 @@ if __name__ == "__main__":
     parser.add_argument('-r', '--ragar',
                         help='Use the original RAGAR prompts.',
                         action='store_true')
+    parser.add_argument('-m', '--madr',
+                        help='Use Multi-Agent Debate Refinement instead of baseline.',
+                        action='store_true')
+    parser.add_argument('--num-agents',
+                        help='Number of agents for MADR (default: 3).',
+                        metavar='',
+                        type=int,
+                        default=3)
+    parser.add_argument('--debate-rounds',
+                        help='Maximum debate rounds for MADR (default: 3).',
+                        metavar='',
+                        type=int,
+                        default=3)
     parser.add_argument('-n', '--num-claims',
                         help='The number of claims to process.',
                         metavar='',
@@ -49,18 +63,30 @@ if __name__ == "__main__":
     split = ds["labelled_dev"].select(range(args.num_claims))
     fever_labels = ["REFUTES", "SUPPORTS", "NOT ENOUGH INFO"]
 
-    user_prompts_dir = PROMPTS_DIR / "ragar"
-    sys_prompts_dir = None
-    if not args.ragar:
+    # Setup prompts directory based on mode
+    if args.madr:
+        # MADR mode uses its own prompts
+        user_prompts_dir = PROMPTS_DIR / "madr"
+        sys_prompts_dir = None
+    elif args.ragar:
+        # Original RAGAR prompts
+        user_prompts_dir = PROMPTS_DIR / "ragar"
+        sys_prompts_dir = None
+    else:
+        # Custom prompts with system messages
         user_prompts_dir = PROMPTS_DIR / "custom" / "user"
-        sys_prompts_dir = PROMPTS_DIR  / "custom" / "system"
+        sys_prompts_dir = PROMPTS_DIR / "custom" / "system"
 
     # Setup CoRAG system here
     mc = LlamaCppClient(user_prompts_dir,
                         sys_prompts_dir,
                         think_mode_bool=args.think)
 
-    corag = RagarCorag(mc)
+    if args.madr:
+        print(f"Using MADR with {args.num_agents} agents, {args.debate_rounds} max rounds")
+        corag = MadrCorag(mc, num_agents=args.num_agents, max_debate_rounds=args.debate_rounds)
+    else:
+        corag = RagarCorag(mc)
 
     labels = []
     preds = []

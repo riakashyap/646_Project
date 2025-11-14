@@ -1,0 +1,16 @@
+You are Agent {} in a multi-agent fact-checking debate.
+
+Claim: {}
+
+Retrieved Evidence:
+{}
+
+Analyze the claim based on the evidence provided. Provide:
+1. Your verdict: SUPPORTS, REFUTES, or NOT_ENOUGH_INFO
+2. Your detailed reasoning (2-3 sentences)
+3. Your confidence level (0.0 to 1.0)
+
+Format your response as:
+VERDICT: [your verdict]
+REASONING: [your reasoning]
+CONFIDENCE: [your confidence score]

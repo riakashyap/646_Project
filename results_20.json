@@ -1,0 +1,978 @@
+{
+  "baseline": {
+    "system_name": "Baseline",
+    "accuracy": 0.5,
+    "precision_macro": 0.541005291005291,
+    "recall_macro": 0.5416666666666666,
+    "f1_macro": 0.5401960784313725,
+    "precision_per_class": {
+      "REFUTES": 0.4444444444444444,
+      "SUPPORTS": 0.75,
+      "NOT ENOUGH INFO": 0.42857142857142855
+    },
+    "recall_per_class": {
+      "REFUTES": 0.5,
+      "SUPPORTS": 0.75,
+      "NOT ENOUGH INFO": 0.375
+    },
+    "f1_per_class": {
+      "REFUTES": 0.47058823529411764,
+      "SUPPORTS": 0.75,
+      "NOT ENOUGH INFO": 0.4
+    },
+    "support_per_class": {
+      "REFUTES": 8,
+      "SUPPORTS": 4,
+      "NOT ENOUGH INFO": 8
+    },
+    "confusion_matrix": [
+      [
+        4,
+        0,
+        4
+      ],
+      [
+        1,
+        3,
+        0
+      ],
+      [
+        4,
+        1,
+        3
+      ]
+    ],
+    "elapsed_time": 39.20505213737488,
+    "avg_time_per_sample": 1.9602526068687438,
+    "metadata": [
+      {
+        "claim_id": 91198,
+        "claim": "Colin Kaepernick became a starting quarterback during the 49ers 63rd season in the National Football League.",
+        "predicted": "REFUTES",
+        "ground_truth": "NOT ENOUGH INFO",
+        "correct": false
+      },
+      {
+        "claim_id": 194462,
+        "claim": "Tilda Swinton is a vegan.",
+        "predicted": "NOT ENOUGH INFO",
+        "ground_truth": "NOT ENOUGH INFO",
+        "correct": true
+      },
+      {
+        "claim_id": 137334,
+        "claim": "Fox 2000 Pictures released the film Soul Food.",
+        "predicted": "REFUTES",
+        "ground_truth": "SUPPORTS",
+        "correct": false
+      },
+      {
+        "claim_id": 166626,
+        "claim": "Anne Rice was born in New Jersey.",
+        "predicted": "REFUTES",
+        "ground_truth": "NOT ENOUGH INFO",
+        "correct": false
+      },
+      {
+        "claim_id": 111897,
+        "claim": "Telemundo is a English-language television network.",
+        "predicted": "REFUTES",
+        "ground_truth": "REFUTES",
+        "correct": true
+      },
+      {
+        "claim_id": 89891,
+        "claim": "Damon Albarn's debut album was released in 2011.",
+        "predicted": "REFUTES",
+        "ground_truth": "REFUTES",
+        "correct": true
+      },
+      {
+        "claim_id": 181634,
+        "claim": "There is a capital called Mogadishu.",
+        "predicted": "SUPPORTS",
+        "ground_truth": "SUPPORTS",
+        "correct": true
+      },
+      {
+        "claim_id": 219028,
+        "claim": "Savages was exclusively a German film.",
+        "predicted": "NOT ENOUGH INFO",
+        "ground_truth": "REFUTES",
+        "correct": false
+      },
+      {
+        "claim_id": 194372,
+        "claim": "Happiness in Slavery is a gospel song by Nine Inch Nails.",
+        "predicted": "SUPPORTS",
+        "ground_truth": "NOT ENOUGH INFO",
+        "correct": false
+      },
+      {
+        "claim_id": 108281,
+        "claim": "Andrew Kevin Walker is only Chinese.",
+        "predicted": "NOT ENOUGH INFO",
+        "ground_truth": "REFUTES",
+        "correct": false
+      },
+      {
+        "claim_id": 140846,
+        "claim": "Shooter is about an expert marksman who tries to stop the assassination of the president.",
+        "predicted": "NOT ENOUGH INFO",
+        "ground_truth": "NOT ENOUGH INFO",
+        "correct": true
+      },
+      {
+        "claim_id": 110177,
+        "claim": "House is a sitcom.",
+        "predicted": "REFUTES",
+        "ground_truth": "NOT ENOUGH INFO",
+        "correct": false
+      },
+      {
+        "claim_id": 204361,
+        "claim": "The Cretaceous ended.",
+        "predicted": "SUPPORTS",
+        "ground_truth": "SUPPORTS",
+        "correct": true
+      },
+      {
+        "claim_id": 54168,
+        "claim": "Murda Beatz's real name is Marshall Mathers.",
+        "predicted": "NOT ENOUGH INFO",
+        "ground_truth": "REFUTES",
+        "correct": false
+      },
+      {
+        "claim_id": 105095,
+        "claim": "Nicholas Brody is a character on Homeland.",
+        "predicted": "SUPPORTS",
+        "ground_truth": "SUPPORTS",
+        "correct": true
+      },
+      {
+        "claim_id": 18708,
+        "claim": "Charles Manson has been proven innocent of all crimes.",
+        "predicted": "NOT ENOUGH INFO",
+        "ground_truth": "REFUTES",
+        "correct": false
+      },
+      {
+        "claim_id": 90809,
+        "claim": "Sean Penn is only ever a stage actor.",
+        "predicted": "REFUTES",
+        "ground_truth": "REFUTES",
+        "correct": true
+      },
+      {
+        "claim_id": 167997,
+        "claim": "Don Bradman retired from soccer.",
+        "predicted": "REFUTES",
+        "ground_truth": "NOT ENOUGH INFO",
+        "correct": false
+      },
+      {
+        "claim_id": 150773,
+        "claim": "L.A. Reid has served as the CEO of Arista Records for four years.",
+        "predicted": "NOT ENOUGH INFO",
+        "ground_truth": "NOT ENOUGH INFO",
+        "correct": true
+      },
+      {
+        "claim_id": 204443,
+        "claim": "Brad Wilk helped co-found Rage in 1962.",
+        "predicted": "REFUTES",
+        "ground_truth": "REFUTES",
+        "correct": true
+      }
+    ]
+  },
+  "madr": {
+    "system_name": "MADR",
+    "accuracy": 0.6,
+    "precision_macro": 0.6010101010101009,
+    "recall_macro": 0.625,
+    "f1_macro": 0.5668261562998405,
+    "precision_per_class": {
+      "REFUTES": 0.6363636363636364,
+      "SUPPORTS": 0.5,
+      "NOT ENOUGH INFO": 0.6666666666666666
+    },
+    "recall_per_class": {
+      "REFUTES": 0.875,
+      "SUPPORTS": 0.75,
+      "NOT ENOUGH INFO": 0.25
+    },
+    "f1_per_class": {
+      "REFUTES": 0.7368421052631579,
+      "SUPPORTS": 0.6,
+      "NOT ENOUGH INFO": 0.36363636363636365
+    },
+    "support_per_class": {
+      "REFUTES": 8,
+      "SUPPORTS": 4,
+      "NOT ENOUGH INFO": 8
+    },
+    "confusion_matrix": [
+      [
+        7,
+        1,
+        0
+      ],
+      [
+        0,
+        3,
+        1
+      ],
+      [
+        4,
+        2,
+        2
+      ]
+    ],
+    "elapsed_time": 134.9603500366211,
+    "avg_time_per_sample": 6.748017501831055,
+    "metadata": [
+      {
+        "claim_id": 91198,
+        "claim": "Colin Kaepernick became a starting quarterback during the 49ers 63rd season in the National Football League.",
+        "predicted": "REFUTES",
+        "ground_truth": "NOT ENOUGH INFO",
+        "correct": false,
+        "madr_metadata": {
+          "final_verdict": "REFUTES",
+          "confidence_weighted_scores": {
+            "REFUTES": 2.85,
+            "SUPPORTS": 0.0,
+            "NOT ENOUGH INFO": 0.0
+          },
+          "debate_rounds": 1,
+          "agent_final_positions": [
+            {
+              "agent_id": 0,
+              "verdict": "REFUTES",
+              "reasoning": "The claim states that Colin Kaepernick became a starting quarterback during the 49ers 63rd season in the NFL. However, the evidence clarifies that the 63rd season of the 49ers corresponds to the 2012 season, during which Kaepernick was indeed the starting quarterback. The claim is ambiguous, but the evidence specifically points out that the 2016 season (the 67th season) is the one referenced in the text, where Kaepernick was not the starting quarterback. Therefore, the claim is refuted based on the provided evidence.",
+              "confidence": 0.95
+            },
+            {
+              "agent_id": 1,
+              "verdict": "REFUTES",
+              "reasoning": "The claim states that Colin Kaepernick became a starting quarterback during the 49ers 63rd season in the NFL. However, the evidence clarifies that the 63rd season corresponds to the 2012 season, during which Kaepernick was indeed the starting quarterback. The claim is ambiguous because it refers to the 63rd season, which is the 2012 season, but the evidence also mentions that the 2016 season was the 67th season. The confusion arises from the ambiguity of the term \"63rd season,\" but the evidence directly supports that Kaepernick was the starting quarterback in the 2012 season (63rd season), so the claim is refuted if it is referring to the 2016 season.",
+              "confidence": 0.95
+            },
+            {
+              "agent_id": 2,
+              "verdict": "REFUTES",
+              "reasoning": "The claim states that Colin Kaepernick became a starting quarterback during the 49ers' 63rd season in the NFL. However, the evidence clarifies that the 63rd season corresponds to the 2012 season, during which Kaepernick was indeed the starting quarterback. The claim is ambiguous because it refers to the 63rd season, which is the 2012 season, but the answer provided in the evidence contradicts this by stating that the 2016 season (67th season) is the one referenced in the text, leading to the conclusion that the answer is \"no.\" This contradiction indicates the claim is refuted based on the evidence.",
+              "confidence": 0.95
+            }
+          ],
+          "consensus_reached": true
+        }
+      },
+      {
+        "claim_id": 194462,
+        "claim": "Tilda Swinton is a vegan.",
+        "predicted": "NOT ENOUGH INFO",
+        "ground_truth": "NOT ENOUGH INFO",
+        "correct": true,
+        "madr_metadata": {
+          "final_verdict": "NOT ENOUGH INFO",
+          "confidence_weighted_scores": {
+            "REFUTES": 0.0,
+            "SUPPORTS": 0.0,
+            "NOT ENOUGH INFO": 1.85
+          },
+          "debate_rounds": 1,
+          "agent_final_positions": [
+            {
+              "agent_id": 0,
+              "verdict": "NOT ENOUGH INFO",
+              "reasoning": "The retrieved evidence does not provide specific information about Tilda Swinton's diet. It only mentions that her diet is not specified and that veganism excludes animal products, but there is no direct confirmation or denial of whether she follows a vegan diet. Therefore, the claim cannot be verified based on the given information.",
+              "confidence": 0.75
+            },
+            {
+              "agent_id": 1,
+              "verdict": "NOT ENOUGH INFO",
+              "reasoning": "The retrieved evidence does not provide specific information about Tilda Swinton's diet. It only states that her diet is not specified and that the information provided does not allow for a conclusive answer. Therefore, there is insufficient data to determine whether she follows a vegan diet.",
+              "confidence": 0.6
+            },
+            {
+              "agent_id": 2,
+              "verdict": "NOT ENOUGH INFO",
+              "reasoning": "The retrieved evidence does not provide any specific information about Tilda Swinton's diet. Both responses indicate that there is no explicit statement confirming or denying whether she follows a vegan diet or includes animal products. Therefore, the claim cannot be verified based on the given information.",
+              "confidence": 0.5
+            }
+          ],
+          "consensus_reached": true
+        }
+      },
+      {
+        "claim_id": 137334,
+        "claim": "Fox 2000 Pictures released the film Soul Food.",
+        "predicted": "NOT ENOUGH INFO",
+        "ground_truth": "SUPPORTS",
+        "correct": false,
+        "madr_metadata": {
+          "final_verdict": "NOT ENOUGH INFO",
+          "confidence_weighted_scores": {
+            "REFUTES": 0.0,
+            "SUPPORTS": 0.0,
+            "NOT ENOUGH INFO": 2.25
+          },
+          "debate_rounds": 1,
+          "agent_final_positions": [
+            {
+              "agent_id": 0,
+              "verdict": "NOT ENOUGH INFO",
+              "reasoning": "The evidence states that Fox 2000 Pictures \"released\" the film Soul Food, but it does not explicitly confirm that they produced it. The production is attributed to Kenneth \"Babyface\" Edmonds, Tracey Edmonds, and Robert Teitel. While release often implies some level of involvement, the distinction between production and distribution is not clearly made in the provided information.",
+              "confidence": 0.75
+            },
+            {
+              "agent_id": 1,
+              "verdict": "NOT ENOUGH INFO",
+              "reasoning": "The evidence indicates that Fox 2000 Pictures released the film Soul Food, but it does not explicitly state that they produced it. The production is attributed to Kenneth \"Babyface\" Edmonds, Tracey Edmonds, and Robert Teitel. While release often implies some level of involvement in production, the information does not clearly confirm that Fox 2000 Pictures were the producers.",
+              "confidence": 0.75
+            },
+            {
+              "agent_id": 2,
+              "verdict": "NOT ENOUGH INFO",
+              "reasoning": "The evidence indicates that Fox 2000 Pictures released the film Soul Food, but it does not explicitly state that they produced it. The production credits are given to Kenneth \"Babyface\" Edmonds, Tracey Edmonds, and Robert Teitel, which suggests they may have been the producers. The distinction between release and production is not clearly made in the information provided.",
+              "confidence": 0.75
+            }
+          ],
+          "consensus_reached": true
+        }
+      },
+      {
+        "claim_id": 166626,
+        "claim": "Anne Rice was born in New Jersey.",
+        "predicted": "REFUTES",
+        "ground_truth": "NOT ENOUGH INFO",
+        "correct": false,
+        "madr_metadata": {
+          "final_verdict": "REFUTES",
+          "confidence_weighted_scores": {
+            "REFUTES": 3.0,
+            "SUPPORTS": 0.0,
+            "NOT ENOUGH INFO": 0.0
+          },
+          "debate_rounds": 1,
+          "agent_final_positions": [
+            {
+              "agent_id": 0,
+              "verdict": "REFUTES",
+              "reasoning": "The evidence clearly states that Anne Rice was born in Britain, not New Jersey. The provided information directly contradicts the claim, making it unnecessary to consider other possibilities.",
+              "confidence": 1.0
+            },
+            {
+              "agent_id": 1,
+              "verdict": "REFUTES",
+              "reasoning": "The evidence clearly states that Anne Rice was born in Britain, not New Jersey. The provided information directly contradicts the claim, making it unnecessary to consider alternative sources or interpretations.",
+              "confidence": 1.0
+            },
+            {
+              "agent_id": 2,
+              "verdict": "REFUTES",
+              "reasoning": "The evidence clearly states that Anne Rice was born in Britain, not New Jersey. The provided information explicitly refutes the claim that she was born in New Jersey.",
+              "confidence": 1.0
+            }
+          ],
+          "consensus_reached": true
+        }
+      },
+      {
+        "claim_id": 111897,
+        "claim": "Telemundo is a English-language television network.",
+        "predicted": "SUPPORTS",
+        "ground_truth": "REFUTES",
+        "correct": false,
+        "madr_metadata": {
+          "final_verdict": "SUPPORTS",
+          "confidence_weighted_scores": {
+            "REFUTES": 0.0,
+            "SUPPORTS": 2.55,
+            "NOT ENOUGH INFO": 0.0
+          },
+          "debate_rounds": 1,
+          "agent_final_positions": [
+            {
+              "agent_id": 0,
+              "verdict": "SUPPORTS",
+              "reasoning": "The evidence clearly states that Telemundo broadcasts programming in English, with specific examples of stations transmitting English-language content. While there is a conflicting statement suggesting Telemundo's programming is primarily in Spanish, the direct evidence supports the claim that Telemundo is an English-language television network.",
+              "confidence": 0.85
+            },
+            {
+              "agent_id": 1,
+              "verdict": "SUPPORTS",
+              "reasoning": "The evidence clearly states that Telemundo broadcasts programming in English, with specific examples of stations transmitting English-language content. While there is conflicting information in the retrieved evidence, the direct statement that Telemundo broadcasts English-language programming supports the claim.",
+              "confidence": 0.85
+            },
+            {
+              "agent_id": 2,
+              "verdict": "SUPPORTS",
+              "reasoning": "The evidence clearly states that Telemundo broadcasts programming in English, with specific examples of stations that transmit English-language content. While there is a conflicting statement suggesting Telemundo's programming is primarily in Spanish, the direct evidence supports the claim that Telemundo is an English-language television network.",
+              "confidence": 0.85
+            }
+          ],
+          "consensus_reached": true
+        }
+      },
+      {
+        "claim_id": 89891,
+        "claim": "Damon Albarn's debut album was released in 2011.",
+        "predicted": "REFUTES",
+        "ground_truth": "REFUTES",
+        "correct": true,
+        "madr_metadata": {
+          "final_verdict": "REFUTES",
+          "confidence_weighted_scores": {
+            "REFUTES": 3.0,
+            "SUPPORTS": 0.0,
+            "NOT ENOUGH INFO": 0.0
+          },
+          "debate_rounds": 1,
+          "agent_final_positions": [
+            {
+              "agent_id": 0,
+              "verdict": "REFUTES",
+              "reasoning": "The retrieved evidence clearly states that Damon Albarn's debut solo album, \"Everyday Robots,\" was released in 2014, not 2011. Therefore, the claim that his debut album was released in 2011 is incorrect.",
+              "confidence": 1.0
+            },
+            {
+              "agent_id": 1,
+              "verdict": "REFUTES",
+              "reasoning": "The retrieved evidence clearly states that Damon Albarn's debut solo album, \"Everyday Robots,\" was released in 2014, not 2011. The claim that his debut album was released in 2011 is therefore incorrect.",
+              "confidence": 1.0
+            },
+            {
+              "agent_id": 2,
+              "verdict": "REFUTES",
+              "reasoning": "The retrieved evidence clearly states that Damon Albarn's debut solo album, \"Everyday Robots,\" was released in 2014, not 2011. The claim that his debut album was released in 2011 is therefore incorrect.",
+              "confidence": 1.0
+            }
+          ],
+          "consensus_reached": true
+        }
+      },
+      {
+        "claim_id": 181634,
+        "claim": "There is a capital called Mogadishu.",
+        "predicted": "SUPPORTS",
+        "ground_truth": "SUPPORTS",
+        "correct": true,
+        "madr_metadata": {
+          "final_verdict": "SUPPORTS",
+          "confidence_weighted_scores": {
+            "REFUTES": 0.0,
+            "SUPPORTS": 3.0,
+            "NOT ENOUGH INFO": 0.0
+          },
+          "debate_rounds": 1,
+          "agent_final_positions": [
+            {
+              "agent_id": 0,
+              "verdict": "SUPPORTS",
+              "reasoning": "The retrieved evidence clearly states that Mogadishu serves as the capital of Somalia. This information is consistent across both provided answers, confirming the claim.",
+              "confidence": 1.0
+            },
+            {
+              "agent_id": 1,
+              "verdict": "SUPPORTS",
+              "reasoning": "The retrieved evidence clearly states that Mogadishu serves as the capital of Somalia, and this information is provided by two separate answers to the same question. This consistent and direct evidence supports the claim that Mogadishu is a capital.",
+              "confidence": 1.0
+            },
+            {
+              "agent_id": 2,
+              "verdict": "SUPPORTS",
+              "reasoning": "The retrieved evidence explicitly states that Mogadishu serves as the capital of Somalia. The answer is confirmed by two separate sources, both of which agree on the same fact. This consistency in the evidence strongly supports the claim.",
+              "confidence": 1.0
+            }
+          ],
+          "consensus_reached": true
+        }
+      },
+      {
+        "claim_id": 219028,
+        "claim": "Savages was exclusively a German film.",
+        "predicted": "REFUTES",
+        "ground_truth": "REFUTES",
+        "correct": true,
+        "madr_metadata": {
+          "final_verdict": "REFUTES",
+          "confidence_weighted_scores": {
+            "REFUTES": 2.85,
+            "SUPPORTS": 0.0,
+            "NOT ENOUGH INFO": 0.0
+          },
+          "debate_rounds": 1,
+          "agent_final_positions": [
+            {
+              "agent_id": 0,
+              "verdict": "REFUTES",
+              "reasoning": "The claim that \"Savages\" was \"exclusively\" a German film is refuted because the film \"Savages\" (1921) was actually directed by Frank Hurley, a Canadian filmmaker, not a German one. While there is a film titled \"Explosivo 008\" directed by a German filmmaker, it is a different film and not the one referred to as \"Savages\" in the claim.",
+              "confidence": 0.95
+            },
+            {
+              "agent_id": 1,
+              "verdict": "REFUTES",
+              "reasoning": "The evidence indicates that \"Savages\" refers to two different films. The 1921 documentary \"Savages\" was directed by Frank Hurley, a Canadian filmmaker, not a German one. However, the film \"Explosivo 008\" (also titled \"Savages\") was directed by James Bauer, a German filmmaker. The claim that \"Savages\" was \"exclusively\" a German film is therefore incorrect because it refers to a film directed by a non-German filmmaker.",
+              "confidence": 0.95
+            },
+            {
+              "agent_id": 2,
+              "verdict": "REFUTES",
+              "reasoning": "The evidence indicates that \"Savages\" refers to two different films. The 1921 documentary \"Savages\" was directed by Frank Hurley, a Canadian filmmaker, not a German one. The 1940 film \"Explosivo 008,\" also titled \"Savages,\" was directed by a German filmmaker. Since the claim refers to \"Savages\" without specifying which film, the claim is refuted because it is not exclusively a German film.",
+              "confidence": 0.95
+            }
+          ],
+          "consensus_reached": true
+        }
+      },
+      {
+        "claim_id": 194372,
+        "claim": "Happiness in Slavery is a gospel song by Nine Inch Nails.",
+        "predicted": "SUPPORTS",
+        "ground_truth": "NOT ENOUGH INFO",
+        "correct": false,
+        "madr_metadata": {
+          "final_verdict": "SUPPORTS",
+          "confidence_weighted_scores": {
+            "REFUTES": 0.0,
+            "SUPPORTS": 2.0,
+            "NOT ENOUGH INFO": 0.0
+          },
+          "debate_rounds": 1,
+          "agent_final_positions": [
+            {
+              "agent_id": 0,
+              "verdict": "SUPPORTS",
+              "reasoning": "The claim that \"Happiness in Slavery\" is a gospel song by Nine Inch Nails is not supported by the provided evidence. The evidence confirms that the song exists and is from Nine Inch Nails' debut EP \"Broken\" in 1992, but it does not mention the song being a gospel song. Therefore, the claim includes information not verified by the evidence.",
+              "confidence": 0.7
+            },
+            {
+              "agent_id": 1,
+              "verdict": "SUPPORTS",
+              "reasoning": "The claim that \"Happiness in Slavery\" is a gospel song by Nine Inch Nails is refuted by the evidence, which confirms that the song is from Nine Inch Nails' debut EP \"Broken\" in 1992. However, the evidence does not mention the song's genre, so while the artist and release are correct, the genre classification as \"gospel\" is not supported by the provided information.",
+              "confidence": 0.7
+            },
+            {
+              "agent_id": 2,
+              "verdict": "SUPPORTS",
+              "reasoning": "The claim that \"Happiness in Slavery\" is a gospel song by Nine Inch Nails is not directly supported by the provided evidence. The evidence confirms that the song exists and is from Nine Inch Nails' debut EP \"Broken\" in 1992, but it does not mention the genre of the song. Therefore, the claim about it being a gospel song is not verified by the given information.",
+              "confidence": 0.6
+            }
+          ],
+          "consensus_reached": true
+        }
+      },
+      {
+        "claim_id": 108281,
+        "claim": "Andrew Kevin Walker is only Chinese.",
+        "predicted": "REFUTES",
+        "ground_truth": "REFUTES",
+        "correct": true,
+        "madr_metadata": {
+          "final_verdict": "REFUTES",
+          "confidence_weighted_scores": {
+            "REFUTES": 3.0,
+            "SUPPORTS": 0.0,
+            "NOT ENOUGH INFO": 0.0
+          },
+          "debate_rounds": 1,
+          "agent_final_positions": [
+            {
+              "agent_id": 0,
+              "verdict": "REFUTES",
+              "reasoning": "The evidence clearly states that Andrew Kevin Walker is an American screenwriter born in 1964 and that there is no mention of his Chinese descent. Therefore, the claim that he is \"only Chinese\" is refuted by the provided information.",
+              "confidence": 1.0
+            },
+            {
+              "agent_id": 1,
+              "verdict": "REFUTES",
+              "reasoning": "The evidence clearly states that Andrew Kevin Walker is an American screenwriter born in 1964 and confirms he is not of Chinese descent. The claim that he is \"only Chinese\" is directly refuted by the provided information.",
+              "confidence": 1.0
+            },
+            {
+              "agent_id": 2,
+              "verdict": "REFUTES",
+              "reasoning": "The evidence clearly states that Andrew Kevin Walker is an American screenwriter born in 1964 and that there is no mention of his Chinese descent. The claim that he is \"only Chinese\" is therefore refuted by the provided information.",
+              "confidence": 1.0
+            }
+          ],
+          "consensus_reached": true
+        }
+      },
+      {
+        "claim_id": 140846,
+        "claim": "Shooter is about an expert marksman who tries to stop the assassination of the president.",
+        "predicted": "REFUTES",
+        "ground_truth": "NOT ENOUGH INFO",
+        "correct": false,
+        "madr_metadata": {
+          "final_verdict": "REFUTES",
+          "confidence_weighted_scores": {
+            "REFUTES": 2.85,
+            "SUPPORTS": 0.0,
+            "NOT ENOUGH INFO": 0.0
+          },
+          "debate_rounds": 1,
+          "agent_final_positions": [
+            {
+              "agent_id": 0,
+              "verdict": "REFUTES",
+              "reasoning": "The claim states that \"Shooter\" features a character who is an expert marksman trying to stop the assassination of the president. However, the evidence clarifies that Raych Seldon is not the one preventing the assassination, but rather Manella Dubanqua. Additionally, the character Raych Seldon is from Isaac Asimov's \"Foundation\" series, not a film or a work titled \"Shooter.\" Therefore, the claim is inaccurate.",
+              "confidence": 0.95
+            },
+            {
+              "agent_id": 1,
+              "verdict": "REFUTES",
+              "reasoning": "The claim states that \"Shooter\" features an expert marksman trying to stop the assassination of the president. However, the evidence clarifies that the character Raych Seldon in the Foundation Series does not prevent the assassination of Hari Seldon. Instead, it is Manella Dubanqua who plays that role. Therefore, the claim is inaccurate based on the provided information.",
+              "confidence": 0.95
+            },
+            {
+              "agent_id": 2,
+              "verdict": "REFUTES",
+              "reasoning": "The claim states that \"Shooter\" features a character who is an expert marksman attempting to stop the assassination of the president. However, the evidence clarifies that Raych Seldon is not the one preventing the assassination, but rather Manella Dubanqua. Additionally, the character in question is from Isaac Asimov's \"Foundation\" series, not a film or TV show titled \"Shooter.\"",
+              "confidence": 0.95
+            }
+          ],
+          "consensus_reached": true
+        }
+      },
+      {
+        "claim_id": 110177,
+        "claim": "House is a sitcom.",
+        "predicted": "SUPPORTS",
+        "ground_truth": "NOT ENOUGH INFO",
+        "correct": false,
+        "madr_metadata": {
+          "final_verdict": "SUPPORTS",
+          "confidence_weighted_scores": {
+            "REFUTES": 0.0,
+            "SUPPORTS": 3.0,
+            "NOT ENOUGH INFO": 0.0
+          },
+          "debate_rounds": 1,
+          "agent_final_positions": [
+            {
+              "agent_id": 0,
+              "verdict": "SUPPORTS",
+              "reasoning": "The evidence clearly states that \"House\" can refer to a sitcom, specifically mentioning \"In the House\" and \"Bless This House\" as examples. The claim that \"House is a sitcom\" is therefore supported by the provided information.",
+              "confidence": 1.0
+            },
+            {
+              "agent_id": 1,
+              "verdict": "SUPPORTS",
+              "reasoning": "The evidence provided explicitly states that \"House\" can refer to a sitcom, specifically mentioning \"In the House\" and \"Bless This House\" as examples. This directly supports the claim that \"House\" is a sitcom.",
+              "confidence": 1.0
+            },
+            {
+              "agent_id": 2,
+              "verdict": "SUPPORTS",
+              "reasoning": "The evidence explicitly states that \"House\" can refer to a sitcom, specifically mentioning \"In the House\" and \"Bless This House\" as examples. This directly supports the claim that \"House\" is a sitcom.",
+              "confidence": 1.0
+            }
+          ],
+          "consensus_reached": true
+        }
+      },
+      {
+        "claim_id": 204361,
+        "claim": "The Cretaceous ended.",
+        "predicted": "SUPPORTS",
+        "ground_truth": "SUPPORTS",
+        "correct": true,
+        "madr_metadata": {
+          "final_verdict": "SUPPORTS",
+          "confidence_weighted_scores": {
+            "REFUTES": 0.0,
+            "SUPPORTS": 3.0,
+            "NOT ENOUGH INFO": 0.0
+          },
+          "debate_rounds": 1,
+          "agent_final_positions": [
+            {
+              "agent_id": 0,
+              "verdict": "SUPPORTS",
+              "reasoning": "The evidence clearly states that the Cretaceous period ended at the same time as the extinction of non-avian dinosaurs, and the Cretaceous-Paleogene boundary marks both the end of the Cretaceous period and the extinction event. This directly supports the claim that the Cretaceous ended.",
+              "confidence": 1.0
+            },
+            {
+              "agent_id": 1,
+              "verdict": "SUPPORTS",
+              "reasoning": "The evidence clearly states that the Cretaceous period ended at the same time as the extinction of non-avian dinosaurs, marked by the Cretaceous-Paleogene boundary. This directly supports the claim that the Cretaceous ended.",
+              "confidence": 1.0
+            },
+            {
+              "agent_id": 2,
+              "verdict": "SUPPORTS",
+              "reasoning": "The evidence clearly states that the Cretaceous period ended at the same time as the extinction of non-avian dinosaurs, and the Cretaceous-Paleogene boundary marks both the end of the Cretaceous period and the extinction event. This directly supports the claim that the Cretaceous ended.",
+              "confidence": 1.0
+            }
+          ],
+          "consensus_reached": true
+        }
+      },
+      {
+        "claim_id": 54168,
+        "claim": "Murda Beatz's real name is Marshall Mathers.",
+        "predicted": "REFUTES",
+        "ground_truth": "REFUTES",
+        "correct": true,
+        "madr_metadata": {
+          "final_verdict": "REFUTES",
+          "confidence_weighted_scores": {
+            "REFUTES": 3.0,
+            "SUPPORTS": 0.0,
+            "NOT ENOUGH INFO": 0.0
+          },
+          "debate_rounds": 1,
+          "agent_final_positions": [
+            {
+              "agent_id": 0,
+              "verdict": "REFUTES",
+              "reasoning": "The evidence clearly states that Marshall Mathers is not Murda Beatz's real name. Instead, Marshall Mathers is the real name of Eminem, while Murda Beatz is a stage name for a different rapper. This directly refutes the claim that Murda Beatz's real name is Marshall Mathers.",
+              "confidence": 1.0
+            },
+            {
+              "agent_id": 1,
+              "verdict": "REFUTES",
+              "reasoning": "The evidence clearly states that Marshall Mathers is not Murda Beatz's real name. Instead, Marshall Mathers is the real name of Eminem, while Murda Beatz is a stage name for a different rapper. This directly refutes the claim that Murda Beatz's real name is Marshall Mathers.",
+              "confidence": 1.0
+            },
+            {
+              "agent_id": 2,
+              "verdict": "REFUTES",
+              "reasoning": "The evidence clearly states that Marshall Mathers is not Murda Beatz's real name. Instead, Marshall Mathers is the real name of Eminem, while Murda Beatz is a stage name for a different rapper. This directly refutes the claim that Murda Beatz's real name is Marshall Mathers.",
+              "confidence": 1.0
+            }
+          ],
+          "consensus_reached": true
+        }
+      },
+      {
+        "claim_id": 105095,
+        "claim": "Nicholas Brody is a character on Homeland.",
+        "predicted": "SUPPORTS",
+        "ground_truth": "SUPPORTS",
+        "correct": true,
+        "madr_metadata": {
+          "final_verdict": "SUPPORTS",
+          "confidence_weighted_scores": {
+            "REFUTES": 0.0,
+            "SUPPORTS": 3.0,
+            "NOT ENOUGH INFO": 0.0
+          },
+          "debate_rounds": 1,
+          "agent_final_positions": [
+            {
+              "agent_id": 0,
+              "verdict": "SUPPORTS",
+              "reasoning": "The claim that Nicholas Brody is a character on the TV show Homeland is directly supported by the evidence, which confirms that he is a fictional character played by Damian Lewis in the series. The information provided clearly aligns with the claim.",
+              "confidence": 1.0
+            },
+            {
+              "agent_id": 1,
+              "verdict": "SUPPORTS",
+              "reasoning": "The evidence clearly states that Nicholas Brody is a character on the TV show Homeland, played by Damian Lewis. The information provided directly supports the claim.",
+              "confidence": 1.0
+            },
+            {
+              "agent_id": 2,
+              "verdict": "SUPPORTS",
+              "reasoning": "The evidence clearly states that Nicholas Brody is a character on the TV show Homeland, played by Damian Lewis. The information provided directly supports the claim.",
+              "confidence": 1.0
+            }
+          ],
+          "consensus_reached": true
+        }
+      },
+      {
+        "claim_id": 18708,
+        "claim": "Charles Manson has been proven innocent of all crimes.",
+        "predicted": "REFUTES",
+        "ground_truth": "REFUTES",
+        "correct": true,
+        "madr_metadata": {
+          "final_verdict": "REFUTES",
+          "confidence_weighted_scores": {
+            "REFUTES": 3.0,
+            "SUPPORTS": 0.0,
+            "NOT ENOUGH INFO": 0.0
+          },
+          "debate_rounds": 1,
+          "agent_final_positions": [
+            {
+              "agent_id": 0,
+              "verdict": "REFUTES",
+              "reasoning": "The retrieved evidence clearly indicates that there is no mention of Charles Manson being officially declared innocent by a court of law or through any judicial process. The text focuses on legal concepts in Singapore and does not provide any information supporting the claim of his innocence in a legal context.",
+              "confidence": 1.0
+            },
+            {
+              "agent_id": 1,
+              "verdict": "REFUTES",
+              "reasoning": "The retrieved evidence clearly states that there is no mention of Charles Manson being officially declared innocent by a court of law or having his innocence legally established through any judicial process. The text focuses on legal concepts but does not provide any information supporting the claim that Manson has been proven innocent.",
+              "confidence": 1.0
+            },
+            {
+              "agent_id": 2,
+              "verdict": "REFUTES",
+              "reasoning": "The retrieved evidence clearly states that there is no mention of Charles Manson being officially declared innocent by a court of law or having his innocence legally established through any judicial process. The text focuses on legal concepts but does not provide any information supporting the claim of his innocence.",
+              "confidence": 1.0
+            }
+          ],
+          "consensus_reached": true
+        }
+      },
+      {
+        "claim_id": 90809,
+        "claim": "Sean Penn is only ever a stage actor.",
+        "predicted": "REFUTES",
+        "ground_truth": "REFUTES",
+        "correct": true,
+        "madr_metadata": {
+          "final_verdict": "REFUTES",
+          "confidence_weighted_scores": {
+            "REFUTES": 2.85,
+            "SUPPORTS": 0.0,
+            "NOT ENOUGH INFO": 0.0
+          },
+          "debate_rounds": 1,
+          "agent_final_positions": [
+            {
+              "agent_id": 0,
+              "verdict": "REFUTES",
+              "reasoning": "The evidence clearly states that Sean Penn has acted in several films, including \"Judgment in Berlin,\" \"At Close Range,\" \"Dead Man Walking,\" \"The Indian Runner,\" and \"The Interpreter.\" This directly contradicts the claim that he is only ever a stage actor. While the response acknowledges his film roles, it also notes that the claim is not definitively confirmed or denied, but the existence of film roles directly refutes the claim.",
+              "confidence": 0.95
+            },
+            {
+              "agent_id": 1,
+              "verdict": "REFUTES",
+              "reasoning": "The evidence directly contradicts the claim that Sean Penn is only ever a stage actor, as it confirms he has acted in multiple films, including \"Judgment in Berlin,\" \"At Close Range,\" \"Dead Man Walking,\" \"The Indian Runner,\" and \"The Interpreter.\" The claim is refuted by the explicit mention of his film roles.",
+              "confidence": 0.95
+            },
+            {
+              "agent_id": 2,
+              "verdict": "REFUTES",
+              "reasoning": "The evidence clearly states that Sean Penn has acted in several films, including \"Judgment in Berlin,\" \"At Close Range,\" \"Dead Man Walking,\" \"The Indian Runner,\" and \"The Interpreter.\" This directly contradicts the claim that he is \"only ever a stage actor,\" as his film roles demonstrate his involvement in film acting.",
+              "confidence": 0.95
+            }
+          ],
+          "consensus_reached": true
+        }
+      },
+      {
+        "claim_id": 167997,
+        "claim": "Don Bradman retired from soccer.",
+        "predicted": "REFUTES",
+        "ground_truth": "NOT ENOUGH INFO",
+        "correct": false,
+        "madr_metadata": {
+          "final_verdict": "REFUTES",
+          "confidence_weighted_scores": {
+            "REFUTES": 3.0,
+            "SUPPORTS": 0.0,
+            "NOT ENOUGH INFO": 0.0
+          },
+          "debate_rounds": 1,
+          "agent_final_positions": [
+            {
+              "agent_id": 0,
+              "verdict": "REFUTES",
+              "reasoning": "The evidence clearly states that Don Bradman was an Australian cricketer and not a soccer player. Therefore, the claim that he retired from soccer is false because he never played soccer in the first place.",
+              "confidence": 1.0
+            },
+            {
+              "agent_id": 1,
+              "verdict": "REFUTES",
+              "reasoning": "The evidence clearly states that Don Bradman was an Australian cricketer and not a soccer player. Therefore, the claim that he retired from soccer is false because he never played soccer in the first place.",
+              "confidence": 1.0
+            },
+            {
+              "agent_id": 2,
+              "verdict": "REFUTES",
+              "reasoning": "The evidence clearly states that Don Bradman was an Australian cricketer and never played soccer. Therefore, the claim that he retired from soccer is false because he was not associated with the sport in the first place.",
+              "confidence": 1.0
+            }
+          ],
+          "consensus_reached": true
+        }
+      },
+      {
+        "claim_id": 150773,
+        "claim": "L.A. Reid has served as the CEO of Arista Records for four years.",
+        "predicted": "NOT ENOUGH INFO",
+        "ground_truth": "NOT ENOUGH INFO",
+        "correct": true,
+        "madr_metadata": {
+          "final_verdict": "NOT ENOUGH INFO",
+          "confidence_weighted_scores": {
+            "REFUTES": 0.0,
+            "SUPPORTS": 0.0,
+            "NOT ENOUGH INFO": 2.2
+          },
+          "debate_rounds": 1,
+          "agent_final_positions": [
+            {
+              "agent_id": 0,
+              "verdict": "NOT ENOUGH INFO",
+              "reasoning": "The evidence provided does not specify the exact duration of L.A. Reid's tenure as CEO of Arista Records. While it is mentioned that he served as CEO and that his tenure ended by 2012, there is no explicit confirmation of a four-year period. Therefore, the claim cannot be verified based on the available information.",
+              "confidence": 0.75
+            },
+            {
+              "agent_id": 1,
+              "verdict": "NOT ENOUGH INFO",
+              "reasoning": "The evidence does not specify the exact duration of L.A. Reid's tenure as CEO of Arista Records. While it is mentioned that he served as CEO when Nodesha signed with the label and that he stepped down in 2012, there is no explicit confirmation of a four-year period. Therefore, the claim cannot be verified based on the provided information.",
+              "confidence": 0.75
+            },
+            {
+              "agent_id": 2,
+              "verdict": "NOT ENOUGH INFO",
+              "reasoning": "The retrieved evidence does not provide a specific duration for L.A. Reid's tenure as CEO of Arista Records. While it mentions he was CEO when Nodesha signed with the label and that he left in 2012, there is no explicit confirmation of a four-year period. Therefore, the claim cannot be verified based on the provided information.",
+              "confidence": 0.7
+            }
+          ],
+          "consensus_reached": true
+        }
+      },
+      {
+        "claim_id": 204443,
+        "claim": "Brad Wilk helped co-found Rage in 1962.",
+        "predicted": "REFUTES",
+        "ground_truth": "REFUTES",
+        "correct": true,
+        "madr_metadata": {
+          "final_verdict": "REFUTES",
+          "confidence_weighted_scores": {
+            "REFUTES": 3.0,
+            "SUPPORTS": 0.0,
+            "NOT ENOUGH INFO": 0.0
+          },
+          "debate_rounds": 1,
+          "agent_final_positions": [
+            {
+              "agent_id": 0,
+              "verdict": "REFUTES",
+              "reasoning": "The claim that Brad Wilk co-founded the band \"Rage\" in 1962 is refuted by the evidence, which clearly states that he co-founded \"Rage Against the Machine\" in 1991, not \"Rage\" in 1962. There is no mention of Brad Wilk being involved with a band named \"Rage\" in 1962.",
+              "confidence": 1.0
+            },
+            {
+              "agent_id": 1,
+              "verdict": "REFUTES",
+              "reasoning": "The claim that Brad Wilk helped co-found the band \"Rage\" in 1962 is refuted by the evidence, which clearly states that Brad Wilk co-founded Rage Against the Machine in 1991, not 1962. The band \"Rage\" does not exist as a band founded in 1962, and the correct band associated with Brad Wilk is Rage Against the Machine.",
+              "confidence": 1.0
+            },
+            {
+              "agent_id": 2,
+              "verdict": "REFUTES",
+              "reasoning": "The claim that Brad Wilk co-founded the band \"Rage\" in 1962 is refuted by the evidence, which clearly states that Brad Wilk co-founded \"Rage Against the Machine\" in 1991, not \"Rage\" in 1962. The evidence also clarifies that Wilk was involved with \"Rage Against the Machine\" from 1991 to 2000 and again from 2007 to 2011.",
+              "confidence": 1.0
+            }
+          ],
+          "consensus_reached": true
+        }
+      }
+    ]
+  }
+}

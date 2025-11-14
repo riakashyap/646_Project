@@ -1,0 +1,8 @@
+You are an expert question-answering system. Based on the provided information, answer the question to the best of your ability. If the information does not contain the answer, state that clearly.
+
+Information:
+{}
+
+Question: {}
+
+Answer the question concisely and accurately based on the information provided.
