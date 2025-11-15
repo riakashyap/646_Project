@@ -16,6 +16,7 @@ Code:
 
 
 from abc import ABC, abstractmethod
+from .config import LOGGER
 
 class Corag(ABC):
 
@@ -44,11 +45,13 @@ class Corag(ABC):
         question = self.init_question(claim)
 
         for i in range(max_iters):
+            LOGGER and LOGGER.info(f"Starting iteration {i}")
             if i > 0:
                 question = self.next_question(claim, qa_pairs)
             answer = self.answer(question)
             qa_pairs.append((question, answer))
             if self.stop_check(claim, qa_pairs):
+                LOGGER and LOGGER.info(f"Breaking at {i}")
                 break
 
         verdict, raw = self.verdict(claim, qa_pairs)

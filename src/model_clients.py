@@ -21,7 +21,7 @@ from typing import Dict
 import os
 import re
 import requests
-
+from . import config
 
 class ModelClient(ABC):
     _prompts: Dict[str, str] = dict()
@@ -56,7 +56,13 @@ class ModelClient(ABC):
 
         # Let this throw an error if key is missing
         user_prompt, system_prompt = self._prompts[key]
-        return self.send_query(user_prompt.format(*args), system_prompt)
+        user_prompt = user_prompt.format(*args)
+        response = self.send_query(user_prompt, system_prompt)
+        if config.LOGGER:
+            cleaned_u_prompt = user_prompt.replace('\n', ' ')
+            cleaned_response = response.replace('\n',' ')
+            config.LOGGER.info(f"{key}:\n\t->{cleaned_u_prompt}\n\t<-{cleaned_response}\n{'─' * 20}")
+        return response
 
 
 class LlamaCppClient(ModelClient):
@@ -88,8 +94,8 @@ class LlamaCppClient(ModelClient):
         self.api = f"http://{host}:{port}/v1/chat/completions"
         self.temperature = temperature
         self.think_mode = "" if think_mode_bool else "/no_think"
-        if think_mode_bool:
-            print(f'{type(self).__name__} will think!')
+        if think_mode_bool and config.LOGGER:
+            config.LOGGER.info(f'{type(self).__name__} will think!')
 
     def send_query(self, user_prompt: str,
                    system_prompt: str | None = None) -> str:
