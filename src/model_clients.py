@@ -97,8 +97,8 @@ class LlamaCppClient(ModelClient):
         system_prompt = system_prompt if system_prompt is not None else \
             "You are an expert fact-checker."
         messages = [
-            {"role": "user", "content": user_prompt},
             {"role": "system", "content": system_prompt + self.think_mode},
+            {"role": "user", "content": user_prompt}
         ]
 
         payload = {
