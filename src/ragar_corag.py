@@ -52,7 +52,6 @@ class RagarCorag(Corag):
         has_inconclusive = "inconclusive" in res
         has_conclusive = "conclusive" in res and not has_inconclusive
 
-        # Stop if the model was indecisive or gave an invalid answer
         if has_conclusive and not has_inconclusive:
             return True
         return False

@@ -160,7 +160,6 @@ class TestCorag(unittest.TestCase):
 
         self.ragar_client.set_ret(response)
         results = self.ragar.run(self.claim, 3)
-        from pprint import pprint
 
         self.assertIsNone(results["verdict"])
         self.assertEqual(response, results["verdict_raw"])
