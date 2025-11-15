@@ -61,7 +61,7 @@ class ModelClient(ABC):
         if config.LOGGER:
             cleaned_u_prompt = user_prompt.replace('\n', ' ')
             cleaned_response = response.replace('\n',' ')
-            config.LOGGER.info(f"{key}:\n\t->{cleaned_u_prompt}\n\t<-{cleaned_response}\n{'─' * 20}")
+            config.LOGGER.info(f"{key}:\n\t->{cleaned_u_prompt}\n\t<-{cleaned_response}")
         return response
 
 
