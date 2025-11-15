@@ -63,16 +63,18 @@ class TestLlamaClient(unittest.TestCase):
 
             self.assertEqual(self.expected_model, json["model"])
 
+            # optional system prompt (defaults to)
+            expected_system_prompt = "You are an expert fact-checker." \
+                if self.expected_system_prompt is None else self.expected_system_prompt
+            # think comment should have been appended to system_prompt
+            expected_system_prompt = expected_system_prompt + "/no_think" \
+                if not self.think_mode else expected_system_prompt
             messages = json["messages"]
             self.assertEqual(2, len(messages))
             self.assertEqual("system", messages[0]["role"])
             self.assertEqual("user", messages[1]["role"])
-            self.assertEqual(self.expected_system_prompt, messages[0]["content"])
+            self.assertEqual(expected_system_prompt, messages[0]["content"])
             self.assertEqual(self.expected_user_prompt, messages[1]["content"])
-            if self.think_mode:
-                self.assertNotIn("/no_think", messages[0]["content"])
-            else:
-                self.assertIn("/no_think", messages[0]["content"])
 
             self.assertEqual(self.expected_temperature, json["temperature"])
 
@@ -150,6 +152,35 @@ class TestLlamaClient(unittest.TestCase):
 
     def test_variable_content(self):
         self.expected_content = "This is a response."
+        lcpp = self.makeLlamaClient()
+        actual_content = lcpp.send_query(
+            self.expected_user_prompt,
+            self.expected_system_prompt,
+        )
+        self.assertEqual(self.expected_content, actual_content)
+
+    def test_default_system(self):
+        self.expected_system_prompt = None
+        expected_system_prompt = "You are an expert fact-checker."
+        lcpp = self.makeLlamaClient()
+        actual_content = lcpp.send_query(
+            self.expected_user_prompt,
+            self.expected_system_prompt,
+        )
+        self.assertEqual(self.expected_content, actual_content)
+
+    def test_default_system(self):
+        self.expected_system_prompt = None
+        lcpp = self.makeLlamaClient()
+        actual_content = lcpp.send_query(
+            self.expected_user_prompt,
+            self.expected_system_prompt,
+        )
+        self.assertEqual(self.expected_content, actual_content)
+
+    def test_default_system_think(self):
+        self.expected_system_prompt = None
+        self.think_mode = True
         lcpp = self.makeLlamaClient()
         actual_content = lcpp.send_query(
             self.expected_user_prompt,
