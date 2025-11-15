@@ -161,7 +161,6 @@ class TestLlamaClient(unittest.TestCase):
 
     def test_default_system(self):
         self.expected_system_prompt = None
-        expected_system_prompt = "You are an expert fact-checker."
         lcpp = self.makeLlamaClient()
         actual_content = lcpp.send_query(
             self.expected_user_prompt,
