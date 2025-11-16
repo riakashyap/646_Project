@@ -42,6 +42,8 @@ class MadrAgent:
         Returns:
             (verdict, reasoning, confidence) where verdict is 0=REFUTES, 1=SUPPORTS, 2=NOT_ENOUGH_INFO
         """
+        print(f"\n[MADR/TRACE] Agent {self.agent_id} analyzing claim...")
+        print(f"[MADR/TRACE] Evidence length: {len(evidence)} chars")
         if other_verdicts is None or len(other_verdicts) == 0:
             # Initial analysis - use agent_initial_analysis prompt
             response = self._mc.send_prompt("agent_initial_analysis", [
@@ -50,6 +52,7 @@ class MadrAgent:
                 evidence
             ])
         else:
+            print(f"[MADR/TRACE] Agent {self.agent_id} refining based on other agents")
             # Refinement round - use agent_debate_round prompt
             other_positions = "\n\n".join([
                 f"Agent {v['agent_id']} (Confidence: {v['confidence']:.2f}):\n"
@@ -69,6 +72,8 @@ class MadrAgent:
             ])
         
         verdict, reasoning, confidence = self._parse_agent_response(response)
+
+        print(f"[MADR/TRACE] Agent {self.agent_id} Verdict: {verdict}  Confidence: {confidence:.2f}")
         
         self.current_verdict = verdict
         self.current_reasoning = reasoning
@@ -161,6 +166,9 @@ class MadrCorag(RagarCorag):
         Returns:
             (verdict_int, detailed_output) where verdict_int is 0=REFUTES, 1=SUPPORTS, 2=NOT_ENOUGH_INFO
         """
+        print("[MADR/TRACE] Starting MADR Debate")
+        print(f"[MADR/TRACE] Claim: {claim}")
+        print(f"[MADR/TRACE] Evidence Q/A pairs: {len(qa_pairs)}\n")
         # Compile all evidence from QA pairs
         evidence = "\n\n".join([f"Q: {q}\nA: {a}" for q, a in qa_pairs])
         
@@ -203,6 +211,7 @@ class MadrCorag(RagarCorag):
                     'reasoning': reasoning,
                     'confidence': confidence
                 })
+                print(f"[MADR/TRACE] Agent {agent.agent_id} updated verdict → {verdict} (conf {confidence:.2f})")
             
             agent_verdicts = refined_verdicts
             debate_history.append({
@@ -211,13 +220,19 @@ class MadrCorag(RagarCorag):
             })
         
         # Aggregate final verdict using confidence-weighted voting
+        print("\n[MADR/TRACE] Debate complete. Aggregating final verdict...\n")
         final_verdict, final_reasoning = self._aggregate_verdicts(agent_verdicts, debate_history)
         
+        print(f"[MADR/TRACE] Final Verdict: {final_verdict}")
         return final_verdict, final_reasoning
     
     def _has_consensus(self, agent_verdicts: List[Dict]) -> bool:
         """Check if agents have reached consensus."""
+
+        print("\n[MADR/TRACE] Checking consensus among agents...")
+
         if not agent_verdicts:
+            print("[MADR/TRACE] No agent verdicts present — cannot form consensus.")
             return False
         
         # Count verdicts
@@ -225,12 +240,21 @@ class MadrCorag(RagarCorag):
         for av in agent_verdicts:
             verdict_counts[av['verdict']] += 1
         
-        # Check if any verdict has sufficient majority
         total = len(agent_verdicts)
-        for count in verdict_counts.values():
-            if count / total >= self.consensus_threshold:
+        print(f"[MADR/TRACE] Verdict counts: "
+            f"REFUTES={verdict_counts[0]}, SUPPORTS={verdict_counts[1]}, NEI={verdict_counts[2]}")
+        print(f"[MADR/TRACE] Consensus threshold: {self.consensus_threshold:.2f}")
+
+        # Check majority threshold
+        for verdict, count in verdict_counts.items():
+            ratio = count / total
+            print(f"[MADR/TRACE] Verdict {verdict} ratio: {ratio:.2f}")
+
+            if ratio >= self.consensus_threshold:
+                print(f"[MADR/TRACE] Consensus achieved on verdict {verdict} (ratio {ratio:.2f})")
                 return True
         
+        print("[MADR/TRACE] No consensus yet.")
         return False
     
     def _aggregate_verdicts(self, agent_verdicts: List[Dict], debate_history: List[Dict]) -> Tuple[int, str]:
@@ -240,16 +264,26 @@ class MadrCorag(RagarCorag):
         Returns:
             (final_verdict, explanation_json)
         """
+
+        print("\n[MADR/TRACE] Aggregating final verdict via confidence-weighted voting...")
+
         # Confidence-weighted voting
         verdict_scores = {0: 0.0, 1: 0.0, 2: 0.0}
         for av in agent_verdicts:
             verdict_scores[av['verdict']] += av['confidence']
+
+        print("[MADR/TRACE] Weighted scores before selection:")
+        print(f"  REFUTES: {verdict_scores[0]:.3f}")
+        print(f"  SUPPORTS: {verdict_scores[1]:.3f}")
+        print(f"  NEI:      {verdict_scores[2]:.3f}")
         
         # Select verdict with highest weighted score
         final_verdict = max(verdict_scores.items(), key=lambda x: x[1])[0]
         
         # Build detailed explanation
         verdict_labels = ["REFUTES", "SUPPORTS", "NOT ENOUGH INFO"]
+
+        print(f"[MADR/TRACE] Final aggregated verdict: {final_verdict} ({verdict_labels[final_verdict]})")
         
         explanation = {
             "final_verdict": verdict_labels[final_verdict],
@@ -268,6 +302,8 @@ class MadrCorag(RagarCorag):
             ],
             "consensus_reached": self._has_consensus(agent_verdicts)
         }
+
+        print("[MADR/TRACE] Aggregation complete.\n")
         
         return final_verdict, json.dumps(explanation, indent=2)
     
@@ -282,23 +318,37 @@ class MadrCorag(RagarCorag):
         Returns:
             Dictionary with claim, qa_pairs, verdict, and MADR-specific metadata
         """
+
+        print("[MADR/TRACE] Running MADR Pipeline")
+        print(f"[MADR/TRACE] Claim: {claim}")
         # Evidence gathering phase (same as baseline)
         qa_pairs = []
         question = self.init_question(claim)
         
         for i in range(max_iters):
+            print(f"\n[MADR/TRACE] Evidence Iteration {i} ")
+            print(f"[MADR/TRACE] Question: {question}")
             if i > 0:
                 question = self.next_question(claim, qa_pairs)
             answer = self.answer(question)
             qa_pairs.append((question, answer))
+
+            print(f"[MADR/TRACE] Answer received ({len(answer)} chars)")
+
             if self.stop_check(claim, qa_pairs):
+                print("[MADR/TRACE] Stop condition reached during evidence gathering.")
                 break
         
+        print("\n[MADR/TRACE] Evidence gathering complete.")
+        print(f"[MADR/TRACE] Total QA pairs: {len(qa_pairs)}")
+
         # Multi-agent debate phase
         verdict, raw = self.verdict(claim, qa_pairs)
         
         # Parse debate details
         debate_details = json.loads(raw) if raw else {}
+
+        print("[MADR/TRACE] MADR pipeline complete.\n")
         
         return {
             "claim": claim,
