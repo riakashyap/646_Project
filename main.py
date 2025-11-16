@@ -17,12 +17,11 @@ Code:
 """
 
 from collections import Counter
-from datasets import load_dataset
+import sys
 from pprint import pprint
 from src.model_clients import LlamaCppClient
 from src.ragar_corag import RagarCorag
 from src.madr_corag import MadrCorag
-from src.config import PROMPTS_DIR
 from tqdm import tqdm
 import argparse
 import time
@@ -80,14 +79,25 @@ if __name__ == "__main__":
     refutes = split.filter(lambda row: row["label"] == "REFUTES").select(range(int(args.num_claims / 2)))
     split = concatenate_datasets([supports, refutes])
 
-    if args.ragar:
+    # PROMPTS SELECTION LOGIC
+
+    if args.madr:
+        # MADR must always use RAGAR prompts
+        config.LOGGER and config.LOGGER.info("Using RAGAR prompts for MADR.")
+        user_prompts_dir = config.PROMPTS_DIR / "ragar"
+        sys_prompts_dir = None
+
+    elif args.ragar:
+        # Standard RAGAR mode
         config.LOGGER and config.LOGGER.info("Using RAGAR prompts.")
         user_prompts_dir = config.PROMPTS_DIR / "ragar"
         sys_prompts_dir = None
+
     else:
+        # Custom prompts (baseline mode only)
         config.LOGGER and config.LOGGER.info("Using CUSTOM prompts.")
         user_prompts_dir = config.PROMPTS_DIR / "custom" / "user"
-        sys_prompts_dir = config.PROMPTS_DIR  / "custom" / "system"
+        sys_prompts_dir = config.PROMPTS_DIR / "custom" / "system"
 
     # Setup CoRAG system here
     mc = LlamaCppClient(user_prompts_dir,
