@@ -55,7 +55,7 @@ class RagarCorag(Corag):
         # Stop if the model was indecisive or gave an invalid answer
         if (has_conclusive and has_inconclusive) or (not has_conclusive and not has_inconclusive):
             return True
-        
+
         return not has_inconclusive
 
     def verdict(self, claim: str, qa_pairs: list[tuple[str, str]]) -> tuple[int, str | None]:
