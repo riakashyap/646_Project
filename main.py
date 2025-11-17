@@ -5,6 +5,7 @@ Copyright:
   Copyright © 2025 bdunahu
   Copyright © 2025 Eric
   Copyright © 2025 Ria
+  Copyright © 2025 uchuuronin
 
   You should have received a copy of the MIT license along with this file.
   If not, see https://mit-license.org/
@@ -28,6 +29,7 @@ import os
 from datasets import load_dataset, Dataset, concatenate_datasets
 
 from src import config
+from reranker import E2RankReranker
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
@@ -46,6 +48,9 @@ if __name__ == "__main__":
                         metavar='',
                         type=int,
                         default=100)
+    parser.add_argument('--reranker',
+                        help='Enable reranking after BM25 retrieval.',
+                        action='store_true')
     parser.add_argument('-l', '--log-trace',
                         help='Output a trace to the log file (define in config.py). Overrides --num-claims to 2.',
                         action='store_true')
@@ -74,12 +79,21 @@ if __name__ == "__main__":
         user_prompts_dir = config.PROMPTS_DIR / "custom" / "user"
         sys_prompts_dir = config.PROMPTS_DIR  / "custom" / "system"
 
+    # Initialize reranker if requested
+    reranker = None
+    if args.reranker:
+        try:
+            reranker = E2RankReranker()
+        except Exception as e:
+            print(f"ERROR: Failed to load reranker: {e}")
+            reranker = None
+    
     # Setup CoRAG system here
     mc = LlamaCppClient(user_prompts_dir,
                         sys_prompts_dir,
                         think_mode_bool=args.think)
 
-    corag = RagarCorag(mc)
+    corag = RagarCorag(mc, reranker=reranker)
 
     labels = []
     preds = []

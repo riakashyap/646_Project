@@ -36,7 +36,9 @@ class E2RankReranker(BaseReranker):
     ):
         # Auto-detect cuda if not specified (optimal performance)
         if device is None:
-            device = "cuda" if torch.cuda.is_available() else "cpu"
+            self.device = "cuda" if torch.cuda.is_available() else "cpu"
+        else:
+            self.device = device
             
         super().__init__(model_path, device, **kwargs)
         

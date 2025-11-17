@@ -13,7 +13,7 @@ Commentary:
 Code:
 """
 
-from .base import BaseReranker
+from .reranker import BaseReranker
 from .e2rank_reranker import E2RankReranker
 
 __all__ = [

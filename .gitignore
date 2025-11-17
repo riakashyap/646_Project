@@ -1,7 +1,6 @@
 models/
 data/
 *.log
-logs/
 
 # Byte-compiled / optimized / compiled files
 __pycache__/

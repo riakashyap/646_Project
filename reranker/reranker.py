@@ -14,7 +14,7 @@ Code:
 
 from abc import ABC, abstractmethod
 from typing import List, Tuple, Any
-
+import torch
 
 class BaseReranker(ABC):
     """
@@ -22,16 +22,20 @@ class BaseReranker(ABC):
     Reranker model should inherit from this class and implement method.
     """
     
-    def __init__(self, model_path: str = None, device: str = "cpu", **kwargs):
+    def __init__(self, model_path: str = None, device: str = None, **kwargs):
         """
         Initialize the reranker.
         
         Args:
             model_path: Path or name of the model to load
-            device: Device to run the model on ('cpu', 'cuda', etc.) default is 'cpu'
+            device: Device defauted to use whatever is available (cuda/cpu)
         """
         self.model_path = model_path
-        self.device = device
+        if device is None:
+            self.device = "cuda" if torch.cuda.is_available() else "cpu"
+        else:
+            self.device = device
+            
         self.model = None
         
     @abstractmethod
