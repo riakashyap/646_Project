@@ -166,35 +166,68 @@ class MadrCorag(RagarCorag):
     def stop_check(self, claim: str, qa_pairs: List[Tuple[str, str]]) -> bool:
         """
         Determine whether enough evidence has been gathered.
-        Uses the stop_check prompt which returns 'conclusive' or 'inconclusive'.
+        Implements true CoRAG-style debate:
+        - Agents debate conclusive vs inconclusive
+        - Full consensus 'conclusive' -> stop CoRAG
+        - Full consensus 'inconclusive' -> continue gathering evidence
+        - Otherwise → more debate rounds (up to self.max_stop_rounds)
         """
 
-        # Require at least 2 QA pairs before allowing early stopping.
-        # This mirrors CoRAG behavior: one question is not enough evidence
-        # for agents to make a meaningful stop decision.
+        # Require at least 2 QA pairs before early stopping
         if len(qa_pairs) < 2:
             return False
 
         evidence = "\n\n".join([f"Q: {q}\nA: {a}" for q, a in qa_pairs])
 
-        responses = []
-        for agent in self.agents:
-            res = agent.send_prompt("stop_check", [claim, evidence]).strip().lower()
-            responses.append({"agent_id": agent.agent_id, "response": res})
+        # Number of debate rounds for stop_check
+        max_rounds = getattr(self, "max_stop_rounds", 3)
 
-        # Logging
-        if config.LOGGER:
-            config.LOGGER.info("[MADR/TRACE] stop_check: agent responses collected")
-            for r in responses:
-                config.LOGGER.info(f"[MADR/TRACE]  Agent {r['agent_id']} → {r['response']}")
+        for round_i in range(max_rounds):
 
-        # Correct CoRAG behavior: stop only if ALL agents say "conclusive"
-        if all(r["response"] == "conclusive" for r in responses):
+            responses = []
+            for agent in self.agents:
+                res = agent.send_prompt("stop_check", [claim, evidence]).strip().lower()
+                responses.append({"agent_id": agent.agent_id, "response": res})
+
+            # Logging
             if config.LOGGER:
-                config.LOGGER.info("[MADR/TRACE] stop_check: full consensus → stopping")
-            return True
+                config.LOGGER.info(f"[MADR/TRACE] stop_check round {round_i}")
+                for r in responses:
+                    config.LOGGER.info(
+                        f"[MADR/TRACE]  Agent {r['agent_id']} → {r['response']}"
+                    )
 
+            # CoRAG Logic
+
+            # 1. Full consensus on "conclusive" -> STOP asking questions
+            if all(r["response"] == "conclusive" for r in responses):
+                if config.LOGGER:
+                    config.LOGGER.info(
+                        "[MADR/TRACE] stop_check: full 'conclusive' consensus → stopping"
+                    )
+                return True
+
+            # 2. Full consensus on "inconclusive" → DO NOT stop (continue gathering)
+            if all(r["response"] == "inconclusive" for r in responses):
+                if config.LOGGER:
+                    config.LOGGER.info(
+                        "[MADR/TRACE] stop_check: unanimous 'inconclusive' → continue gathering"
+                    )
+                return False
+
+            # 3. Disagreement → another debate round (unless out of rounds)
+            if config.LOGGER:
+                config.LOGGER.info(
+                    "[MADR/TRACE] stop_check: disagreement → additional debate round"
+                )
+
+        # After all rounds, if still no consensus → continue gathering
+        if config.LOGGER:
+            config.LOGGER.info(
+                "[MADR/TRACE] stop_check: no consensus after debate → continue gathering"
+            )
         return False
+
 
     def verdict(self, claim: str, qa_pairs: list[tuple[str, str]]) -> tuple[int, str]:
         """
