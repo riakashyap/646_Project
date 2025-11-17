@@ -100,47 +100,40 @@ class TestReranker(unittest.TestCase):
         """
         reranker = None
         if use_reranker:
+            print("\nInitializing E2Rank reranker...")
             reranker = E2RankReranker()
-            print(f"Reranker loaded: {reranker}")
+            print(f"Reranker loaded successfully")
         
         corag = RagarCorag(self.mc, reranker=reranker)
-        corag_alt = RagarCorag(self.mc, reranker=None)
         
         fever_labels = ["REFUTES", "SUPPORTS", "NOT ENOUGH INFO"]
-        bm25_labels = []
         predicted_labels = []
         true_labels = []
         
         start_time = time.time()
         
-        print(f"\nRunning pipeline {'WITH' if use_reranker else 'WITHOUT'} reranker...")
+        config_name = "WITH reranker" if use_reranker else "WITHOUT reranker"
+        print(f"\nRunning pipeline {config_name}...")
+        
         for i in tqdm(range(len(self.test_data)), desc="Processing claims"):
             claim = self.test_data[i]["claim"]
             label = self.test_data[i]["label"]
             
             try:
-                # Get BM25-only result
-                bm25_result = corag_alt.run(claim)
-                bm25_verdict = bm25_result["verdict"]
-                bm25_pred = None if bm25_verdict is None else fever_labels[bm25_verdict]
-                bm25_labels.append(bm25_pred)
-                
-                # Get actual result (with or without reranker)
                 result = corag.run(claim)
                 verdict = result["verdict"]
                 pred = None if verdict is None else fever_labels[verdict]
             except Exception as e:
                 print(f"\nError processing claim {i}: {e}")
-                bm25_pred = "NOT ENOUGH INFO"
                 pred = "NOT ENOUGH INFO"
-                bm25_labels.append(bm25_pred)
             
             predicted_labels.append(pred)
             true_labels.append(label)
         
         elapsed_time = time.time() - start_time
         
-        return bm25_labels, predicted_labels, true_labels, elapsed_time
+        return predicted_labels, true_labels, elapsed_time
+    
     
     def _compute_metrics(self, predicted_labels: List[str], true_labels: List[str]) -> dict:
         """
@@ -190,12 +183,6 @@ class TestReranker(unittest.TestCase):
                     "recall": recall[1],
                     "f1": f1[1],
                     "support": int(support[1])
-                },
-                "NOT ENOUGH INFO": {
-                    "precision": precision[2],
-                    "recall": recall[2],
-                    "f1": f1[2],
-                    "support": int(support[2])
                 }
             },
             "confusion_matrix": cm.tolist(),
@@ -204,7 +191,7 @@ class TestReranker(unittest.TestCase):
         
         return metrics
     
-    def _write_log(self, config_name: str, metrics: dict, elapsed_time: float, bm25_labels: List[str],
+    def _write_log(self, config_name: str, metrics: dict, elapsed_time: float,
                predicted_labels: List[str], true_labels: List[str]):
         """Write comprehensive log file."""
         
@@ -259,32 +246,34 @@ class TestReranker(unittest.TestCase):
         print(f"\nDoneeee, the log has been written to: {filepath}")
     
     def test_bm25_baseline(self):
-        """Test BM25 retrieval without reranker."""
-        print("BM25 Baseline (No Reranker):")
+        """Test BM25 retrieval without reranker (k=3 direct)."""
+        print("BM25 Baseline (No Reranker)")
         
-        bm25_labels, predicted_labels, true_labels, elapsed_time = self._run_pipeline(use_reranker=False)
+        predicted_labels, true_labels, elapsed_time = self._run_pipeline(use_reranker=False)
         metrics = self._compute_metrics(predicted_labels, true_labels)
         
-        print(f"\tAccuracy: {metrics['accuracy']:.4f}")
-        print(f"\tWeighted F1: {metrics['weighted_f1']:.4f}")
-        print(f"\tNEI Predictions: {metrics['nei_predictions']}")
-        print(f"\tTime: {elapsed_time:.2f}s ({elapsed_time/len(true_labels):.3f}s per claim)")
+        print(f"\n\tAccuracy:\t{metrics['accuracy']:.4f}")
+        print(f"\tWeighted F1:\t{metrics['weighted_f1']:.4f}")
+        print(f"\tNEI Predicted:\t{metrics['nei_predictions']}")
+        print(f"\tTotal Time:\t{elapsed_time:.2f}s")
+        print(f"\tTime/Claim:\t{elapsed_time/len(true_labels):.3f}s")
         
-        self._write_log("baseline", metrics, elapsed_time, bm25_labels, predicted_labels, true_labels)
+        self._write_log("baseline", metrics, elapsed_time, predicted_labels, true_labels)
 
     def test_bm25_with_reranker(self):
-        """Test BM25 retrieval WITH reranker."""
-        print("BM25 Retreival + E2Rank Reranker")
+        """Test BM25 retrieval WITH reranker (k=50 → 20 → 10 → 3)."""
+        print("BM25 + E2Rank Reranker")
         
-        bm25_labels, predicted_labels, true_labels, elapsed_time = self._run_pipeline(use_reranker=True)
+        predicted_labels, true_labels, elapsed_time = self._run_pipeline(use_reranker=True)
         metrics = self._compute_metrics(predicted_labels, true_labels)
         
-        print(f"\tAccuracy: {metrics['accuracy']:.4f}")
-        print(f"\tWeighted F1: {metrics['weighted_f1']:.4f}")
-        print(f"\tNEI Predictions: {metrics['nei_predictions']}")
-        print(f"\tTime: {elapsed_time:.2f}s ({elapsed_time/len(true_labels):.3f}s per claim)")
+        print(f"\n\tAccuracy:\t{metrics['accuracy']:.4f}")
+        print(f"\tWeighted F1:\t{metrics['weighted_f1']:.4f}")
+        print(f"\tNEI Predicted:\t{metrics['nei_predictions']}")
+        print(f"\tTotal Time:\t{elapsed_time:.2f}s")
+        print(f"\tTime/Claim:\t{elapsed_time/len(true_labels):.3f}s")
         
-        self._write_log("with_reranker", metrics, elapsed_time, bm25_labels, predicted_labels, true_labels)
+        self._write_log("with_reranker", metrics, elapsed_time, predicted_labels, true_labels)
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)

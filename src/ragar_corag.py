@@ -38,11 +38,12 @@ class RagarCorag(Corag):
         return self._mc.send_prompt("init_question", [claim]).strip()
 
     def answer(self, question: str) -> str:
-        hits = self._searcher.search(question, k=3)
-        search_results=[]
+        bm25_k = 50 if self._reranker is not None else 3
+        
+        hits = self._searcher.search(question, k=bm25_k)
+        search_results = []
         
         if self._reranker is not None:
-            # Create doc list and rerank
             docs = []
             for hit in hits:
                 doc = self._searcher.doc(hit.docid)
@@ -51,17 +52,21 @@ class RagarCorag(Corag):
                     docs.append((hit.docid, contents))
             
             if docs:
-                reranked = self._reranker.rerank(question, docs, top_k=3)
+                reranked = self._reranker.rerank(
+                    question, docs
+                )
                 search_results = [contents for _, contents, _ in reranked]
         else:
             # Use BM25 results directly
             for hit in hits:
                 doc = self._searcher.doc(hit.docid)
                 contents = doc.get("contents")
-                search_results.append(contents)
+                if contents:
+                    search_results.append(contents)
         
         output = "\n\n".join(search_results)
         return self._mc.send_prompt("answer", [output, question]).strip()
+
 
     def next_question(self, claim: str, qa_pairs: list[tuple[str, str]]) -> str:
         return self._mc.send_prompt("next_question", [claim, qa_pairs]).strip()

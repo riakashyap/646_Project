@@ -29,7 +29,7 @@ class E2RankReranker(BaseReranker):
         self,
         model_path: str = "microsoft/deberta-v3-large",
         device: str = None,
-        max_length: int = 512,
+        max_length: int = 384,
         use_layerwise: bool = True,
         reranking_block_map: Dict[int, int] = None,
         **kwargs
@@ -48,9 +48,9 @@ class E2RankReranker(BaseReranker):
         # Progressively reduce candidates: Layers : Top-K Docs to keep
         if reranking_block_map is None:
             self.reranking_block_map = {
-                8: 100,  
-                16: 50,   
-                24: 20    
+                8: 20,  
+                16: 10,   
+                24: 3    
             }
         else:
             self.reranking_block_map = reranking_block_map
