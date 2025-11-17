@@ -1,0 +1,197 @@
+"""
+Copyright:
+
+  Copyright © 2025 uchuuronin
+
+  You should have received a copy of the MIT license along with this file.
+  If not, see https://mit-license.org/
+
+Commentary:
+    E2Rank reranker implementation using layer-wise progressive reranking.
+    Based on the paper "E2Rank: Efficient and Effective Layer-wise Reranking"
+    Called model found @ https://github.com/caesar-one/e2rank
+    
+Code:
+"""
+
+import torch
+from typing import List, Tuple, Dict, Optional
+from .reranker import BaseReranker
+import logging
+from transformers import AutoTokenizer, AutoConfig, AutoModelForSequenceClassification
+from .grouped_debertav2 import GroupedDebertaV2ForSequenceClassification 
+
+logger = logging.getLogger(__name__)
+
+
+class E2RankReranker(BaseReranker):
+    def __init__(
+        self,
+        model_path: str = "microsoft/deberta-v3-large",
+        device: str = None,
+        max_length: int = 512,
+        use_layerwise: bool = True,
+        reranking_block_map: Dict[int, int] = None,
+        **kwargs
+    ):
+        # Auto-detect cuda if not specified (optimal performance)
+        if device is None:
+            device = "cuda" if torch.cuda.is_available() else "cpu"
+            
+        super().__init__(model_path, device, **kwargs)
+        
+        self.max_length = max_length
+        self.use_layerwise = use_layerwise
+        
+        # Progressively reduce candidates: Layers : Top-K Docs to keep
+        if reranking_block_map is None:
+            self.reranking_block_map = {
+                8: 100,  
+                16: 50,   
+                24: 20    
+            }
+        else:
+            self.reranking_block_map = reranking_block_map
+        
+        logger.info(f"Initializing E2RankReranker on {self.device}")
+        logger.info(f"Layerwise reranking: {self.use_layerwise}")
+        if self.use_layerwise:
+            logger.info(f"Reranking strategy: {self.reranking_block_map}")
+        
+        self._load_model()
+        
+    def _load_model(self):
+        try:
+            self.tokenizer = AutoTokenizer.from_pretrained(self.model_path)
+            config = AutoConfig.from_pretrained(self.model_path)
+            
+            self.model = GroupedDebertaV2ForSequenceClassification(config)
+            
+            try:
+                state_dict = torch.load(
+                    f"{self.model_path}/pytorch_model.bin",
+                    map_location=self.device
+                )
+                self.model.load_state_dict(state_dict)
+            except FileNotFoundError:
+                logger.warning(
+                    f"Could not find pytorch_model.bin at {self.model_path}. "
+                    "Loading from HuggingFace Hub..."
+                )
+
+                base_model = AutoModelForSequenceClassification.from_pretrained(
+                    self.model_path
+                )
+                self.model.load_state_dict(base_model.state_dict(), strict=False)
+            
+            self.model.to(self.device)
+            self.model.eval()
+            
+            logger.info("E2Rank model loaded successfully")
+        except Exception as e:
+            logger.error(f"Error loading E2Rank model: {str(e)}")
+            raise
+    
+    def rerank(
+        self,
+        query: str,
+        documents: List[Tuple[str, str]],
+        top_k: int = None
+    ) -> List[Tuple[str, str, float]]:
+
+        if not documents:
+            return []
+        
+        if top_k is None and self.use_layerwise:
+            top_k = min(self.reranking_block_map.values()) if self.reranking_block_map else len(documents)
+        elif top_k is None:
+            top_k = len(documents)
+        
+        top_k = min(top_k, len(documents))
+        
+        logger.debug(f"Reranking {len(documents)} documents for query: {query[:50]}...")
+        
+        doc_ids = [doc[0] for doc in documents]
+        doc_texts = [doc[1] for doc in documents]
+        
+        pairs = [[f"Query: {query}", f"Document: {text}"] for text in doc_texts]
+        
+        inputs = self.tokenizer(
+            pairs,
+            padding=True,
+            truncation=True,
+            max_length=self.max_length,
+            return_tensors="pt"
+        ).to(self.device)
+        
+        with torch.no_grad():
+            if self.use_layerwise and len(documents) > 10:
+                # Use progressive layerwise reranking for efficiency
+                reranked_indices = self.model.layerwise_rerank(
+                    **inputs,
+                    reranking_block_map=self.reranking_block_map
+                )
+                reranked_indices = reranked_indices.cpu().tolist()
+                
+                results = []
+                for idx in reranked_indices[:top_k]:
+                    results.append((
+                        doc_ids[idx],
+                        doc_texts[idx],
+                        1.0 / (len(results) + 1)  # Approximate score based on rank
+                    ))
+                
+            else:
+                # Standard full-model reranking for small sets
+                outputs = self.model(**inputs)
+                logits = outputs.logits.squeeze(-1)
+                scores = logits.cpu().tolist()
+                
+                # Sort by score descending
+                scored_docs = list(zip(doc_ids, doc_texts, scores))
+                scored_docs.sort(key=lambda x: x[2], reverse=True)
+                results = scored_docs[:top_k]
+        
+        logger.debug(f"Reranking complete. Returning top {len(results)} results")
+        return results
+    
+    def compute_score(self, query: str, document: str) -> float:
+        pair = [[f"Query: {query}", f"Document: {document}"]]
+        
+        inputs = self.tokenizer(
+            pair,
+            padding=True,
+            truncation=True,
+            max_length=self.max_length,
+            return_tensors="pt"
+        ).to(self.device)
+        
+        with torch.no_grad():
+            outputs = self.model(**inputs)
+            score = outputs.logits.squeeze(-1).item()
+        
+        return score
+    
+    def batch_compute_scores(
+        self,
+        query: str,
+        documents: List[str]
+    ) -> List[float]:
+        if not documents:
+            return []
+        
+        pairs = [[f"Query: {query}", f"Document: {doc}"] for doc in documents]
+        
+        inputs = self.tokenizer(
+            pairs,
+            padding=True,
+            truncation=True,
+            max_length=self.max_length,
+            return_tensors="pt"
+        ).to(self.device)
+        
+        with torch.no_grad():
+            outputs = self.model(**inputs)
+            scores = outputs.logits.squeeze(-1).cpu().tolist()
+        
+        return scores if isinstance(scores, list) else [scores]

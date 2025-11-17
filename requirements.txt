@@ -1,0 +1,14 @@
+datasets==2.20.0
+transformers==4.45.0
+requests
+tqdm
+sentencepiece
+pyserini==0.38.0
+faiss-cpu
+rank_bm25
+sentence-transformers
+rapidfuzz
+unidecode
+nltk
+llama-cpp-python>=0.2.90
+huggingface_hub
