@@ -21,11 +21,13 @@ from datasets import load_dataset
 from pprint import pprint
 from src.model_clients import LlamaCppClient
 from src.ragar_corag import RagarCorag
-from src.config import PROMPTS_DIR
 from tqdm import tqdm
 import argparse
 import time
+import os
 from datasets import load_dataset, Dataset, concatenate_datasets
+
+from src import config
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
@@ -44,7 +46,14 @@ if __name__ == "__main__":
                         metavar='',
                         type=int,
                         default=100)
+    parser.add_argument('-l', '--log-trace',
+                        help='Output a trace to the log file (define in config.py). Overrides --num-claims to 2.',
+                        action='store_true')
     args = parser.parse_args()
+
+    if args.log_trace:
+        config.make_logger()
+        args.num_claims = 2
 
     fever_labels = ["REFUTES", "SUPPORTS", "NOT ENOUGH INFO"]
     ds = load_dataset("fever", "v1.0", trust_remote_code=True)
@@ -55,12 +64,15 @@ if __name__ == "__main__":
     supports = split.filter(lambda row: row["label"] == "SUPPORTS").select(range(int(args.num_claims / 2)))
     refutes = split.filter(lambda row: row["label"] == "REFUTES").select(range(int(args.num_claims / 2)))
     split = concatenate_datasets([supports, refutes])
-    
-    user_prompts_dir = PROMPTS_DIR / "ragar"
-    sys_prompts_dir = None
-    if not args.ragar:
-        user_prompts_dir = PROMPTS_DIR / "custom" / "user"
-        sys_prompts_dir = PROMPTS_DIR  / "custom" / "system"
+
+    if args.ragar:
+        config.LOGGER and config.LOGGER.info("Using RAGAR prompts.")
+        user_prompts_dir = config.PROMPTS_DIR / "ragar"
+        sys_prompts_dir = None
+    else:
+        config.LOGGER and config.LOGGER.info("Using CUSTOM prompts.")
+        user_prompts_dir = config.PROMPTS_DIR / "custom" / "user"
+        sys_prompts_dir = config.PROMPTS_DIR  / "custom" / "system"
 
     # Setup CoRAG system here
     mc = LlamaCppClient(user_prompts_dir,
@@ -90,7 +102,6 @@ if __name__ == "__main__":
         args.num_claims
 
     print()
-    # pprint(outputs)
     print(f"Accuracy: {accuracy:.8f}")
     print("Pred labels:", preds)
     print("True labels:", labels)
