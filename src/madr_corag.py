@@ -173,10 +173,6 @@ class MadrCorag(RagarCorag):
         - Otherwise → more debate rounds (up to self.max_stop_rounds)
         """
 
-        # Require at least 2 QA pairs before early stopping
-        if len(qa_pairs) < 2:
-            return False
-
         evidence = "\n\n".join([f"Q: {q}\nA: {a}" for q, a in qa_pairs])
 
         # Number of debate rounds for stop_check
