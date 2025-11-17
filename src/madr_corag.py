@@ -165,39 +165,35 @@ class MadrCorag(RagarCorag):
     
     def stop_check(self, claim: str, qa_pairs: List[Tuple[str, str]]) -> bool:
         """
-        Determine whether enough evidence has been gathered to stop asking questions.
-        MADR stops early when the agents already reach consensus based on current evidence.
+        Determine whether enough evidence has been gathered.
+        Uses the stop_check prompt which returns 'conclusive' or 'inconclusive'.
         """
+
+        # Require at least 2 QA pairs before allowing early stopping.
+        # This mirrors CoRAG behavior: one question is not enough evidence
+        # for agents to make a meaningful stop decision.
         if len(qa_pairs) < 2:
             return False
 
-        # Compile evidence so far
         evidence = "\n\n".join([f"Q: {q}\nA: {a}" for q, a in qa_pairs])
 
-        # Ask all MADR agents for their current position
-        agent_verdicts = []
+        responses = []
         for agent in self.agents:
-            verdict, reasoning, confidence = agent.analyze_claim(claim, evidence)
-            agent_verdicts.append({
-                "agent_id": agent.agent_id,
-                "verdict": verdict,
-                "reasoning": reasoning,
-                "confidence": confidence
-            })
+            res = agent.send_prompt("stop_check", [claim, evidence]).strip().lower()
+            responses.append({"agent_id": agent.agent_id, "response": res})
 
+        # Logging
         if config.LOGGER:
-            config.LOGGER.info("[MADR/TRACE] stop_check: agent verdicts collected")
-            for av in agent_verdicts:
-                config.LOGGER.info(
-                    f"[MADR/TRACE]  Agent {av['agent_id']} → {av['verdict']} "
-                    f"(conf {av['confidence']:.2f})"
-                )
+            config.LOGGER.info("[MADR/TRACE] stop_check: agent responses collected")
+            for r in responses:
+                config.LOGGER.info(f"[MADR/TRACE]  Agent {r['agent_id']} → {r['response']}")
 
-        # Stop if MADR agents already reached consensus
-        if self._has_consensus(agent_verdicts):
+        # Correct CoRAG behavior: stop only if ALL agents say "conclusive"
+        if all(r["response"] == "conclusive" for r in responses):
             if config.LOGGER:
-                config.LOGGER.info("[MADR/TRACE] stop_check: consensus reached → stopping early")
+                config.LOGGER.info("[MADR/TRACE] stop_check: full consensus → stopping")
             return True
+
         return False
 
     def verdict(self, claim: str, qa_pairs: list[tuple[str, str]]) -> tuple[int, str]:
