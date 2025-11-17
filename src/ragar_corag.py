@@ -52,11 +52,9 @@ class RagarCorag(Corag):
         has_inconclusive = "inconclusive" in res
         has_conclusive = "conclusive" in res and not has_inconclusive
 
-        # Stop if the model was indecisive or gave an invalid answer
-        if (has_conclusive and has_inconclusive) or (not has_conclusive and not has_inconclusive):
+        if has_conclusive and not has_inconclusive:
             return True
-
-        return not has_inconclusive
+        return False
 
     def verdict(self, claim: str, qa_pairs: list[tuple[str, str]]) -> tuple[int, str | None]:
         res = self._mc.send_prompt("verdict", [claim, qa_pairs])
