@@ -10,6 +10,7 @@ Commentary:
     E2Rank reranker implementation using layer-wise progressive reranking.
     Based on the paper "E2Rank: Efficient and Effective Layer-wise Reranking"
     Called model found @ https://github.com/caesar-one/e2rank
+    HuggingFace Model for cross-encoder: https://huggingface.co/naver/trecdl22-crossencoder-debertav3
     
 Code:
 """
@@ -27,14 +28,14 @@ logger = logging.getLogger(__name__)
 class E2RankReranker(BaseReranker):
     def __init__(
         self,
-        model_path: str = "microsoft/deberta-v3-large",
+        model_path: str = "naver/trecdl22-crossencoder-debertav3",
         device: str = None,
         max_length: int = 384,
         use_layerwise: bool = True,
         reranking_block_map: Dict[int, int] = None,
         **kwargs
     ):
-        # Auto-detect cuda if not specified (optimal performance)
+        # Auto-detect cuda
         if device is None:
             self.device = "cuda" if torch.cuda.is_available() else "cpu"
         else:
@@ -48,9 +49,9 @@ class E2RankReranker(BaseReranker):
         # Progressively reduce candidates: Layers : Top-K Docs to keep
         if reranking_block_map is None:
             self.reranking_block_map = {
-                8: 20,  
-                16: 10,   
-                24: 3    
+                8: 50,  
+                16: 39,   
+                24: 10    
             }
         else:
             self.reranking_block_map = reranking_block_map

@@ -261,7 +261,7 @@ class TestReranker(unittest.TestCase):
         self._write_log("baseline", metrics, elapsed_time, predicted_labels, true_labels)
 
     def test_bm25_with_reranker(self):
-        """Test BM25 retrieval WITH reranker (k=50 → 20 → 10 → 3)."""
+        """Test BM25 retrieval with reranker"""
         print("BM25 + E2Rank Reranker")
         
         predicted_labels, true_labels, elapsed_time = self._run_pipeline(use_reranker=True)
