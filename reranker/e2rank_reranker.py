@@ -50,7 +50,7 @@ class E2RankReranker(BaseReranker):
         if reranking_block_map is None:
             self.reranking_block_map = {
                 8: 50,  
-                16: 39,   
+                16: 30,   
                 24: 10    
             }
         else:
