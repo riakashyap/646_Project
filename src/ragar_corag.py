@@ -18,6 +18,7 @@ from .corag import Corag
 from .model_clients import ModelClient
 from .config import INDEX_DIR
 from pyserini.search.lucene import LuceneSearcher
+from .parsers import parse_ternary, parse_conclusive
 
 class RagarCorag(Corag):
     _mc: ModelClient
@@ -48,22 +49,8 @@ class RagarCorag(Corag):
 
     def stop_check(self, claim: str, qa_pairs: list[tuple[str, str]]) -> bool:
         res = self._mc.send_prompt("stop_check", [claim, qa_pairs]).lower()
-
-        has_inconclusive = "inconclusive" in res
-        has_conclusive = "conclusive" in res and not has_inconclusive
-        return has_conclusive and not has_inconclusive
+        return parse_conclusive(res)
 
     def verdict(self, claim: str, qa_pairs: list[tuple[str, str]]) -> tuple[int, str | None]:
         res = self._mc.send_prompt("verdict", [claim, qa_pairs])
-        verdict = None
-
-        # 0 -> false, 1 -> true, 2 -> inconclusive
-        lower = res.lower()
-        if "false" in lower:
-            verdict = 0
-        elif "true" in lower:
-            verdict = 1
-        elif "inconclusive" in lower:
-            verdict = 2
-
-        return verdict, res
+        return parse_ternary(res), res
