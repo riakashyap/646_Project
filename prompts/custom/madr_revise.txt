@@ -8,13 +8,13 @@ Your task:
 
 <<USER>>
 
-Original explanation:
-{}
-
 Feedback from Debater 1:
 {}
 
 Feedback from Debater 2:
+{}
+
+Original explanation:
 {}
 
 Final revised explanation:
