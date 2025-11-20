@@ -14,21 +14,17 @@ Commentary:
 
 Code:
 """
-
 import unittest
 import sys
-import os
 from pathlib import Path
 from typing import List, Tuple
 import time
 from collections import defaultdict
-import json
 from sklearn.metrics import accuracy_score, precision_recall_fscore_support, confusion_matrix
 from datasets import load_dataset, Dataset, concatenate_datasets
 from pyserini.search.lucene import LuceneSearcher
 from tqdm import tqdm
 
-# Add parent directory to path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from reranker import E2RankReranker
@@ -37,7 +33,7 @@ from src.model_clients import LlamaCppClient
 from src.ragar_corag import RagarCorag
 from src.config import PROMPTS_DIR
 
-class TestReranker(unittest.TestCase):
+class RerankerEvaluator:
     """
     Comprehensive test comparing BM25 baseline vs BM25 + Reranker.
     
@@ -48,32 +44,25 @@ class TestReranker(unittest.TestCase):
     - Time taken per claim
     - Detailed log file
     """
-    
-    @classmethod
-    def setUpClass(cls):
-        """Set up test environment once for all tests."""
-        super().setUpClass()
+    def __init__(self, num_claims=50, think_mode=False, use_ragar_prompts=True, model_size="8b"):
+        self.num_claims = num_claims
+        self.think_mode = think_mode
+        self.use_ragar_prompts = use_ragar_prompts
+        self.model_size = model_size 
         
-        # Modify these parameters to test different configurations
-        cls.num_claims = 50
-        cls.think_mode = False
-        cls.use_ragar_prompts = True
-        cls.model_size = "8b" # Qwen 
-        
-        # Determine prompt directories
-        if cls.use_ragar_prompts:
-            cls.user_prompts_dir = PROMPTS_DIR / "ragar"
-            cls.sys_prompts_dir = None
-            cls.prompt_type = "r"
+        if self.use_ragar_prompts:
+            self.user_prompts_dir = PROMPTS_DIR / "ragar"
+            self.sys_prompts_dir = None
+            self.prompt_type = "r"
         else:
-            cls.user_prompts_dir = PROMPTS_DIR / "custom" / "user"
-            cls.sys_prompts_dir = PROMPTS_DIR / "custom" / "system"
-            cls.prompt_type = ""
+            self.user_prompts_dir = PROMPTS_DIR / "custom" / "user"
+            self.sys_prompts_dir = PROMPTS_DIR / "custom" / "system"
+            self.prompt_type = ""
         
-        cls.mc = LlamaCppClient(
-            cls.user_prompts_dir,
-            cls.sys_prompts_dir,
-            think_mode_bool=cls.think_mode
+        self.mc = LlamaCppClient(
+            self.user_prompts_dir,
+            self.sys_prompts_dir,
+            think_mode_bool=self.think_mode
         )
         
         print("\n[Loading FEVER dataset...")
@@ -82,25 +71,24 @@ class TestReranker(unittest.TestCase):
         split = Dataset.from_pandas(split.to_pandas().drop_duplicates(subset="claim"))
         
         # Get balanced samples
-        supports = split.filter(lambda row: row["label"] == "SUPPORTS").select(range(cls.num_claims // 2))
-        refutes = split.filter(lambda row: row["label"] == "REFUTES").select(range(cls.num_claims // 2))
-        cls.test_data = concatenate_datasets([supports, refutes])
+        supports = split.filter(lambda row: row["label"] == "SUPPORTS").select(range(self.num_claims // 2))
+        refutes = split.filter(lambda row: row["label"] == "REFUTES").select(range(self.num_claims // 2))
+        self.test_data = concatenate_datasets([supports, refutes])
         
         print(f"Testing configurations:")
-        print(f"\tClaims: {cls.num_claims}")
-        print(f"\tThink mode: {cls.think_mode}")
-        print(f"\tPrompts: {'RAGAR' if cls.use_ragar_prompts else 'CUSTOM'}")
-        print(f"\tModel: Qwen3 {cls.model_size}")
+        print(f"\tClaims: {self.num_claims}")
+        print(f"\tThink mode: {self.think_mode}")
+        print(f"\tPrompts: {'RAGAR' if self.use_ragar_prompts else 'CUSTOM'}")
+        print(f"\tModel: Qwen3 {self.model_size}")
     
     
     def _run_pipeline(self, use_reranker: bool) -> Tuple[List[str], List[str], List[str], float]:
         """
         Returns:
-            (bm25_labels, predicted_labels, true_labels, elapsed_time)
+            (predicted_labels, true_labels, elapsed_time)
         """
         reranker = None
         if use_reranker:
-            print("\nInitializing E2Rank reranker...")
             reranker = E2RankReranker()
             print(f"Reranker loaded successfully")
         
@@ -275,5 +263,15 @@ class TestReranker(unittest.TestCase):
         
         self._write_log("with_reranker", metrics, elapsed_time, predicted_labels, true_labels)
 
+    def main():
+        evaluator = RerankerEvaluator(
+            num_claims=50,
+            think_mode=False,
+            use_ragar_prompts=True,
+            model_size="8b" # only for log file name
+        )
+        evaluator.test_bm25_baseline()
+        evaluator.test_bm25_with_reranker()
+        
 if __name__ == "__main__":
     unittest.main(verbosity=2)
