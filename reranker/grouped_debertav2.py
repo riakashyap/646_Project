@@ -1,3 +1,21 @@
+"""
+Copyright:
+  Apache License
+  Version 2.0, January 2004
+  http://www.apache.org/licenses/
+
+Commentary:
+    Following is original work from the paper "E2Rank: Efficient and Effective Layer-wise Reranking" 
+        by Cesare Campagnano, Antonio Mallia, Jack Pertschuk, and Fabrizio Silvestri1 
+        1 Sapienza University of Rome, Italy {campagnano, fsilvestri}@diag.uniroma1.it 
+        2 Pinecone, US {cesare, antonio, jack}@pinecone.io
+        
+    Sourced from: https://github.com/caesar-one/e2rank
+    HuggingFace Model for cross-encoder: https://huggingface.co/naver/trecdl22-crossencoder-debertav3
+    
+Code:
+"""
+
 from collections.abc import Sequence
 from typing import Optional, Tuple, Union, Dict
 

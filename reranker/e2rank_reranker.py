@@ -49,9 +49,9 @@ class E2RankReranker(BaseReranker):
         # Progressively reduce candidates: Layers : Top-K Docs to keep
         if reranking_block_map is None:
             self.reranking_block_map = {
-                8: 50,  
-                16: 30,   
-                24: 10    
+                8: 200,  
+                16: 75,   
+                24: 3    
             }
         else:
             self.reranking_block_map = reranking_block_map
