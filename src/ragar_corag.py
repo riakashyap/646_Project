@@ -26,7 +26,7 @@ class RagarCorag(Corag):
     def __init__(self, mc: ModelClient):
         super().__init__()
         self._mc = mc
-        self._searcher = LuceneSearcher(str(INDEX_DIR)) # Ideally would inject this but I'm lazy
+        self._searcher = LuceneSearcher(str(INDEX_DIR)) 
         self._searcher.set_bm25(1.2, 0.75)
 
     def init_question(self, claim: str) -> str:
@@ -51,17 +51,12 @@ class RagarCorag(Corag):
 
         has_inconclusive = "inconclusive" in res
         has_conclusive = "conclusive" in res and not has_inconclusive
-
-        if has_conclusive and not has_inconclusive:
-            return True
-        return False
+        return has_conclusive and not has_inconclusive
 
     def verdict(self, claim: str, qa_pairs: list[tuple[str, str]]) -> tuple[int, str | None]:
         res = self._mc.send_prompt("verdict", [claim, qa_pairs])
         verdict = None
 
-        # TODO: define an enum or Verdict class for this
-        # TODO: could also use a map, and extract this to a parsers.py file for easier reuse
         # 0 -> false, 1 -> true, 2 -> inconclusive
         lower = res.lower()
         if "false" in lower:
