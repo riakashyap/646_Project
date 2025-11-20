@@ -207,7 +207,7 @@ class TestReranker(unittest.TestCase):
                 "MAP_10": MAP_10 / num_queries,
             }
 
-        rerank_metrics = eval_on_fever(self.reranked_ranklists)
+        rerank_metrics = eval_on_fever()
         rerank_metrics = {k: round(v, 3) for k, v in rerank_metrics.items()}
 
         print("Reranker metrics:", rerank_metrics)
