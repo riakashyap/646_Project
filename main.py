@@ -84,8 +84,8 @@ if __name__ == "__main__":
     if args.reranker:
         try:
             reranker = E2RankReranker()
-        except Exception as e:
-            print(f"ERROR: Failed to load reranker: {e}")
+        except (OSError, FileNotFoundError) as e:
+            print(f"ERROR: Model files not found or download failed: {e}")
             reranker = None
     
     # Setup CoRAG system here

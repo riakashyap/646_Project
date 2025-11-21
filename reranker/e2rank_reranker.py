@@ -21,8 +21,7 @@ from .reranker import BaseReranker
 import logging
 from transformers import AutoTokenizer, AutoConfig, AutoModelForSequenceClassification
 from .grouped_debertav2 import GroupedDebertaV2ForSequenceClassification 
-
-logger = logging.getLogger(__name__)
+from src.config import LOGGER as logger
 
 
 class E2RankReranker(BaseReranker):
@@ -35,12 +34,6 @@ class E2RankReranker(BaseReranker):
         reranking_block_map: Dict[int, int] = None,
         **kwargs
     ):
-        # Auto-detect cuda
-        if device is None:
-            self.device = "cuda" if torch.cuda.is_available() else "cpu"
-        else:
-            self.device = device
-            
         super().__init__(model_path, device, **kwargs)
         
         self.max_length = max_length
@@ -56,10 +49,11 @@ class E2RankReranker(BaseReranker):
         else:
             self.reranking_block_map = reranking_block_map
         
-        logger.info(f"Initializing E2RankReranker on {self.device}")
-        logger.info(f"Layerwise reranking: {self.use_layerwise}")
-        if self.use_layerwise:
-            logger.info(f"Reranking strategy: {self.reranking_block_map}")
+        if logger:
+            logger.info(f"Initializing E2RankReranker on {self.device}")
+            logger.info(f"Layerwise reranking: {self.use_layerwise}")
+            if self.use_layerwise:
+                logger.info(f"Reranking strategy: {self.reranking_block_map}")
         
         self._load_model()
         
@@ -77,7 +71,7 @@ class E2RankReranker(BaseReranker):
                 )
                 self.model.load_state_dict(state_dict)
             except FileNotFoundError:
-                logger.warning(
+                print(
                     f"Could not find pytorch_model.bin at {self.model_path}. "
                     "Loading from HuggingFace Hub..."
                 )
@@ -90,9 +84,10 @@ class E2RankReranker(BaseReranker):
             self.model.to(self.device)
             self.model.eval()
             
-            logger.info("E2Rank model loaded successfully")
+            if logger:
+                logger.info("E2Rank model loaded successfully")
         except Exception as e:
-            logger.error(f"Error loading E2Rank model: {str(e)}")
+            print(f"Error loading E2Rank model: {str(e)}")
             raise
     
     def rerank(
@@ -112,7 +107,8 @@ class E2RankReranker(BaseReranker):
         
         top_k = min(top_k, len(documents))
         
-        logger.debug(f"Reranking {len(documents)} documents for query: {query[:50]}...")
+        if logger:
+            logger.debug(f"Reranking {len(documents)} documents for query: {query[:50]}...")
         
         doc_ids = [doc[0] for doc in documents]
         doc_texts = [doc[1] for doc in documents]
@@ -154,8 +150,8 @@ class E2RankReranker(BaseReranker):
                 scored_docs = list(zip(doc_ids, doc_texts, scores))
                 scored_docs.sort(key=lambda x: x[2], reverse=True)
                 results = scored_docs[:top_k]
-        
-        logger.debug(f"Reranking complete. Returning top {len(results)} results")
+        if logger:    
+            logger.debug(f"Reranking complete. Returning top {len(results)} results")
         return results
     
     def compute_score(self, query: str, document: str) -> float:
