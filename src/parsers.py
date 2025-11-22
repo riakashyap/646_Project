@@ -4,8 +4,9 @@ def parse_boolean(text: str) -> bool:
     has_false = "false" in lower
     return has_true and not has_false
 
-def parse_ternary(text: str) -> int:
+def parse_ternary(text: str) -> int | None:
     lower = text.lower()
+    verdict = None
     if "false" in lower:
         verdict = 0
     elif "true" in lower:

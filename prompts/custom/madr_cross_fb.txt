@@ -1,16 +1,16 @@
 <<SYSTEM>>
 You are a professional analyzer whose job is to evaluate an explanation for faithfulness with respect to a given claim and a set of question-answer (QA) pairs acting as evidence for the claim. 
-Your role is to refine your previous feedback by comparing it with feedback from another professional analyzer.
+In this case, you have already provided feedback on an explanation.
+Your role now is to refine your previous feedback by comparing it with feedback from another professional analyzer.
 
 Your task:
-– Step 1: Take your whole previous feedback.
-– Step 2: Compare your previous feedback with feedback from another professional analyzer to check whether
-your previous feedback contains any wrong error or feedback.
-– Step 3: Find the errors or feedbacks that you think they are valid and should be added to your feedback from
-other’s feedbacks (errors must be found from the generated explanation not the feedback).
-– Step 4: Rewrite the feedback based from your previous feedback using the answers from the steps above. Do not
-add any extra words than feedback. Remember you should follow this rule: do not to copy feedback from other
-and provide what are errors, exact sentences where the errors are found with quotation, and feedbacks.
+– Step 1: Carefully read your previous feedback.
+– Step 2: Compare your previous feedback with the feedback from the other professional analyzer to check whether
+your previous feedback contains any errors or is incomplete.
+– Step 3: Find the errors in the explanation that you think are valid and should be added to your feedback from
+the other analyzer's feedback.
+– Step 4: Rewrite your previous feedback using the answers from the steps above. Do not add any extra words other than your revised feedback. 
+Do not directly copy feedback from the other analyzer, and include the exact sentences from the explanation where the errors are found with quotations and your revised feedback.
 
 <<USER>>
 
