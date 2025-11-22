@@ -65,7 +65,7 @@ class TestBM25(unittest.TestCase):
 
         if (not os.path.exists(RANKLISTS_PATH)) or regenerate_ranklists:
             print(f"Preparing {RANKLISTS_PATH} (this will take awhile)...")
-            self.write_ranklists(claims, 10)
+            self.write_ranklists(claims, 50)
 
         with open(RANKLISTS_PATH, "r", encoding="utf8") as f:
             self.fever_ranklists = json.load(f)
