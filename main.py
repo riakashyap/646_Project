@@ -29,7 +29,7 @@ from datasets import load_dataset, Dataset, concatenate_datasets
 
 from src import config
 
-if __name__ == "__main__":
+def parse_arguments():
     parser = argparse.ArgumentParser(
         usage='%(prog)s [args] -- prog'
     )
@@ -52,14 +52,22 @@ if __name__ == "__main__":
     parser.add_argument('-l', '--log-trace',
                         help='Output a trace to the log file (define in config.py). Overrides --num-claims to 2.',
                         action='store_true')
+
     args = parser.parse_args()
 
+    # handle overrides
     if args.log_trace:
         config.make_logger()
         args.num_claims = 2
 
     if args.debate_stop:
         args.ragar = False
+
+    return args
+
+
+if __name__ == "__main__":
+    args = parse_arguments()
 
     fever_labels = ["REFUTES", "SUPPORTS", "NOT ENOUGH INFO"]
     ds = load_dataset("fever", "v1.0", trust_remote_code=True)
