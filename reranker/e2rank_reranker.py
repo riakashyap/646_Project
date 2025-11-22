@@ -44,7 +44,7 @@ class E2RankReranker(BaseReranker):
             self.reranking_block_map = {
                 8: 50,  
                 16: 20,   
-                24: 3    
+                24: 10    
             }
         else:
             self.reranking_block_map = reranking_block_map
@@ -131,16 +131,29 @@ class E2RankReranker(BaseReranker):
                     **inputs,
                     reranking_block_map=self.reranking_block_map
                 )
-                reranked_indices = reranked_indices.cpu().tolist()
+                reranked_indices = reranked_indices.cpu().tolist()[:top_k]
                 
-                results = []
-                for idx in reranked_indices[:top_k]:
-                    results.append((
-                        doc_ids[idx],
-                        doc_texts[idx],
-                        1.0 / (len(results) + 1)  # Approximate score based on rank
-                    ))
+                final_pairs = [[query, doc_texts[idx]] for idx in reranked_indices]
+                final_inputs = self.tokenizer(
+                    final_pairs,
+                    padding=True,
+                    truncation=True,
+                    max_length=self.max_length,
+                    return_tensors="pt"
+                ).to(self.device)
                 
+                final_outputs = self.model(**final_inputs)
+                final_logits = final_outputs.logits.squeeze(-1)
+                final_scores = final_logits.cpu().tolist()
+                
+                # Handle single document case (k=1)
+                if not isinstance(final_scores, list):
+                    final_scores = [final_scores]
+                
+                results = [
+                    (doc_ids[idx], doc_texts[idx], score)
+                    for idx, score in zip(reranked_indices, final_scores)
+                ]
             else:
                 # Standard full-model reranking for small sets
                 outputs = self.model(**inputs)

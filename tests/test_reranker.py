@@ -180,6 +180,7 @@ class TestReranker(unittest.TestCase):
         rerank_metrics = {k: round(v, 3) for k, v in rerank_metrics.items()}
 
         print("Reranker metrics:", rerank_metrics)
+        # TODO: Add assertions based on expected results
 
     @classmethod
     def write_reranked_lists(self,

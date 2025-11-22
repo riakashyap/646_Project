@@ -133,7 +133,7 @@ class TestBM25(unittest.TestCase):
             "MAP_3": 0.257,
             "MAP_5": 0.273,
             "MAP_10": 0.286,
-        } ## Modify to 1000 claims
+        } ## TODO: Modify to 1000 claims and uncomment below assertion
         actual = eval_on_fever()
         actual = {key: round(value, 3) for key, value in actual.items()}
         # self.assertEqual(expected, actual, "BM25 evaluation on the fever dataset"
