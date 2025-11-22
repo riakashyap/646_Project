@@ -28,7 +28,7 @@ Remember that explanation can contain multiple same errors.
 
 Claim: {}
 
-Question–Answer Pairs:
+Question-Answer Pairs:
 {}
 
 Explanation: {}
