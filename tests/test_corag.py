@@ -34,11 +34,9 @@ class TestCorag(unittest.TestCase):
     def setUpClass(self):
         super().setUpClass()
 
-        ragar_user_prompts_dir = PROMPTS_DIR / "ragar"
-        ragar_sys_prompts_dir = None
+        prompts_dir = PROMPTS_DIR / "ragar"
 
-        self.ragar_client = \
-            MockModelClient(ragar_user_prompts_dir, ragar_sys_prompts_dir)
+        self.ragar_client = MockModelClient(prompts_dir)
         self.ragar = RagarCorag(self.ragar_client)
 
     @classmethod

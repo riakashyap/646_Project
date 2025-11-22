@@ -31,6 +31,8 @@ RANKLISTS_PATH = DATA_DIR / "fever-ranklist.json"
 TRACE_PATH = SCRIPT_DIR.parent / "logs" / "trace.log"
 
 PROMPTS_DIR = SCRIPT_DIR.parent / "prompts"
+SYSTEM_TAG = "<<SYSTEM>>"
+USER_TAG = "<<USER>>"
 
 # global logger
 LOGGER = None

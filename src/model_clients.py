@@ -26,24 +26,29 @@ from . import config
 class ModelClient(ABC):
     _prompts: Dict[str, str] = dict()
 
-    def __init__(self, user_prompts_dir: str, system_prompts_dir: str | None = None):
-
-        for file_name in os.listdir(user_prompts_dir):
+    def __init__(self, prompts_dir: str):
+        for file_name in os.listdir(prompts_dir):
             if file_name.endswith(".txt"):
-                user_prompt_path = user_prompts_dir / file_name
-                with open(user_prompt_path, "r", encoding="utf-8") as file:
-                    user_prompt = file.read()
+                prompt_path = prompts_dir / file_name
+                with open(prompt_path, "r", encoding="utf-8") as file:
+                    prompt = file.read()
 
-                system_prompt = None
-                if system_prompts_dir is not None:
-                    system_prompt_path = system_prompts_dir / file_name
-                    with open(system_prompt_path, "r", encoding="utf-8") \
-                         as file:
-                        system_prompt = file.read()
+                has_system = config.SYSTEM_TAG in prompt
+                has_user = config.USER_TAG in prompt
+
+                if has_system and has_user:
+                    split = prompt.split(config.USER_TAG, 1)
+                    system_prompt = split[0].replace(config.SYSTEM_TAG, "").strip()
+                    user_prompt = split[1].strip()
+                elif not has_system and not has_user:
+                    system_prompt = None
+                    user_prompt = prompt.strip()
+                else:
+                    raise ValueError("Bad prompt file")
 
                 key = os.path.splitext(file_name)[0]
                 self._prompts[key] = (user_prompt, system_prompt)
-
+                
     @abstractmethod
     def send_query(self, user_prompt: str, system_prompt: str | None = None) -> str:
         """Send USER_PROMPT and SYSTEM_PROMPT if given to the model and return
@@ -83,14 +88,13 @@ class LlamaCppClient(ModelClient):
 
     def __init__(
         self,
-        user_prompts_dir: str,
-        system_prompts_dir: str | None = None,
+        prompts_dir: str,
         think_mode_bool: bool = False,
         host: str = "127.0.0.1",
         port: int = 4568,
         temperature: float = 0.7,
      ):
-        super().__init__(user_prompts_dir, system_prompts_dir)
+        super().__init__(prompts_dir)
         self.api = f"http://{host}:{port}/v1/chat/completions"
         self.temperature = temperature
         self.think_mode = "" if think_mode_bool else "/no_think"

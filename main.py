@@ -67,18 +67,13 @@ if __name__ == "__main__":
 
     if args.ragar:
         config.LOGGER and config.LOGGER.info("Using RAGAR prompts.")
-        user_prompts_dir = config.PROMPTS_DIR / "ragar"
-        sys_prompts_dir = None
+        prompts_dir = config.PROMPTS_DIR / "ragar"
     else:
         config.LOGGER and config.LOGGER.info("Using CUSTOM prompts.")
-        user_prompts_dir = config.PROMPTS_DIR / "custom" / "user"
-        sys_prompts_dir = config.PROMPTS_DIR  / "custom" / "system"
+        prompts_dir = config.PROMPTS_DIR / "custom"
 
     # Setup CoRAG system here
-    mc = LlamaCppClient(user_prompts_dir,
-                        sys_prompts_dir,
-                        think_mode_bool=args.think)
-
+    mc = LlamaCppClient(prompts_dir, think_mode_bool=args.think)
     corag = RagarCorag(mc)
 
     labels = []
