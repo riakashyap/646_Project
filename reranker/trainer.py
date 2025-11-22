@@ -26,7 +26,7 @@ from src.config import LOGGER as logger
 class RerankerTrainer:
     def __init__(
         self,
-        model_name: str = "Alibaba-NLP/E2Rank-4B"
+        model_name: str = "naver/trecdl22-crossencoder-debertav3"
     ):
         # Initialize reranker trainer
         
