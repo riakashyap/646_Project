@@ -46,6 +46,9 @@ if __name__ == "__main__":
                         metavar='',
                         type=int,
                         default=100)
+    parser.add_argument('--debate-stop',
+                        help='Refines the stop_check agent with MADR. Overrides -r.',
+                        action='store_true')
     parser.add_argument('-l', '--log-trace',
                         help='Output a trace to the log file (define in config.py). Overrides --num-claims to 2.',
                         action='store_true')
@@ -54,6 +57,9 @@ if __name__ == "__main__":
     if args.log_trace:
         config.make_logger()
         args.num_claims = 2
+
+    if args.debate_stop:
+        args.ragar = False
 
     fever_labels = ["REFUTES", "SUPPORTS", "NOT ENOUGH INFO"]
     ds = load_dataset("fever", "v1.0", trust_remote_code=True)
@@ -74,7 +80,7 @@ if __name__ == "__main__":
 
     # Setup CoRAG system here
     mc = LlamaCppClient(prompts_dir, think_mode_bool=args.think)
-    corag = RagarCorag(mc)
+    corag = RagarCorag(mc, args.debate_stop)
 
     labels = []
     preds = []
