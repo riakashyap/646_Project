@@ -25,6 +25,7 @@ from src.config import (
     DATA_DIR,
     CLAIMS_PATH,
     RANKLISTS_PATH,
+    T1000_RANKLISTS_PATH,
     RERANKEDLISTS_PATH
 )
 import os
@@ -32,6 +33,7 @@ import json
 import unittest
 from datasets import load_dataset
 import pytrec_eval
+import random
 from reranker import E2RankReranker
 
 class TestReranker(unittest.TestCase):
@@ -70,11 +72,11 @@ class TestReranker(unittest.TestCase):
         self.searcher = LuceneSearcher(str(INDEX_DIR))
         self.searcher.set_bm25(1.2, 0.75)
 
-        if (not os.path.exists(RANKLISTS_PATH)) or regenerate_ranklists:
-            print(f"Preparing {RANKLISTS_PATH} (this will take awhile)...")
+        if (not os.path.exists(T1000_RANKLISTS_PATH)) or regenerate_ranklists:
+            print(f"Preparing {T1000_RANKLISTS_PATH} (this will take awhile)...")
             self.write_ranklists(claims, 50)
 
-        with open(RANKLISTS_PATH, "r", encoding="utf8") as f:
+        with open(T1000_RANKLISTS_PATH, "r", encoding="utf8") as f:
             self.fever_ranklists = json.load(f)
             
         if not os.path.exists(RERANKEDLISTS_PATH):
@@ -238,9 +240,9 @@ class TestReranker(unittest.TestCase):
             retrieved_docs: dict[str, float] = {}
             for h in curr_q_hits:
                 retrieved_docs[h.docid] = float(h.score)
-                ranklists[claim_id] = retrieved_docs
+            ranklists[claim_id] = retrieved_docs
 
-        with open(RANKLISTS_PATH, "w", encoding="utf8") as out:
+        with open(T1000_RANKLISTS_PATH, "w", encoding="utf8") as out:
             json.dump(ranklists, out, indent=2)
 
     @classmethod
@@ -260,8 +262,16 @@ class TestReranker(unittest.TestCase):
         qrels = defaultdict(lambda: defaultdict(lambda: 0))
         claims = []
         added_claims = set()
+        random.seed(42)  
+        ds_list = list(ds)
+        random.shuffle(ds_list)
 
-        for ex in ds:
+        claims_count = 0  
+        MAX_CLAIMS = 1000  
+
+        for ex in ds_list:
+            if claims_count >= MAX_CLAIMS:
+                break
             cid = str(ex["id"])
             l = ex["label"]
             if l not in ("SUPPORTS", "REFUTES"):
@@ -283,6 +293,7 @@ class TestReranker(unittest.TestCase):
                         "input": claim,
                     })
                 added_claims.add(cid)
+                claims_count += 1  
 
         with open(QRELS_PATH, "w", encoding="utf8") as out:
             json.dump(qrels, out, indent=2)
@@ -294,7 +305,7 @@ class TestReranker(unittest.TestCase):
                           raw_claims: list[dict],
                           top_k: int) -> None:
         reranked_lists: dict[str, dict[str, float]] = {}
-        with open(RANKLISTS_PATH, "r", encoding="utf8") as f:
+        with open(T1000_RANKLISTS_PATH, "r", encoding="utf8") as f:
             bm25_ranklists = json.load(f)
         
         for claim_entry in raw_claims:

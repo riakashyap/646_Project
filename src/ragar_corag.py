@@ -39,7 +39,7 @@ class RagarCorag(Corag):
 
     def answer(self, question: str) -> str:
         bm25_k = 50 if self._reranker is not None else 3 
-        ## TODO: Define bm25_k for reranker (currently modified to 50 because reranker's first layer is 50)
+        ## TODO: Finalise after a few iterative tests
         
         hits = self._searcher.search(question, k=bm25_k)
         search_results = []

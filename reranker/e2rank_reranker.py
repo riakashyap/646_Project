@@ -50,6 +50,7 @@ class E2RankReranker(BaseReranker):
             self.reranking_block_map = reranking_block_map
         
         if logger:
+            logger.info(f"Device: {self.device} (is CUDA available: {torch.cuda.is_available()})")
             logger.info(f"Initializing E2RankReranker on {self.device}")
             logger.info(f"Layerwise reranking: {self.use_layerwise}")
             if self.use_layerwise:
