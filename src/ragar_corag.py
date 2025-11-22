@@ -3,6 +3,7 @@ Copyright:
 
   Copyright © 2025 bdunahu
   Copyright © 2025 Eric
+  Copyright © 2025 uchuuronin
 
   You should have received a copy of the MIT license along with this file.
   If not, see https://mit-license.org/
@@ -23,25 +24,50 @@ class RagarCorag(Corag):
     _mc: ModelClient
     _searcher: LuceneSearcher
 
-    def __init__(self, mc: ModelClient):
+    def __init__(self, mc: ModelClient, reranker=None):
         super().__init__()
         self._mc = mc
         self._searcher = LuceneSearcher(str(INDEX_DIR)) # Ideally would inject this but I'm lazy
         self._searcher.set_bm25(1.2, 0.75)
+        self._reranker = reranker
+        
+        if self._reranker is not None:
+            print(f"Reranker enabled: {self._reranker}")
 
     def init_question(self, claim: str) -> str:
         return self._mc.send_prompt("init_question", [claim]).strip()
 
     def answer(self, question: str) -> str:
-        hits = self._searcher.search(question, k=3)
+        bm25_k = 50 if self._reranker is not None else 3 
+        ## TODO: Finalise after a few iterative tests
+        
+        hits = self._searcher.search(question, k=bm25_k)
         search_results = []
-        for hit in hits:
-            doc = self._searcher.doc(hit.docid)
-            contents = doc.get("contents")
-            search_results.append(contents)
-
+        
+        if self._reranker is not None:
+            docs = []
+            for hit in hits:
+                doc = self._searcher.doc(hit.docid)
+                contents = doc.get("contents")
+                if contents:
+                    docs.append((hit.docid, contents))
+            
+            if docs:
+                reranked = self._reranker.rerank(
+                    question, docs
+                )
+                search_results = [contents for _, contents, _ in reranked]
+        else:
+            # Use BM25 results directly
+            for hit in hits:
+                doc = self._searcher.doc(hit.docid)
+                contents = doc.get("contents")
+                if contents:
+                    search_results.append(contents)
+        
         output = "\n\n".join(search_results)
         return self._mc.send_prompt("answer", [output, question]).strip()
+
 
     def next_question(self, claim: str, qa_pairs: list[tuple[str, str]]) -> str:
         return self._mc.send_prompt("next_question", [claim, qa_pairs]).strip()
