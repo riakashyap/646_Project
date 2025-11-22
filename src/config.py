@@ -28,7 +28,6 @@ PAGES_DIR = WIKI_DIR / "wiki-pages"
 QRELS_PATH = DATA_DIR / "fever-qrel.json"
 CLAIMS_PATH = DATA_DIR / "fever-claims.json"
 RANKLISTS_PATH = DATA_DIR / "fever-ranklist.json"
-T1000_RANKLISTS_PATH = DATA_DIR / "fever-ranklist-top1000.json"
 RERANKEDLISTS_PATH = DATA_DIR / "fever-reranked.json"
 TRACE_PATH = SCRIPT_DIR.parent / "logs" / "trace.log"
 

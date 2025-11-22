@@ -29,7 +29,7 @@ class E2RankReranker(BaseReranker):
         self,
         model_path: str = "naver/trecdl22-crossencoder-debertav3",
         device: str = None,
-        max_length: int = 384,
+        max_length: int = 512,
         use_layerwise: bool = True,
         reranking_block_map: Dict[int, int] = None,
         **kwargs
@@ -114,7 +114,7 @@ class E2RankReranker(BaseReranker):
         doc_ids = [doc[0] for doc in documents]
         doc_texts = [doc[1] for doc in documents]
         
-        pairs = [[f"Query: {query}", f"Document: {text}"] for text in doc_texts]
+        pairs = [[query, text] for text in doc_texts] 
         
         inputs = self.tokenizer(
             pairs,
@@ -156,7 +156,7 @@ class E2RankReranker(BaseReranker):
         return results
     
     def compute_score(self, query: str, document: str) -> float:
-        pair = [[f"Query: {query}", f"Document: {document}"]]
+        pair = [[query, document]]
         
         inputs = self.tokenizer(
             pair,
@@ -180,7 +180,7 @@ class E2RankReranker(BaseReranker):
         if not documents:
             return []
         
-        pairs = [[f"Query: {query}", f"Document: {doc}"] for doc in documents]
+        pairs = [[query, doc] for doc in documents]  
         
         inputs = self.tokenizer(
             pairs,
