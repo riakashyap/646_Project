@@ -45,13 +45,13 @@ class Corag(ABC):
         question = self.init_question(claim)
 
         for i in range(max_iters):
-            config.LOGGER and config.LOGGER.info(f"\n{'─' * 20}\nStarting iteration {i+1}")
+            config.LOGGER.info(f"\n{'─' * 20}\nStarting iteration {i+1}")
             if i > 0:
                 question = self.next_question(claim, qa_pairs)
             answer = self.answer(question)
             qa_pairs.append((question, answer))
             if self.stop_check(claim, qa_pairs):
-                config.LOGGER and config.LOGGER.info(f"\n{'─' * 20}\nBreaking at {i+1}")
+                config.LOGGER.info(f"\n{'─' * 20}\nBreaking at {i+1}")
                 break
 
         verdict, raw = self.verdict(claim, qa_pairs)

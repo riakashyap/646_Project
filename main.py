@@ -57,8 +57,11 @@ def parse_arguments():
 
     # handle overrides
     if args.log_trace:
-        config.make_logger()
         args.num_claims = 2
+        config.make_log_file()
+        config.LOGGER.disabled = False
+        config.LOGGER.info("\n" + "═" * 40)
+        config.LOGGER.info("Starting pipeline...")
 
     if args.debate_stop:
         args.ragar = False
@@ -80,10 +83,10 @@ if __name__ == "__main__":
     split = concatenate_datasets([supports, refutes])
 
     if args.ragar:
-        config.LOGGER and config.LOGGER.info("Using RAGAR prompts.")
+        config.LOGGER.info("Using RAGAR prompts.")
         prompts_dir = config.PROMPTS_DIR / "ragar"
     else:
-        config.LOGGER and config.LOGGER.info("Using CUSTOM prompts.")
+        config.LOGGER.info("Using CUSTOM prompts.")
         prompts_dir = config.PROMPTS_DIR / "custom"
 
     # Setup CoRAG system here

@@ -62,7 +62,7 @@ class RagarCorag(Corag):
         )
 
         if exp_bool != exp_bool_refined:
-            config.LOGGER and config.LOGGER.info(f"MADR swapped to {exp_bool_refined}")
+            config.LOGGER.info(f"MADR swapped to {exp_bool_refined}")
 
         return exp_bool_refined
 
