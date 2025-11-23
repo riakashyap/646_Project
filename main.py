@@ -49,6 +49,9 @@ def parse_arguments():
     parser.add_argument('--debate-stop',
                         help='Refines the stop_check agent with MADR. Overrides -r.',
                         action='store_true')
+    parser.add_argument('--debate-verdict',
+                        help='Refines the verdict agent with MADR. Overrides -r.',
+                        action='store_true')
     parser.add_argument('-l', '--log-trace',
                         help='Output a trace to the log file (define in config.py). Overrides --num-claims to 2.',
                         action='store_true')
@@ -60,11 +63,10 @@ def parse_arguments():
         config.make_logger()
         args.num_claims = 2
 
-    if args.debate_stop:
+    if args.debate_stop or args.debate_verdict:
         args.ragar = False
 
     return args
-
 
 if __name__ == "__main__":
     args = parse_arguments()
@@ -88,7 +90,7 @@ if __name__ == "__main__":
 
     # Setup CoRAG system here
     mc = LlamaCppClient(prompts_dir, think_mode_bool=args.think)
-    corag = RagarCorag(mc, args.debate_stop)
+    corag = RagarCorag(mc, args.debate_stop, args.debate_verdict)
 
     labels = []
     preds = []
