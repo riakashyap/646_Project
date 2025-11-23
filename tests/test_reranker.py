@@ -16,7 +16,6 @@ Commentary:
 
 Code:
 """
-from tqdm import tqdm
 import torch
 from pyserini.search.lucene import LuceneSearcher
 from collections import defaultdict
@@ -300,11 +299,10 @@ class TestReranker(unittest.TestCase):
         with open(TOP_RANKLISTS_PATH, "r", encoding="utf8") as f:
             bm25_ranklists = json.load(f)
             
-        print(f"\nReranking {len(raw_claims)} claims...")
         if torch.cuda.is_available():
             print(f"GPU memory allocated: {torch.cuda.memory_allocated(0) / 1024**2:.2f} MB")
             
-        for claim_entry in tqdm(raw_claims, desc="Reranking", unit="claim"): 
+        for claim_entry in raw_claims: 
             claim_id = claim_entry['id']
             query = claim_entry['input']
             
