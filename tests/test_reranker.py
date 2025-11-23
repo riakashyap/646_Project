@@ -44,11 +44,7 @@ class TestReranker(unittest.TestCase):
     bm25_ranklists_top50: dict[str, dict[str, float]]
     reranked_ranklists: dict[str, dict[str, float]]
     reranker = E2RankReranker(
-        reranking_block_map={
-            8: 50,
-            16: 35,
-            24: 15,
-        }
+        reranking_block_map={8: 50, 16: 28, 24: 10}
     )
 
     @classmethod
@@ -137,12 +133,24 @@ class TestReranker(unittest.TestCase):
                 "MAP_10": MAP_10 / num_queries,
                 "MAP_50": MAP_50 / num_queries,
             }
-
+        expected = {
+            "P_3": 0.107,
+            "P_5": 0.08,
+            "P_10": 0.051,
+            "P_50": 0.017,
+            "R_3": 0.31,
+            "R_5": 0.39,
+            "R_10": 0.475,
+            "R_50": 0.747,
+            "MAP_3": 0.252 ,
+            "MAP_5": 0.271,
+            "MAP_10": 0.283,
+            "MAP_50": 0.296,
+        }
         actual = eval_on_fever()
         actual = {key: round(value, 3) for key, value in actual.items()}
-        print("\nBM25 metrics:", actual)
-        # TODO: add assertions based on expected performance
-        
+        self.assertEqual(expected, actual, "BM25 evaluation on the fever dataset"
+                         " was significantly different than expected!")
 
     def test_can_rerank(self):
         claim_id = list(self.reranked_ranklists.keys())[0]
