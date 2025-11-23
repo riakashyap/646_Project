@@ -37,7 +37,7 @@ class TestCorag(unittest.TestCase):
         prompts_dir = PROMPTS_DIR / "ragar"
 
         self.ragar_client = MockModelClient(prompts_dir)
-        self.ragar = RagarCorag(self.ragar_client)
+        self.ragar = RagarCorag(self.ragar_client, False)
 
     @classmethod
     def get_expected_prompts(self, client: MockModelClient,

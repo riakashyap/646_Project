@@ -1,3 +1,19 @@
+"""
+Copyright:
+
+  Copyright © 2025 Eric
+  Copyright © 2025 bdunahu
+
+  You should have received a copy of the MIT license along with this file.
+  If not, see https://mit-license.org/
+
+Commentary:
+
+  This file contains various utility AI-response parsers.
+
+Code:
+"""
+
 def parse_boolean(text: str) -> bool:
     lower = text.lower()
     has_true = "true" in lower
