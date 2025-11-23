@@ -1,7 +1,20 @@
 """
-Unit tests for the MADR routine.
+Copyright:
 
-These tests follow the pattern used in `tests/test_corag.py` and exercise the MADR control flow by using a small sequential mock model client that returns predefined responses and records all prompts sent by the pipeline.
+    Copyright © 2025 Ria
+
+    You should have received a copy of the MIT license along with this file.
+    If not, see https://mit-license.org/
+
+Commentary:
+
+    Unit tests for the MADR routine.
+
+    These tests follow the pattern used in `tests/test_corag.py` and exercise the
+    MADR control flow by using a small sequential mock model client that returns
+    predefined responses and records all prompts sent by the pipeline.
+
+Code:
 """
 
 from src.madr import run_madr
