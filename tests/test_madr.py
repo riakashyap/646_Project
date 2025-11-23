@@ -135,7 +135,7 @@ class TestMadr(unittest.TestCase):
 
 
 class TestParsers(unittest.TestCase):
-    """Parser unit tests"""
+    """Parser unit tests embedded into the MADR test file"""
 
     def test_parse_boolean_true(self):
         self.assertTrue(parse_boolean("True"))
