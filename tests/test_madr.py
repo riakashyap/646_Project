@@ -8,11 +8,7 @@ Copyright:
 
 Commentary:
 
-    Unit tests for the MADR routine.
-
-    These tests follow the pattern used in `tests/test_corag.py` and exercise the
-    MADR control flow by using a small sequential mock model client that returns
-    predefined responses and records all prompts sent by the pipeline.
+   This file tests the base functionality of the MADR pipeline.
 
 Code:
 """
