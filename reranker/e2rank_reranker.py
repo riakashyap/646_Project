@@ -114,7 +114,7 @@ class E2RankReranker(BaseReranker):
         
         doc_ids, doc_texts = zip(*documents)
         
-        pairs = [[query, text] for text in doc_texts] 
+        pairs = [[f"Query: {query}\n", f"Document: {text}\n"] for text in doc_texts]
         
         inputs = self.tokenizer(
             pairs,
@@ -133,7 +133,7 @@ class E2RankReranker(BaseReranker):
                 )
                 reranked_indices = reranked_indices.cpu().tolist()[:top_k]
                 
-                final_pairs = [[query, doc_texts[idx]] for idx in reranked_indices]
+                final_pairs = [[f"Query: {query}\n", f"Document: {doc_texts[idx]}\n"] for idx in reranked_indices]
                 final_inputs = self.tokenizer(
                     final_pairs,
                     padding=True,
@@ -169,7 +169,7 @@ class E2RankReranker(BaseReranker):
         return results
     
     def compute_score(self, query: str, document: str) -> float:
-        pair = [[query, document]]
+        pair = [[f"Query: {query}\n", f"Document: {document}\n"]]
         
         inputs = self.tokenizer(
             pair,
@@ -193,7 +193,7 @@ class E2RankReranker(BaseReranker):
         if not documents:
             return []
         
-        pairs = [[query, doc] for doc in documents]  
+        pairs = [[f"Query: {query}\n", f"Document: {doc}\n"] for doc in documents]  
         
         inputs = self.tokenizer(
             pairs,
