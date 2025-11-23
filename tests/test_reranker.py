@@ -46,8 +46,8 @@ class TestReranker(unittest.TestCase):
     reranker = E2RankReranker(
         reranking_block_map={
             8: 50,
-            16: 20,
-            24: 10,
+            16: 35,
+            24: 15,
         }
     )
 
@@ -202,100 +202,7 @@ class TestReranker(unittest.TestCase):
 
         print("Reranker metrics:", rerank_metrics)
         # TODO: add assertions based on expected performance
-        
-    def test_layerwise_intermediate_results(self):
-        def evaluate_ranklists(ranklists: dict, metrics: list) -> dict:
-            evaluator = pytrec_eval.RelevanceEvaluator(
-                self.qrels,
-                set(metrics)
-            )
-            results = evaluator.evaluate(ranklists)
-            aggregated = {metric: 0.0 for metric in metrics}
-            
-            for _qid, scores in results.items():
-                for metric in metrics:
-                    metric_key = metric.replace('.', '_')
-                    aggregated[metric] += scores[metric_key]
-            num_queries = len(ranklists) if ranklists else 1
-            return {metric: aggregated[metric] / num_queries for metric in metrics}
-        
-        def get_layerwise_results(reranking_map: dict, target_k: int) -> dict:
-            temp_reranker = E2RankReranker(
-                reranking_block_map=reranking_map, 
-                use_layerwise=True
-            )
-            
-            with open(TOP_CLAIMS_PATH, "r", encoding="utf8") as f:
-                claims = json.load(f)
-            with open(TOP_RANKLISTS_PATH, "r", encoding="utf8") as f:
-                bm25_ranklists = json.load(f)
-            
-            intermediate_ranklists = {}
-            
-            final_layer = max(reranking_map.keys())
-            print(f"Processing {len(claims)} claims through layers {list(reranking_map.keys())}")
-            
-            for claim_entry in tqdm(claims, desc=f"Layer {final_layer}", unit="claim"):
-                claim_id = claim_entry['id']
-                query = claim_entry['input']
-                if claim_id not in bm25_ranklists:
-                    continue
-                
-                bm25_docs = bm25_ranklists[claim_id]
-                
-                doc_pairs = []
-                for docid in bm25_docs.keys():
-                    doc = self.searcher.doc(docid)
-                    if doc is not None:
-                        doc_text = doc.contents()
-                        doc_pairs.append((docid, doc_text))
-                
-                if not doc_pairs:
-                    continue
-                
-                reranked = temp_reranker.rerank(
-                    query=query,
-                    documents=doc_pairs,
-                    top_k=target_k, 
-                )
-                
-                intermediate_ranklists[claim_id] = {
-                    docid: float(score)
-                    for (docid, _text, score) in reranked
-                }
-            
-            return intermediate_ranklists
-        
-        layerwise_configs = [
-            (
-                {8: 50}, 
-                50,
-                ['P.3', 'P.5', 'P.10', 'P.50', 'recall.3', 'recall.5', 'recall.10', 'recall.50', 
-                'map_cut.3', 'map_cut.5', 'map_cut.10', 'map_cut.50']
-            ),
-            (
-                {8: 50, 16: 20}, 
-                20,
-                ['P.3', 'P.5', 'P.10', 'P.20', 'recall.3', 'recall.5', 'recall.10', 'recall.20',
-                'map_cut.3', 'map_cut.5', 'map_cut.10', 'map_cut.20']
-            ),
-            (
-                {8: 50, 16: 20, 24: 10}, 
-                10,
-                ['P.3', 'P.5', 'P.10', 'recall.3', 'recall.5', 'recall.10',
-                'map_cut.3', 'map_cut.5', 'map_cut.10']
-            )
-        ]
-        
-        for reranking_map, target_k, metrics in layerwise_configs:
-            print(f"Evaluating layer block at stage: {reranking_map}")
-            intermediate_ranklists = get_layerwise_results(reranking_map, target_k)
-            results = evaluate_ranklists(intermediate_ranklists, metrics)
-            print("Metrics:", results)
-            
-        ## TODO: Delete function later; its a quick-fix approach for evaluating each layer performance only
-            
-            
+                 
     @classmethod
     def write_ranklists(self,
                      raw_claims: list[dict],

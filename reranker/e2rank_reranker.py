@@ -11,7 +11,6 @@ Commentary:
     Based on the paper "E2Rank: Efficient and Effective Layer-wise Reranking"
     Called model found @ https://github.com/caesar-one/e2rank
     HuggingFace Model for cross-encoder: https://huggingface.co/naver/trecdl22-crossencoder-debertav3
-    TODO: test model_path: str = "cross-encoder/nli-deberta-v3-large",
     
 Code:
 """
