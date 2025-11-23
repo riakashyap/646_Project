@@ -6,28 +6,9 @@ These tests follow the pattern used in `tests/test_corag.py` and exercise the MA
 
 from src.madr import run_madr
 from src.config import PROMPTS_DIR
-from tests.mock_model_client import MockModelClient
+from tests.mock_model_client import MockModelClient, SeqMockClient
 import unittest
 from src.parsers import parse_boolean, parse_ternary, parse_conclusive
-
-
-class SeqMockClient(MockModelClient):
-    """MockModelClient variant that returns queued responses and records sent prompts."""
-
-    def __init__(self, prompts_dir, responses: list[str]):
-        super().__init__(prompts_dir)
-        self._queue = list(responses)
-        self.history = []
-
-    def send_query(self, user_prompt: str, system_prompt: str | None = None) -> str:
-        # record prompt then pop next response
-        self.history.append((user_prompt, system_prompt))
-        self.last_user_prompt = user_prompt
-        self.last_system_prompt = system_prompt
-        if not self._queue:
-            return ""
-        return self._queue.pop(0)
-
 
 class TestMadr(unittest.TestCase):
 
