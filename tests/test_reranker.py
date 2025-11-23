@@ -16,15 +16,16 @@ Commentary:
 
 Code:
 """
+from tqdm import tqdm
 import torch
 from pyserini.search.lucene import LuceneSearcher
 from collections import defaultdict
 from src.config import (
     INDEX_DIR,
-    QRELS_PATH,
     DATA_DIR,
-    CLAIMS_PATH,
-    RANKLISTS_PATH,
+    TOP_QRELS_PATH,
+    TOP_CLAIMS_PATH,
+    TOP_RANKLISTS_PATH,
     RERANKEDLISTS_PATH
 )
 import os
@@ -53,20 +54,32 @@ class TestReranker(unittest.TestCase):
     @classmethod
     def setUpClass(self):
         super().setUpClass()
-
+        
+        regenerate_ranklists = False
         regenerate_reranklists = False
 
-        with open(QRELS_PATH, "r", encoding="utf8") as f:
-            self.qrels = json.load(f)
-        with open(CLAIMS_PATH, "r", encoding="utf8") as f:
-            claims = json.load(f)
+        if not (os.path.exists(TOP_QRELS_PATH) and \
+                os.path.exists(TOP_CLAIMS_PATH)):
+           print(f"Preparing {TOP_QRELS_PATH}...")
+           print(f"Preparing {TOP_CLAIMS_PATH}...")
+           regenerate_ranklists = True
+           self.write_qrels()
 
+        with open(TOP_QRELS_PATH, "r", encoding="utf8") as f:
+            self.qrels = json.load(f)
+        with open(TOP_CLAIMS_PATH, "r", encoding="utf8") as f:
+            claims = json.load(f)
+        
         self.searcher = LuceneSearcher(str(INDEX_DIR))
         self.searcher.set_bm25(1.2, 0.75)
+        
+        if (not os.path.exists(TOP_RANKLISTS_PATH)) or regenerate_ranklists:
+            print(f"Preparing {TOP_RANKLISTS_PATH} (this will take awhile)...")
+            self.write_ranklists(claims, 50)
 
-        with open(RANKLISTS_PATH, "r", encoding="utf8") as f:
+        with open(TOP_RANKLISTS_PATH, "r", encoding="utf8") as f:
             self.fever_ranklists = json.load(f)
-            
+
         if not os.path.exists(RERANKEDLISTS_PATH) or regenerate_reranklists:
             print(f"Preparing {RERANKEDLISTS_PATH}  (this will take awhile)...")
             self.write_reranked_lists(claims, 10)
@@ -83,27 +96,30 @@ class TestReranker(unittest.TestCase):
             evaluator = pytrec_eval.RelevanceEvaluator(
                 self.qrels,
                 {
-                    'P.3', 'P.5', 'P.10',
-                    'recall.3', 'recall.5', 'recall.10',
-                    'map_cut.3', 'map_cut.5', 'map_cut.10'
+                    'P.3', 'P.5', 'P.10', 'P.50',
+                    'recall.3', 'recall.5', 'recall.10', 'recall.50',
+                    'map_cut.3', 'map_cut.5', 'map_cut.10', 'map_cut.50'
                 }
             )
             results = evaluator.evaluate(self.fever_ranklists)
 
-            P_3, P_5, P_10 = 0, 0, 0
-            R_3, R_5, R_10 = 0, 0, 0
-            MAP_3, MAP_5, MAP_10 = 0, 0, 0
+            P_3, P_5, P_10, P_50 = 0, 0, 0 , 0
+            R_3, R_5, R_10, R_50 = 0, 0, 0, 0
+            MAP_3, MAP_5, MAP_10, MAP_50 = 0, 0, 0, 0
 
             for query_id, scores in results.items():
                 P_3 += scores['P_3']
                 P_5 += scores['P_5']
                 P_10 += scores['P_10']
+                P_50 += scores['P_50']
                 R_3 += scores['recall_3']
                 R_5 += scores['recall_5']
                 R_10 += scores['recall_10']
+                R_50 += scores['recall_50']
                 MAP_3 += scores['map_cut_3']
                 MAP_5 += scores['map_cut_5']
                 MAP_10 += scores['map_cut_10']
+                MAP_50 += scores['map_cut_50']
 
             num_queries = len(self.fever_ranklists)
 
@@ -111,17 +127,22 @@ class TestReranker(unittest.TestCase):
                 "P_3": P_3 / num_queries,
                 "P_5": P_5 / num_queries,
                 "P_10": P_10 / num_queries,
+                "P_50": P_50 / num_queries,
                 "R_3": R_3 / num_queries,
                 "R_5": R_5 / num_queries,
                 "R_10": R_10 / num_queries,
+                "R_50": R_50 / num_queries,
                 "MAP_3": MAP_3 / num_queries,
                 "MAP_5": MAP_5 / num_queries,
                 "MAP_10": MAP_10 / num_queries,
+                "MAP_50": MAP_50 / num_queries,
             }
 
         actual = eval_on_fever()
         actual = {key: round(value, 3) for key, value in actual.items()}
         print("\nBM25 metrics:", actual)
+        # TODO: add assertions based on expected performance
+        
 
     def test_can_rerank(self):
         claim_id = list(self.reranked_ranklists.keys())[0]
@@ -180,21 +201,195 @@ class TestReranker(unittest.TestCase):
         rerank_metrics = {k: round(v, 3) for k, v in rerank_metrics.items()}
 
         print("Reranker metrics:", rerank_metrics)
-        # TODO: Add assertions based on expected results
+        # TODO: add assertions based on expected performance
+        
+    def test_layerwise_intermediate_results(self):
+        def evaluate_ranklists(ranklists: dict, metrics: list) -> dict:
+            evaluator = pytrec_eval.RelevanceEvaluator(
+                self.qrels,
+                set(metrics)
+            )
+            results = evaluator.evaluate(ranklists)
+            aggregated = {metric: 0.0 for metric in metrics}
+            
+            for _qid, scores in results.items():
+                for metric in metrics:
+                    metric_key = metric.replace('.', '_')
+                    aggregated[metric] += scores[metric_key]
+            num_queries = len(ranklists) if ranklists else 1
+            return {metric: aggregated[metric] / num_queries for metric in metrics}
+        
+        def get_layerwise_results(reranking_map: dict, target_k: int) -> dict:
+            temp_reranker = E2RankReranker(
+                reranking_block_map=reranking_map, 
+                use_layerwise=True
+            )
+            
+            with open(TOP_CLAIMS_PATH, "r", encoding="utf8") as f:
+                claims = json.load(f)
+            with open(TOP_RANKLISTS_PATH, "r", encoding="utf8") as f:
+                bm25_ranklists = json.load(f)
+            
+            intermediate_ranklists = {}
+            
+            final_layer = max(reranking_map.keys())
+            print(f"Processing {len(claims)} claims through layers {list(reranking_map.keys())}")
+            
+            for claim_entry in tqdm(claims, desc=f"Layer {final_layer}", unit="claim"):
+                claim_id = claim_entry['id']
+                query = claim_entry['input']
+                if claim_id not in bm25_ranklists:
+                    continue
+                
+                bm25_docs = bm25_ranklists[claim_id]
+                
+                doc_pairs = []
+                for docid in bm25_docs.keys():
+                    doc = self.searcher.doc(docid)
+                    if doc is not None:
+                        doc_text = doc.contents()
+                        doc_pairs.append((docid, doc_text))
+                
+                if not doc_pairs:
+                    continue
+                
+                reranked = temp_reranker.rerank(
+                    query=query,
+                    documents=doc_pairs,
+                    top_k=target_k, 
+                )
+                
+                intermediate_ranklists[claim_id] = {
+                    docid: float(score)
+                    for (docid, _text, score) in reranked
+                }
+            
+            return intermediate_ranklists
+        
+        layerwise_configs = [
+            (
+                {8: 50}, 
+                50,
+                ['P.3', 'P.5', 'P.10', 'P.50', 'recall.3', 'recall.5', 'recall.10', 'recall.50', 
+                'map_cut.3', 'map_cut.5', 'map_cut.10', 'map_cut.50']
+            ),
+            (
+                {8: 50, 16: 20}, 
+                20,
+                ['P.3', 'P.5', 'P.10', 'P.20', 'recall.3', 'recall.5', 'recall.10', 'recall.20',
+                'map_cut.3', 'map_cut.5', 'map_cut.10', 'map_cut.20']
+            ),
+            (
+                {8: 50, 16: 20, 24: 10}, 
+                10,
+                ['P.3', 'P.5', 'P.10', 'recall.3', 'recall.5', 'recall.10',
+                'map_cut.3', 'map_cut.5', 'map_cut.10']
+            )
+        ]
+        
+        for reranking_map, target_k, metrics in layerwise_configs:
+            print(f"Evaluating layer block at stage: {reranking_map}")
+            intermediate_ranklists = get_layerwise_results(reranking_map, target_k)
+            results = evaluate_ranklists(intermediate_ranklists, metrics)
+            print("Metrics:", results)
+            
+        ## TODO: Delete function later; its a quick-fix approach for evaluating each layer performance only
+            
+            
+    @classmethod
+    def write_ranklists(self,
+                     raw_claims: list[dict],
+                     top_k: int) -> None:
+        """
+        Runs BM25 retrieval with Pyserini for a subset of fever claims.
+        """
+        ranklists: dict[str, dict[str, float]] = {}
+
+        list_claims = []
+        list_ids = []
+        for entry in raw_claims:
+            list_ids.append(entry['id'])
+            list_claims.append(entry['input'])
+
+        hits = self.searcher.batch_search(
+            list_claims,
+            qids=list_ids,
+            k=top_k,
+            threads=self.num_worker
+        )
+
+        for claim_id, curr_q_hits in hits.items():
+            retrieved_docs: dict[str, float] = {}
+            for h in curr_q_hits:
+                retrieved_docs[h.docid] = float(h.score)
+            ranklists[claim_id] = retrieved_docs
+
+        with open(TOP_RANKLISTS_PATH, "w", encoding="utf8") as out:
+            json.dump(ranklists, out, indent=2)
+
+    @classmethod
+    def write_qrels(self) -> None:
+        """
+        Downloads and generates a QRELS, CLAIMS file out of the fever training set.
+        """
+        os.makedirs(DATA_DIR, exist_ok=True)
+
+        ds = load_dataset(
+            "fever",
+            "v1.0",
+            cache_dir=DATA_DIR,
+            split="train"
+        )
+
+        qrels = defaultdict(lambda: defaultdict(lambda: 0))
+        claims = []
+        added_claims = set()
+        claims_count = 0  
+        MAX_CLAIMS = 100  
+
+        for ex in ds:
+            if len(added_claims) >= MAX_CLAIMS:
+                break
+            cid = str(ex["id"])
+            l = ex["label"]
+            if l not in ("SUPPORTS", "REFUTES"):
+                # don't care if there's (possibly no) evidence
+                continue
+            page = ex.get("evidence_wiki_url")
+            sent_id = ex.get("evidence_sentence_id")
+            claim = ex.get("claim")
+            if (page is not None and
+                sent_id is not None and
+                claim is not None
+                ):
+                qrels[cid][page] = 1
+
+                # avoid adding the same cid twice
+                if cid not in added_claims:
+                    claims.append({
+                        "id": cid,
+                        "input": claim,
+                    })
+                added_claims.add(cid)
+
+        with open(TOP_QRELS_PATH, "w", encoding="utf8") as out:
+            json.dump(qrels, out, indent=2)
+        with open(TOP_CLAIMS_PATH, "w", encoding="utf8") as out:
+            json.dump(claims, out, indent=2)
 
     @classmethod
     def write_reranked_lists(self,
                           raw_claims: list[dict],
                           top_k: int) -> None:
         reranked_lists: dict[str, dict[str, float]] = {}
-        with open(RANKLISTS_PATH, "r", encoding="utf8") as f:
+        with open(TOP_RANKLISTS_PATH, "r", encoding="utf8") as f:
             bm25_ranklists = json.load(f)
             
         print(f"\nReranking {len(raw_claims)} claims...")
         if torch.cuda.is_available():
             print(f"GPU memory allocated: {torch.cuda.memory_allocated(0) / 1024**2:.2f} MB")
             
-        for claim_entry in raw_claims:
+        for claim_entry in tqdm(raw_claims, desc="Reranking", unit="claim"): 
             claim_id = claim_entry['id']
             query = claim_entry['input']
             
@@ -224,6 +419,7 @@ class TestReranker(unittest.TestCase):
                 for (docid, _text, score) in reranked
             }
 
+        print(f"\nWriting {len(reranked_lists)} reranked results to {RERANKEDLISTS_PATH}...")
         with open(RERANKEDLISTS_PATH, "w", encoding="utf8") as out:
             json.dump(reranked_lists, out, indent=2)
         

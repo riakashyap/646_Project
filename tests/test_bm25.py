@@ -31,9 +31,7 @@ import json
 import unittest
 from datasets import load_dataset
 import pytrec_eval
-import random
 
-MAX_CLAIMS = 1000 
 
 class TestBM25(unittest.TestCase):
 
@@ -65,7 +63,7 @@ class TestBM25(unittest.TestCase):
 
         if (not os.path.exists(RANKLISTS_PATH)) or regenerate_ranklists:
             print(f"Preparing {RANKLISTS_PATH} (this will take awhile)...")
-            self.write_ranklists(claims, 50)
+            self.write_ranklists(claims, 10)
 
         with open(RANKLISTS_PATH, "r", encoding="utf8") as f:
             self.fever_ranklists = json.load(f)
@@ -133,11 +131,11 @@ class TestBM25(unittest.TestCase):
             "MAP_3": 0.257,
             "MAP_5": 0.273,
             "MAP_10": 0.286,
-        } ## TODO: Modify to 1000 claims and uncomment below assertion
+        }
         actual = eval_on_fever()
         actual = {key: round(value, 3) for key, value in actual.items()}
-        # self.assertEqual(expected, actual, "BM25 evaluation on the fever dataset"
-        #                  " was significantly different than expected!")
+        self.assertEqual(expected, actual, "BM25 evaluation on the fever dataset"
+                         " was significantly different than expected!")
 
     @classmethod
     def write_ranklists(self,
@@ -187,16 +185,8 @@ class TestBM25(unittest.TestCase):
         qrels = defaultdict(lambda: defaultdict(lambda: 0))
         claims = []
         added_claims = set()
-        
-        random.seed(42)
-        ds_list = list(ds)
-        random.shuffle(ds_list)
-        
-        claims_count = 0
 
-        for ex in ds_list:
-            if claims_count >= MAX_CLAIMS:
-                break
+        for ex in ds:
             cid = str(ex["id"])
             l = ex["label"]
             if l not in ("SUPPORTS", "REFUTES"):
@@ -218,7 +208,6 @@ class TestBM25(unittest.TestCase):
                         "input": claim,
                     })
                 added_claims.add(cid)
-                claims_count += 1
 
         with open(QRELS_PATH, "w", encoding="utf8") as out:
             json.dump(qrels, out, indent=2)
