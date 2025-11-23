@@ -17,17 +17,21 @@ Code:
 
 from .corag import Corag
 from .model_clients import ModelClient
-from .config import INDEX_DIR
+from . import config
 from pyserini.search.lucene import LuceneSearcher
+from .parsers import parse_ternary, parse_conclusive
+from .madr import run_madr
 
 class RagarCorag(Corag):
     _mc: ModelClient
     _searcher: LuceneSearcher
+    _debate_stop: bool
 
-    def __init__(self, mc: ModelClient, reranker=None):
+    def __init__(self, mc: ModelClient, debate_stop: bool, reranker=None):
         super().__init__()
         self._mc = mc
-        self._searcher = LuceneSearcher(str(INDEX_DIR)) # Ideally would inject this but I'm lazy
+        self._debate_stop = debate_stop
+        self._searcher = LuceneSearcher(str(config.INDEX_DIR))
         self._searcher.set_bm25(1.2, 0.75)
         self._reranker = reranker
         
@@ -73,28 +77,21 @@ class RagarCorag(Corag):
         return self._mc.send_prompt("next_question", [claim, qa_pairs]).strip()
 
     def stop_check(self, claim: str, qa_pairs: list[tuple[str, str]]) -> bool:
-        res = self._mc.send_prompt("stop_check", [claim, qa_pairs]).lower()
+        exp = self._mc.send_prompt("stop_check", [claim, qa_pairs])
+        exp_bool = parse_conclusive(exp)
 
-        has_inconclusive = "inconclusive" in res
-        has_conclusive = "conclusive" in res and not has_inconclusive
+        if not self._debate_stop:
+            return exp_bool
 
-        if has_conclusive and not has_inconclusive:
-            return True
-        return False
+        exp_bool_refined = parse_conclusive(
+            run_madr(self._mc, claim, qa_pairs, exp)
+        )
+
+        if exp_bool != exp_bool_refined:
+            config.LOGGER and config.LOGGER.info(f"MADR swapped to {exp_bool_refined}")
+
+        return exp_bool_refined
 
     def verdict(self, claim: str, qa_pairs: list[tuple[str, str]]) -> tuple[int, str | None]:
         res = self._mc.send_prompt("verdict", [claim, qa_pairs])
-        verdict = None
-
-        # TODO: define an enum or Verdict class for this
-        # TODO: could also use a map, and extract this to a parsers.py file for easier reuse
-        # 0 -> false, 1 -> true, 2 -> inconclusive
-        lower = res.lower()
-        if "false" in lower:
-            verdict = 0
-        elif "true" in lower:
-            verdict = 1
-        elif "inconclusive" in lower:
-            verdict = 2
-
-        return verdict, res
+        return parse_ternary(res), res
