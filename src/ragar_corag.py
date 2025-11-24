@@ -58,7 +58,7 @@ class RagarCorag(Corag):
             
             if docs:
                 reranked = self._reranker.rerank(
-                    question, docs
+                    question, docs, top_k=3
                 )
                 search_results = [contents for _, contents, _ in reranked]
         else:
