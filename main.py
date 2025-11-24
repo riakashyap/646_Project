@@ -54,6 +54,9 @@ def parse_arguments():
     parser.add_argument('--debate-stop',
                         help='Refines the stop_check agent with MADR. Overrides -r.',
                         action='store_true')
+    parser.add_argument('--debate-verdict',
+                        help='Refines the verdict agent with MADR. Overrides -r.',
+                        action='store_true')
     parser.add_argument('-l', '--log-trace',
                         help='Output a trace to the log file (define in config.py). Overrides --num-claims to 2.',
                         action='store_true')
@@ -62,14 +65,16 @@ def parse_arguments():
 
     # handle overrides
     if args.log_trace:
-        config.make_logger()
         args.num_claims = 2
+        config.make_log_file()
+        config.LOGGER.disabled = False
+        config.LOGGER.info("\n" + "═" * 40)
+        config.LOGGER.info("Starting pipeline...")
 
-    if args.debate_stop:
+    if args.debate_stop or args.debate_verdict:
         args.ragar = False
 
     return args
-
 
 if __name__ == "__main__":
     args = parse_arguments()
@@ -85,10 +90,10 @@ if __name__ == "__main__":
     split = concatenate_datasets([supports, refutes])
 
     if args.ragar:
-        config.LOGGER and config.LOGGER.info("Using RAGAR prompts.")
+        config.LOGGER.info("Using RAGAR prompts.")
         prompts_dir = config.PROMPTS_DIR / "ragar"
     else:
-        config.LOGGER and config.LOGGER.info("Using CUSTOM prompts.")
+        config.LOGGER.info("Using CUSTOM prompts.")
         prompts_dir = config.PROMPTS_DIR / "custom"
 
     # Initialize reranker if requested
@@ -102,7 +107,7 @@ if __name__ == "__main__":
     
     # Setup CoRAG system here
     mc = LlamaCppClient(prompts_dir, think_mode_bool=args.think)
-    corag = RagarCorag(mc, args.debate_stop, reranker=reranker)
+    corag = RagarCorag(mc, args.debate_stop, args.debate_verdict, reranker=reranker)
 
     labels = []
     preds = []

@@ -40,20 +40,18 @@ SYSTEM_TAG = "<<SYSTEM>>"
 USER_TAG = "<<USER>>"
 
 # global logger
-LOGGER = None
+LOGGER = logging.getLogger('corag_logger')
+LOGGER.setLevel(logging.DEBUG)
+LOGGER.propagate = False
+LOGGER.disabled = True
 
-def make_logger():
+def make_log_file():
     if not os.path.exists(TRACE_PATH):
         with open(TRACE_PATH, 'w') as file:
             pass
-    global LOGGER
-    LOGGER = logging.getLogger('corag_logger')
-    LOGGER.setLevel(logging.DEBUG)
-    LOGGER.propagate = False
+
     file_handler = logging.FileHandler(TRACE_PATH)
     file_handler.setLevel(logging.DEBUG)
     formatter = logging.Formatter('%(asctime)s - %(levelname)s --- %(message)s')
     file_handler.setFormatter(formatter)
     LOGGER.addHandler(file_handler)
-    LOGGER.info("\n" + "═" * 40)
-    LOGGER.info("Starting pipeline...")

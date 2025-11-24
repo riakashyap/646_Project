@@ -3,6 +3,7 @@ Copyright:
 
   Copyright © 2025 bdunahu
   Copyright © 2025 Eric
+  Copyright © 2025 Ria
 
   You should have received a copy of the MIT license along with this file.
   If not, see https://mit-license.org/
@@ -40,24 +41,28 @@ class Corag(ABC):
     def verdict(self, claim: str, qa_pairs: list[tuple[str, str]]) -> tuple[int, str]:
         pass
 
-    def run(self, claim: str, max_iters: int = 3) -> dict[str, any]:
+    def run(self, claim: str, max_iters: int = 5) -> dict[str, any]:
         qa_pairs = []
         question = self.init_question(claim)
 
         for i in range(max_iters):
-            config.LOGGER and config.LOGGER.info(f"\n{'─' * 20}\nStarting iteration {i+1}")
+            config.LOGGER.info(f"\n{'─' * 20}\nStarting iteration {i+1}")
             if i > 0:
                 question = self.next_question(claim, qa_pairs)
             answer = self.answer(question)
             qa_pairs.append((question, answer))
             if self.stop_check(claim, qa_pairs):
-                config.LOGGER and config.LOGGER.info(f"\n{'─' * 20}\nBreaking at {i+1}")
+                config.LOGGER.info(f"\n{'─' * 20}\nBreaking at {i+1}")
                 break
 
         verdict, raw = self.verdict(claim, qa_pairs)
+
+        config.LOGGER.info(f"Iterations: {len(qa_pairs)}")
+
         return {
             "claim": claim,
             "qa_pairs": qa_pairs,
             "verdict": verdict,
-            "verdict_raw": raw
+            "verdict_raw": raw,
+            "iterations": len(qa_pairs)
         }
