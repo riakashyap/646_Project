@@ -36,7 +36,7 @@ class RagarCorag(Corag):
         self._searcher = LuceneSearcher(str(config.INDEX_DIR))
         self._searcher.set_bm25(1.2, 0.75)
         self._reranker = reranker
-        
+
         if self._reranker is not None:
             print(f"Reranker enabled: {self._reranker}")
 
@@ -44,12 +44,12 @@ class RagarCorag(Corag):
         return self._mc.send_prompt("init_question", [claim]).strip()
 
     def answer(self, question: str) -> str:
-        bm25_k = 50 if self._reranker is not None else 3 
+        bm25_k = 50 if self._reranker is not None else 3
         ## TODO: Finalise after a few iterative tests
-        
+
         hits = self._searcher.search(question, k=bm25_k)
         search_results = []
-        
+
         if self._reranker is not None:
             docs = []
             for hit in hits:
@@ -57,7 +57,7 @@ class RagarCorag(Corag):
                 contents = doc.get("contents")
                 if contents:
                     docs.append((hit.docid, contents))
-            
+
             if docs:
                 reranked = self._reranker.rerank(
                     question, docs, top_k=3
@@ -70,7 +70,7 @@ class RagarCorag(Corag):
                 contents = doc.get("contents")
                 if contents:
                     search_results.append(contents)
-        
+
         output = "\n\n".join(search_results)
         return self._mc.send_prompt("answer", [output, question]).strip()
 
@@ -100,11 +100,11 @@ class RagarCorag(Corag):
 
         if not self._debate_verdict:
             return verdict, exp
-        
+
         exp_refined = run_madr(self._mc, claim, qa_pairs, exp)
         verdict_refined = parse_ternary(exp_refined)
 
         if verdict != verdict_refined:
-            config.LOGGER and config.LOGGER.info(f"MADR swapped to {verdict_refined}")
+            config.LOGGER.info(f"MADR swapped to {verdict_refined}")
 
         return verdict_refined, exp_refined
