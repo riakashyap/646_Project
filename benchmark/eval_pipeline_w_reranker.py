@@ -14,7 +14,6 @@ Commentary:
 
 Code:
 """
-import unittest
 import sys
 from pathlib import Path
 from typing import List, Tuple
@@ -51,17 +50,14 @@ class RerankerEvaluator:
         self.model_size = model_size 
         
         if self.use_ragar_prompts:
-            self.user_prompts_dir = PROMPTS_DIR / "ragar"
-            self.sys_prompts_dir = None
+            self.prompts_dir = PROMPTS_DIR / "ragar"
             self.prompt_type = "r"
         else:
-            self.user_prompts_dir = PROMPTS_DIR / "custom" / "user"
-            self.sys_prompts_dir = PROMPTS_DIR / "custom" / "system"
+            self.prompts_dir = PROMPTS_DIR / "custom"
             self.prompt_type = ""
-        
+
         self.mc = LlamaCppClient(
-            self.user_prompts_dir,
-            self.sys_prompts_dir,
+            prompts_dir=self.prompts_dir,
             think_mode_bool=self.think_mode
         )
         
@@ -92,7 +88,7 @@ class RerankerEvaluator:
             reranker = E2RankReranker()
             print(f"Reranker loaded successfully")
         
-        corag = RagarCorag(self.mc, reranker=reranker)
+        corag = RagarCorag(self.mc, debate_stop=False, debate_verdict=False, reranker=reranker)
         
         fever_labels = ["REFUTES", "SUPPORTS", "NOT ENOUGH INFO"]
         predicted_labels = []
@@ -274,4 +270,4 @@ class RerankerEvaluator:
         evaluator.test_bm25_with_reranker()
         
 if __name__ == "__main__":
-    unittest.main(verbosity=2)
+    RerankerEvaluator.main()
