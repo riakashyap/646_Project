@@ -57,7 +57,7 @@ class Corag(ABC):
 
         verdict, raw = self.verdict(claim, qa_pairs)
 
-        config.LOGGER and config.LOGGER.info(f"Iterations: {len(qa_pairs)}")
+        config.LOGGER.info(f"Iterations: {len(qa_pairs)}")
 
         return {
             "claim": claim,
