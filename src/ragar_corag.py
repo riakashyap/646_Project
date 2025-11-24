@@ -25,11 +25,13 @@ class RagarCorag(Corag):
     _mc: ModelClient
     _searcher: LuceneSearcher
     _debate_stop: bool
+    _debate_verdict: bool
 
-    def __init__(self, mc: ModelClient, debate_stop: bool):
+    def __init__(self, mc: ModelClient, debate_stop: bool, debate_verdict: bool):
         super().__init__()
         self._mc = mc
         self._debate_stop = debate_stop
+        self._debate_verdict = debate_verdict
         self._searcher = LuceneSearcher(str(config.INDEX_DIR))
         self._searcher.set_bm25(1.2, 0.75)
 
@@ -66,6 +68,17 @@ class RagarCorag(Corag):
 
         return exp_bool_refined
 
-    def verdict(self, claim: str, qa_pairs: list[tuple[str, str]]) -> tuple[int, str | None]:
-        res = self._mc.send_prompt("verdict", [claim, qa_pairs])
-        return parse_ternary(res), res
+    def verdict(self, claim: str, qa_pairs: list[tuple[str, str]]) -> tuple[int | None, str]:
+        exp = self._mc.send_prompt("verdict", [claim, qa_pairs])
+        verdict = parse_ternary(exp)
+
+        if not self._debate_verdict:
+            return verdict, exp
+        
+        exp_refined = run_madr(self._mc, claim, qa_pairs, exp)
+        verdict_refined = parse_ternary(exp_refined)
+
+        if verdict != verdict_refined:
+            config.LOGGER and config.LOGGER.info(f"MADR swapped to {verdict_refined}")
+
+        return verdict_refined, exp_refined
