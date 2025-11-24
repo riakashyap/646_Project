@@ -18,12 +18,12 @@ from .parsers import parse_boolean
 from . import config
 
 def run_madr(mc: ModelClient, claim: str, qa_pairs: list[tuple[str, str]], explanation: str, max_iters: int = 3):
-    config.LOGGER and config.LOGGER.info(f"\n{'-' * 20}\nStarting MADR routine")
+    config.LOGGER.info(f"\n{'-' * 20}\nStarting MADR routine")
     f1 = mc.send_prompt("madr_init_fb1", [claim, qa_pairs, explanation])
     f2 = mc.send_prompt("madr_init_fb2", [claim, qa_pairs, explanation])
 
     for i in range(max_iters):
-        config.LOGGER and config.LOGGER.info(f"Beginning MADR round {i}")
+        config.LOGGER.info(f"Beginning MADR round {i}")
 
         judgement =  mc.send_prompt("madr_judge", [f1, f2])
         if parse_boolean(judgement):
@@ -34,5 +34,5 @@ def run_madr(mc: ModelClient, claim: str, qa_pairs: list[tuple[str, str]], expla
             f2 = mc.send_prompt("madr_cross_fb", [f2, f1])
 
     revised_verdict = mc.send_prompt("madr_revise", [f1, f2, explanation])
-    config.LOGGER and config.LOGGER.info(f"Ending MADR routine\n{'-' * 20}\n")
+    config.LOGGER.info(f"Ending MADR routine\n{'-' * 20}\n")
     return revised_verdict
