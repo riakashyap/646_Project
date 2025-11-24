@@ -41,8 +41,9 @@ def parse_pipeline_log(path: str):
                 true_labels = ast.literal_eval(line.split("True labels:")[1].strip())
             elif line.startswith("Time:"):
                 total_time = float(line.split("Time:")[1].strip())
-            elif line.startswith("Iterations:"):    
+            elif "Iterations:" in line:    
                 iterations.append(int(line.split("Iterations:")[1].strip()))
+
 
     # Computes F1 scores
     report = classification_report(true_labels, pred_labels, output_dict=True, zero_division=0)
