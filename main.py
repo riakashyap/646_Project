@@ -19,6 +19,9 @@ Code:
 from collections import Counter
 from datasets import load_dataset
 from pprint import pprint
+import json
+import os
+import numpy as np
 from src.model_clients import LlamaCppClient
 from src.ragar_corag import RagarCorag
 from tqdm import tqdm
@@ -26,6 +29,7 @@ import argparse
 import time
 import os
 from datasets import load_dataset, Dataset, concatenate_datasets
+from sklearn.metrics import classification_report
 
 from src import config
 
@@ -71,18 +75,17 @@ def parse_arguments():
 
     return args
 
+def setup_fever(num_claims: int):
+    # Split into unique 50 'REFUTES' and 50 'SUPPORTS'
+    ds = load_dataset("fever", "v1.0", trust_remote_code=True)
+    half = int(num_claims / 2)
+    split = Dataset.from_pandas(ds["train"].to_pandas().drop_duplicates(subset="claim"))
+    supports = split.filter(lambda row: row["label"] == "SUPPORTS").select(range(half))
+    refutes = split.filter(lambda row: row["label"] == "REFUTES").select(range(half))
+    return concatenate_datasets([supports, refutes])
+
 if __name__ == "__main__":
     args = parse_arguments()
-
-    fever_labels = ["REFUTES", "SUPPORTS", "NOT ENOUGH INFO"]
-    ds = load_dataset("fever", "v1.0", trust_remote_code=True)
-
-    # Split into unique 50 'REFUTES' and 50 'SUPPORTS'
-    split = ds["train"]
-    split = Dataset.from_pandas(split.to_pandas().drop_duplicates(subset="claim"))
-    supports = split.filter(lambda row: row["label"] == "SUPPORTS").select(range(int(args.num_claims / 2)))
-    refutes = split.filter(lambda row: row["label"] == "REFUTES").select(range(int(args.num_claims / 2)))
-    split = concatenate_datasets([supports, refutes])
 
     if args.ragar:
         config.LOGGER.info("Using RAGAR prompts.")
@@ -91,35 +94,47 @@ if __name__ == "__main__":
         config.LOGGER.info("Using CUSTOM prompts.")
         prompts_dir = config.PROMPTS_DIR / "custom"
 
+    fever_labels = {0: "REFUTES", 1: "SUPPORTS", 2: "NOT ENOUGH INFO"}
+    fever_split = setup_fever(args.num_claims)
+
     # Setup CoRAG system here
     mc = LlamaCppClient(prompts_dir, think_mode_bool=args.think)
     corag = RagarCorag(mc, args.debate_stop, args.debate_verdict)
 
-    labels = []
-    preds = []
+    # Run pipeline on claims 
+    golds = []
     outputs = []
     start = time.time()
-    for i in tqdm(range(len(split))):
-        claim = split[i]["claim"]
-        label = split[i]["label"]
-
-        result = corag.run(claim)
-        verdict = result["verdict"]
-        pred = None if verdict is None else fever_labels[verdict]
-
-        preds.append(pred)
-        labels.append(label)
-        outputs.append(result)
-
+    for i in tqdm(range(len(fever_split))):
+        claim = fever_split[i]["claim"]
+        gold = fever_split[i]["label"]
+        output = corag.run(claim)
+        golds.append(gold)
+        outputs.append(output)
+    
+    # Extract relevant data
     elapsed = time.time() - start
-    accuracy = sum(pred == label for pred, label in zip(preds, labels)) / \
-        args.num_claims
+    preds = [fever_labels.get(output["verdict"], None) for output in outputs]
+    iters = [output["iterations"] for output in outputs]
 
-    print()
-    print(f"Accuracy: {accuracy:.8f}")
-    print("Pred labels:", preds)
-    print("True labels:", labels)
-    print(f"Time: {elapsed:8f}")
+    # Compute metrics
+    report = classification_report(golds, preds, output_dict=True, zero_division=0)
+    metrics = {
+        "time_elapsed": elapsed,
+        "num_support": preds.count("SUPPORTS"),
+        "num_refute": preds.count("REFUTES"),
+        "num_failed": preds.count(None),
+        "accuracy": sum(pred == gold for pred, gold in zip(preds, golds)) / len(preds),
+        "tpc": elapsed / len(preds),
+        "avg_iters": np.mean(iters),
+        "support_f1": report.get("SUPPORTS", {}).get("f1-score", 0),
+        "refute_f1": report.get("REFUTES", {}).get("f1-score", 0),
+        "weighted_f1": report["weighted avg"]["f1-score"]
+    }
+
+    print(json.dumps(metrics, indent=4))
+    with open(f"logs/metrics.json", "w") as file:
+        json.dump(metrics, file, indent=4)
 
 # Local Variables:
 # compile-command: "guix shell -m manifest.scm -- python3 ./main.py"
