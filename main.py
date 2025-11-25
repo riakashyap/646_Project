@@ -76,7 +76,7 @@ def parse_arguments():
     return args
 
 def setup_fever(num_claims: int):
-    # Split into unique 50 'REFUTES' and 50 'SUPPORTS'
+    # Split into unique half 'REFUTES' and half 'SUPPORTS'
     ds = load_dataset("fever", "v1.0", trust_remote_code=True)
     half = int(num_claims / 2)
     split = Dataset.from_pandas(ds["train"].to_pandas().drop_duplicates(subset="claim"))
