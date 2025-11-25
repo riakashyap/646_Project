@@ -37,10 +37,8 @@ class MockModelClient(ModelClient):
         
 
 class SeqMockClient(MockModelClient):
-    """MockModelClient variant that returns queued responses and records sent prompts.
-
-    This helper was originally defined in `tests/test_madr.py`; moving it here
-    makes it reusable across test suites.
+    """
+    MockModelClient variant that returns queued responses and records sent prompts.
     """
 
     def __init__(self, prompts_dir, responses: list[str]):

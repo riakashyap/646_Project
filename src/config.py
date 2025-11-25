@@ -21,19 +21,21 @@ import logging
 
 SCRIPT_DIR = Path(__file__).resolve().parent
 DATA_DIR = SCRIPT_DIR.parent / "data"
+LOGS_DIR = SCRIPT_DIR.parent / "logs"
 WIKI_DIR = DATA_DIR / "wiki"
 ZIP_PATH = DATA_DIR / "wiki-pages.zip"
 INDEX_DIR = WIKI_DIR / "index"
 PAGES_DIR = WIKI_DIR / "wiki-pages"
+TRACE_PATH = LOGS_DIR / "trace.log"
+EVAL_OUT_FNAME_BASE = "metrics"
 
-QRELS_PATH = DATA_DIR / "fever-qrel.json"
 CLAIMS_PATH = DATA_DIR / "fever-claims.json"
+QRELS_PATH = DATA_DIR / "fever-qrel.json"
 RANKLISTS_PATH = DATA_DIR / "fever-ranklist.json"
-TOP_QRELS_PATH = DATA_DIR / "fever-qrel-top.json"
-TOP_CLAIMS_PATH = DATA_DIR / "fever-claims-top.json"
-TOP_RANKLISTS_PATH = DATA_DIR / "fever-ranklist-top.json"
 RERANKEDLISTS_PATH = DATA_DIR / "fever-reranked.json"
-TRACE_PATH = SCRIPT_DIR.parent / "logs" / "trace.log"
+TOP_CLAIMS_PATH = DATA_DIR / "fever-claims-top.json"
+TOP_QRELS_PATH = DATA_DIR / "fever-qrel-top.json"
+TOP_RANKLISTS_PATH = DATA_DIR / "fever-ranklist-top.json"
 
 PROMPTS_DIR = SCRIPT_DIR.parent / "prompts"
 SYSTEM_TAG = "<<SYSTEM>>"
