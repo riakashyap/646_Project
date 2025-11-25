@@ -27,6 +27,7 @@ from src.config import (
     TOP_RANKLISTS_PATH,
     RERANKEDLISTS_PATH
 )
+from tests.utils import write_qrels, write_ranklists
 import os
 import json
 import unittest
@@ -58,7 +59,10 @@ class TestReranker(unittest.TestCase):
            print(f"Preparing {TOP_QRELS_PATH}...")
            print(f"Preparing {TOP_CLAIMS_PATH}...")
            regenerate_ranklists = True
-           self.write_qrels()
+           write_qrels(data_dir=DATA_DIR,
+                       qrels_path=TOP_QRELS_PATH,
+                       claims_path=TOP_CLAIMS_PATH,
+                       max_claims=100)
 
         with open(TOP_QRELS_PATH, "r", encoding="utf8") as f:
             self.qrels = json.load(f)
@@ -70,7 +74,7 @@ class TestReranker(unittest.TestCase):
         
         if (not os.path.exists(TOP_RANKLISTS_PATH)) or regenerate_ranklists:
             print(f"Preparing {TOP_RANKLISTS_PATH} (this will take awhile)...")
-            self.write_ranklists(claims, 50)
+            write_ranklists(self.searcher,self.num_worker, TOP_RANKLISTS_PATH, claims, 50)
 
         with open(TOP_RANKLISTS_PATH, "r", encoding="utf8") as f:
             self.fever_ranklists = json.load(f)
@@ -85,7 +89,7 @@ class TestReranker(unittest.TestCase):
     def test_fever_evaluation(self):
         def eval_on_fever() -> dict[str, float]:
             """
-            Evaluate BM25 retrieval results using pytrec_eval.
+            Evaluate BM25 retrieval results for limited claims using pytrec_eval.
             """
 
             evaluator = pytrec_eval.RelevanceEvaluator(
@@ -210,87 +214,6 @@ class TestReranker(unittest.TestCase):
         print("Reranker metrics:", rerank_metrics)
         # TODO: add assertions based on expected performance
                  
-    @classmethod
-    def write_ranklists(self,
-                     raw_claims: list[dict],
-                     top_k: int) -> None:
-        """
-        Runs BM25 retrieval with Pyserini for a subset of fever claims.
-        """
-        ranklists: dict[str, dict[str, float]] = {}
-
-        list_claims = []
-        list_ids = []
-        for entry in raw_claims:
-            list_ids.append(entry['id'])
-            list_claims.append(entry['input'])
-
-        hits = self.searcher.batch_search(
-            list_claims,
-            qids=list_ids,
-            k=top_k,
-            threads=self.num_worker
-        )
-
-        for claim_id, curr_q_hits in hits.items():
-            retrieved_docs: dict[str, float] = {}
-            for h in curr_q_hits:
-                retrieved_docs[h.docid] = float(h.score)
-            ranklists[claim_id] = retrieved_docs
-
-        with open(TOP_RANKLISTS_PATH, "w", encoding="utf8") as out:
-            json.dump(ranklists, out, indent=2)
-
-    @classmethod
-    def write_qrels(self) -> None:
-        """
-        Downloads and generates a QRELS, CLAIMS file out of the fever training set.
-        """
-        os.makedirs(DATA_DIR, exist_ok=True)
-
-        ds = load_dataset(
-            "fever",
-            "v1.0",
-            cache_dir=DATA_DIR,
-            split="train"
-        )
-
-        qrels = defaultdict(lambda: defaultdict(lambda: 0))
-        claims = []
-        added_claims = set()
-        claims_count = 0  
-        MAX_CLAIMS = 100  
-
-        for ex in ds:
-            if len(added_claims) >= MAX_CLAIMS:
-                break
-            cid = str(ex["id"])
-            l = ex["label"]
-            if l not in ("SUPPORTS", "REFUTES"):
-                # don't care if there's (possibly no) evidence
-                continue
-            page = ex.get("evidence_wiki_url")
-            sent_id = ex.get("evidence_sentence_id")
-            claim = ex.get("claim")
-            if (page is not None and
-                sent_id is not None and
-                claim is not None
-                ):
-                qrels[cid][page] = 1
-
-                # avoid adding the same cid twice
-                if cid not in added_claims:
-                    claims.append({
-                        "id": cid,
-                        "input": claim,
-                    })
-                added_claims.add(cid)
-
-        with open(TOP_QRELS_PATH, "w", encoding="utf8") as out:
-            json.dump(qrels, out, indent=2)
-        with open(TOP_CLAIMS_PATH, "w", encoding="utf8") as out:
-            json.dump(claims, out, indent=2)
-
     @classmethod
     def write_reranked_lists(self,
                           raw_claims: list[dict],
