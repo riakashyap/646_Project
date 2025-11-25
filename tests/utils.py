@@ -104,3 +104,45 @@ def write_ranklists(
 
     with open(ranklist_path, "w", encoding="utf8") as out:
         json.dump(ranklists, out, indent=2)
+        
+def eval_on_fever(
+    qrels: Dict[str, Dict[str, int]],
+    ranklists: Dict[str, Dict[str, float]],
+    max_k: int = 10
+    ) -> dict[str, float]:
+    """
+    Evaluate BM25 retrieval results using pytrec_eval.
+    """
+    eval_checkpoints = [3, 5, 10]
+    
+    k_values = sorted(set([k for k in eval_checkpoints if k <= max_k] + [max_k]))
+    # if max_k >10, then include max_k in evaluation
+    
+    metrics = set()
+    for k in k_values:
+        metrics.add(f'P.{k}')
+        metrics.add(f'recall.{k}')
+        metrics.add(f'map_cut.{k}')
+    
+    evaluator = pytrec_eval.RelevanceEvaluator(qrels, metrics)
+    results = evaluator.evaluate(ranklists)
+
+    P_dict = {k: 0.0 for k in k_values}
+    R_dict = {k: 0.0 for k in k_values}
+    MAP_dict = {k: 0.0 for k in k_values}
+
+    for query_id, scores in results.items():
+        for k in k_values:
+            P_dict[k] += scores[f'P_{k}']
+            R_dict[k] += scores[f'recall_{k}']
+            MAP_dict[k] += scores[f'map_cut_{k}']
+
+    num_queries = len(ranklists)
+
+    result = {}
+    for k in k_values:
+        result[f"P_{k}"] = P_dict[k] / num_queries
+        result[f"R_{k}"] = R_dict[k] / num_queries
+        result[f"MAP_{k}"] = MAP_dict[k] / num_queries
+    
+    return result

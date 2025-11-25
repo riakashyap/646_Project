@@ -27,7 +27,7 @@ from src.config import (
     CLAIMS_PATH,
     RANKLISTS_PATH
 )
-from tests.utils import write_qrels, write_ranklists
+from tests.utils import write_qrels, write_ranklists, eval_on_fever
 import os
 import json
 import unittest
@@ -81,50 +81,6 @@ class TestBM25(unittest.TestCase):
         self.assertGreater(len(hits), 0, "BM25 search returned no documents.")
 
     def test_fever_evaluation(self):
-        def eval_on_fever() -> dict[str, float]:
-            """
-            Evaluate BM25 retrieval results using pytrec_eval.
-            """
-
-            evaluator = pytrec_eval.RelevanceEvaluator(
-                self.qrels,
-                {
-                    'P.3', 'P.5', 'P.10',
-                    'recall.3', 'recall.5', 'recall.10',
- 'map_cut.3', 'map_cut.5', 'map_cut.10'
-                }
-            )
-            results = evaluator.evaluate(self.fever_ranklists)
-
-            P_3, P_5, P_10 = 0, 0, 0
-            R_3, R_5, R_10 = 0, 0, 0
-            MAP_3, MAP_5, MAP_10 = 0, 0, 0
-
-            for query_id, scores in results.items():
-                P_3 += scores['P_3']
-                P_5 += scores['P_5']
-                P_10 += scores['P_10']
-                R_3 += scores['recall_3']
-                R_5 += scores['recall_5']
-                R_10 += scores['recall_10']
-                MAP_3 += scores['map_cut_3']
-                MAP_5 += scores['map_cut_5']
-                MAP_10 += scores['map_cut_10']
-
-            num_queries = len(self.fever_ranklists)
-
-            return {
-                "P_3": P_3 / num_queries,
-                "P_5": P_5 / num_queries,
-                "P_10": P_10 / num_queries,
-                "R_3": R_3 / num_queries,
-                "R_5": R_5 / num_queries,
-                "R_10": R_10 / num_queries,
-                "MAP_3": MAP_3 / num_queries,
-                "MAP_5": MAP_5 / num_queries,
-                "MAP_10": MAP_10 / num_queries,
-            }
-
         expected = {
             "P_3": 0.124,
             "P_5": 0.090,
@@ -136,7 +92,7 @@ class TestBM25(unittest.TestCase):
             "MAP_5": 0.273,
             "MAP_10": 0.286,
         }
-        actual = eval_on_fever()
+        actual = eval_on_fever(self.qrels, self.fever_ranklists)
         actual = {key: round(value, 3) for key, value in actual.items()}
         self.assertEqual(expected, actual, "BM25 evaluation on the fever dataset"
                          " was significantly different than expected!")
