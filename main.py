@@ -149,7 +149,7 @@ if __name__ == "__main__":
         "madrverdict_" if args.debate_verdict else "",
     ]
     timestamp = datetime.now().strftime("%Y%m%dT%H%M%S")
-    to_write = str(config.BENCH_DIR / (
+    to_write = str(config.LOGS_DIR / (
         f"{timestamp}--{config.EVAL_OUT_FNAME_BASE}__"
         + f"".join(flags)
         + f"{args.num_claims}.json"

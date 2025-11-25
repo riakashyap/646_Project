@@ -21,7 +21,6 @@ import logging
 SCRIPT_DIR = Path(__file__).resolve().parent
 DATA_DIR = SCRIPT_DIR.parent / "data"
 LOGS_DIR = SCRIPT_DIR.parent / "logs"
-BENCH_DIR = SCRIPT_DIR.parent / "benchmark"
 WIKI_DIR = DATA_DIR / "wiki"
 ZIP_PATH = DATA_DIR / "wiki-pages.zip"
 INDEX_DIR = WIKI_DIR / "index"
