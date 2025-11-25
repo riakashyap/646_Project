@@ -2,7 +2,6 @@ models/
 data/
 *.log
 logs/
-benchmark/*.json
 
 # Byte-compiled / optimized / compiled files
 __pycache__/
