@@ -1,7 +1,9 @@
 """
 Copyright:
 
+  Copyright © 2025 Ananya-Jha-code
   Copyright © 2025 uchuuronin
+
 
   You should have received a copy of the MIT license along with this file.
   If not, see https://mit-license.org/
@@ -30,19 +32,29 @@ Code:
         
 # ## add train, validate, save model methods here
 """
-trainer.py — Finetunes naver/trecdl22-crossencoder-debertav3 on FEVER
-Uses PairwiseRankingLoss from lossfunc.py
+trainer.py — Finetunes naver on FEVER
+
+Loss used: PairwiseRankingLoss from lossfunc.py
 """
 
 import json
 import torch
 from torch.utils.data import Dataset, DataLoader
-from transformers import AutoTokenizer, AutoModelForSequenceClassification, AdamW
+from transformers import (
+    AutoTokenizer,
+    AutoModelForSequenceClassification,
+    AdamW
+)
 from tqdm import tqdm
-
-from lossfunc import PairwiseRankingLoss       
-from rerank import BaseReranker                
 from pathlib import Path
+
+from lossfunc import PairwiseRankingLoss
+from e2rank_reranker import E2RankReranker  
+from src.config import (
+    CLAIMS_PATH, QRELS_PATH, RANKLISTS_PATH,
+    PAGES_DIR
+)
+
 
 class FeverRerankDataset(Dataset):
 
@@ -54,12 +66,11 @@ class FeverRerankDataset(Dataset):
         pages_dir: Path,
         max_negatives: int = 1
     ):
+        self.claims_path = claims_path
+        self.qrels_path = qrels_path
+        self.ranklist_path = ranklist_path
         self.pages_dir = pages_dir
         self.max_negatives = max_negatives
-
-        self.claims = json.loads(Path(claims_path).read_text())
-        self.qrels = json.loads(Path(qrels_path).read_text())
-        self.ranklists = json.loads(Path(ranklist_path).read_text())
 
         self.samples = []
 
@@ -90,10 +101,10 @@ class FeverRerankDataset(Dataset):
         print(f"Built {len(self.samples)} FEVER triplets.")
 
     def _load_page(self, pid: str):
-        page_path = self.pages_dir / f"{pid}.txt"
-        if not page_path.exists():
+        file_path = self.pages_dir / f"{pid}.txt"
+        if not file_path.exists():
             return ""
-        return page_path.read_text(errors="ignore")
+        return file_path.read_text(errors="ignore")
 
     def __len__(self):
         return len(self.samples)
@@ -101,47 +112,76 @@ class FeverRerankDataset(Dataset):
     def __getitem__(self, idx):
         return self.samples[idx]
 
+
+
 class RerankerTrainer:
-    """
-    Trains a CrossEncoder reranker using PairwiseRankingLoss.
-    """
 
     def __init__(
         self,
+        model_type: str = "pairwise",    
         model_name: str = "naver/trecdl22-crossencoder-debertav3",
         device: str = None,
-        lr: float = 1e-5
+        lr: float = 1e-5,
+        use_layerwise: bool = True
     ):
-        # Device handling
+     
+        self.model_type = model_type.strip().lower()
+
         self.device = device or ("cuda" if torch.cuda.is_available() else "cpu")
-
-        # Load tokenizer + cross-encoder model
         self.tokenizer = AutoTokenizer.from_pretrained(model_name)
-        self.model = AutoModelForSequenceClassification.from_pretrained(
-            model_name,
-            num_labels=1        # single relevance score
-        ).to(self.device)
 
-        # Pairwise ranking loss from lossfunc.py
+
+        if self.model_type == "pairwise":
+            print("[Trainer] Using PAIRWISE")
+
+            self.model = AutoModelForSequenceClassification.from_pretrained(
+                model_name,
+                num_labels=1
+            ).to(self.device)
+
+        elif self.model_type == "e2rank":
+            print("[Trainer] Using E2RANK")
+            self.reranker = E2RankReranker(
+                model_path=model_name,
+                device=self.device,
+                use_layerwise=use_layerwise
+            )
+            self.model = self.reranker.model
+
+        else:
+            raise ValueError("model_type must be 'pairwise' or 'e2rank'.")
+
+ 
         self.loss_fn = PairwiseRankingLoss()
-
         self.optimizer = AdamW(self.model.parameters(), lr=lr)
 
-        print(f"Loaded cross-encoder: {model_name}")
+        print(f"Loaded model: {self.model_type} @ {model_name}")
 
-    def _score_pair(self, queries, docs):
-        encoded = self.tokenizer(
-            queries,
-            docs,
-            padding=True,
-            truncation=True,
-            return_tensors="pt",
-            max_length=512
+    def _score_ce(self, queries, docs):
+        inp = self.tokenizer(
+            queries, docs,
+            padding=True, truncation=True,
+            max_length=512,
+            return_tensors="pt"
         ).to(self.device)
 
-        outputs = self.model(**encoded)
-        return outputs.logits.squeeze(-1)   # (batch,)
+        out = self.model(**inp)
+        return out.logits.squeeze(-1)
 
+    def _score_e2rank(self, queries, docs):
+        scores = []
+        for q, d in zip(queries, docs):
+            score = self.reranker.compute_score(q, d)
+            scores.append(score)
+        return torch.tensor(scores, device=self.device)
+
+    def _score(self, queries, docs):
+        if self.model_type == "pairwise":
+            return self._score_ce(queries, docs)
+        else:
+            return self._score_e2rank(queries, docs)
+
+    
     def train(self, dataset: Dataset, batch_size=4, num_epochs=2):
 
         loader = DataLoader(dataset, batch_size=batch_size, shuffle=True)
@@ -153,8 +193,8 @@ class RerankerTrainer:
             for batch in tqdm(loader):
                 queries, pos_docs, neg_docs = zip(*batch)
 
-                pos_scores = self._score_pair(queries, pos_docs)
-                neg_scores = self._score_pair(queries, neg_docs)
+                pos_scores = self._score(queries, pos_docs)
+                neg_scores = self._score(queries, neg_docs)
 
                 loss = self.loss_fn(pos_scores, neg_scores)
 
@@ -166,14 +206,17 @@ class RerankerTrainer:
 
             print(f"Epoch Loss: {total_loss / len(loader):.4f}")
 
-        print("Training complete.")
-
+        print("\nTraining complete.")
 
     def save(self, output_dir: str):
         output_dir = Path(output_dir)
         output_dir.mkdir(parents=True, exist_ok=True)
 
-        self.model.save_pretrained(output_dir)
-        self.tokenizer.save_pretrained(output_dir)
+        if self.model_type == "pairwise":
+            self.model.save_pretrained(output_dir)
+            self.tokenizer.save_pretrained(output_dir)
+        else:
+            torch.save(self.model.state_dict(), output_dir / "pytorch_model.bin")
+            self.tokenizer.save_pretrained(output_dir)
 
         print(f"Saved model to {output_dir}")
