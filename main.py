@@ -18,20 +18,21 @@ Code:
 
 from collections import Counter
 from datasets import load_dataset
+from datasets import load_dataset, Dataset, concatenate_datasets
+from datetime import datetime
 from pprint import pprint
-import json
-import os
-import numpy as np
+from sklearn.metrics import classification_report
+from src import config
 from src.model_clients import LlamaCppClient
 from src.ragar_corag import RagarCorag
 from tqdm import tqdm
 import argparse
-import time
+import json
+import numpy as np
 import os
-from datasets import load_dataset, Dataset, concatenate_datasets
-from sklearn.metrics import classification_report
+import os
+import time
 
-from src import config
 
 def parse_arguments():
     parser = argparse.ArgumentParser(
@@ -50,6 +51,9 @@ def parse_arguments():
                         metavar='',
                         type=int,
                         default=100)
+    parser.add_argument('--reranker',
+                        help='Enable reranking after BM25 retrieval.',
+                        action='store_true')
     parser.add_argument('--debate-stop',
                         help='Refines the stop_check agent with MADR. Overrides -r.',
                         action='store_true')
@@ -101,7 +105,7 @@ if __name__ == "__main__":
     mc = LlamaCppClient(prompts_dir, think_mode_bool=args.think)
     corag = RagarCorag(mc, args.debate_stop, args.debate_verdict)
 
-    # Run pipeline on claims 
+    # Run pipeline on claims
     golds = []
     outputs = []
     start = time.time()
@@ -111,7 +115,7 @@ if __name__ == "__main__":
         output = corag.run(claim)
         golds.append(gold)
         outputs.append(output)
-    
+
     # Extract relevant data
     elapsed = time.time() - start
     preds = [fever_labels.get(output["verdict"], None) for output in outputs]
@@ -136,9 +140,20 @@ if __name__ == "__main__":
     }
 
     print(json.dumps(metrics, indent=4))
-    with open(f"logs/metrics.json", "w") as file:
-        json.dump(metrics, file, indent=4)
 
-# Local Variables:
-# compile-command: "guix shell -m manifest.scm -- python3 ./main.py"
-# End:
+    flags = [
+        "think_"       if args.think else "",
+        "ragar_"       if args.ragar else "",
+        "rerank_"      if args.reranker else "",
+        "madrstop_"    if args.debate_stop else "",
+        "madrverdict_" if args.debate_verdict else "",
+    ]
+    timestamp = datetime.now().strftime("%Y%m%dT%H%M%S")
+    to_write = str(config.BENCH_DIR / (
+        f"{timestamp}--{config.EVAL_OUT_FNAME_BASE}__"
+        + f"".join(flags)
+        + f"{args.num_claims}.json"
+    ))
+    with open(to_write, "w") as file:
+        json.dump(metrics, file, indent=4)
+    print(f"Wrote {to_write}.")
