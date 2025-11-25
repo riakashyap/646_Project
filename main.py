@@ -117,14 +117,17 @@ if __name__ == "__main__":
     preds = [fever_labels.get(output["verdict"], None) for output in outputs]
     iters = [output["iterations"] for output in outputs]
 
+    print(preds)
+
     # Compute metrics
     report = classification_report(golds, preds, output_dict=True, zero_division=0)
     metrics = {
         "time_elapsed": elapsed,
-        "num_support": preds.count("SUPPORTS"),
-        "num_refute": preds.count("REFUTES"),
-        "num_failed": preds.count(None),
         "accuracy": sum(pred == gold for pred, gold in zip(preds, golds)) / len(preds),
+        "support_preds": preds.count("SUPPORTS"),
+        "refute_preds": preds.count("REFUTES"),
+        "nei_preds": preds.count("NOT ENOUGH INFO"),
+        "failed_preds": preds.count(None),
         "tpc": elapsed / len(preds),
         "avg_iters": np.mean(iters),
         "support_f1": report.get("SUPPORTS", {}).get("f1-score", 0),
