@@ -46,7 +46,7 @@ class Corag(ABC):
         question = self.init_question(claim)
 
         for i in range(max_iters):
-            config.LOGGER.info(f"\Starting iteration {i+1}")
+            config.LOGGER.info(f"Starting iteration {i+1}")
             if i > 0:
                 question = self.next_question(claim, qa_pairs)
 
