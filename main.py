@@ -5,6 +5,7 @@ Copyright:
   Copyright © 2025 bdunahu
   Copyright © 2025 Eric
   Copyright © 2025 Ria
+  Copyright © 2025 uchuuronin
 
   You should have received a copy of the MIT license along with this file.
   If not, see https://mit-license.org/
@@ -17,10 +18,9 @@ Code:
 """
 
 from collections import Counter
-from datasets import load_dataset
 from datasets import load_dataset, Dataset, concatenate_datasets
 from datetime import datetime
-from pprint import pprint
+from reranker import E2RankReranker
 from sklearn.metrics import classification_report
 from src import config
 from src.model_clients import LlamaCppClient
@@ -29,7 +29,6 @@ from tqdm import tqdm
 import argparse
 import json
 import numpy as np
-import os
 import os
 import time
 
@@ -98,12 +97,21 @@ if __name__ == "__main__":
         config.LOGGER.info("Using CUSTOM prompts.")
         prompts_dir = config.PROMPTS_DIR / "custom"
 
+    # Initialize reranker if requested
+    reranker = None
+    if args.reranker:
+        try:
+            reranker = E2RankReranker()
+        except (OSError, FileNotFoundError) as e:
+            print(f"ERROR: Model files not found or download failed: {e}")
+            reranker = None
+
     fever_labels = {0: "REFUTES", 1: "SUPPORTS", 2: "NOT ENOUGH INFO"}
     fever_split = setup_fever(args.num_claims)
 
     # Setup CoRAG system here
     mc = LlamaCppClient(prompts_dir, think_mode_bool=args.think)
-    corag = RagarCorag(mc, args.debate_stop, args.debate_verdict)
+    corag = RagarCorag(mc, args.debate_stop, args.debate_verdict, reranker=reranker)
 
     # Run pipeline on claims
     golds = []

@@ -3,6 +3,7 @@ Copyright:
 
   Copyright © 2025 bdunahu
   Copyright © 2025 Eric
+  Copyright © 2025 uchuuronin
 
   You should have received a copy of the MIT license along with this file.
   If not, see https://mit-license.org/
@@ -25,12 +26,16 @@ WIKI_DIR = DATA_DIR / "wiki"
 ZIP_PATH = DATA_DIR / "wiki-pages.zip"
 INDEX_DIR = WIKI_DIR / "index"
 PAGES_DIR = WIKI_DIR / "wiki-pages"
-
-QRELS_PATH = DATA_DIR / "fever-qrel.json"
-CLAIMS_PATH = DATA_DIR / "fever-claims.json"
-RANKLISTS_PATH = DATA_DIR / "fever-ranklist.json"
 TRACE_PATH = LOGS_DIR / "trace.log"
 EVAL_OUT_FNAME_BASE = "metrics"
+
+CLAIMS_PATH = DATA_DIR / "fever-claims.json"
+QRELS_PATH = DATA_DIR / "fever-qrel.json"
+RANKLISTS_PATH = DATA_DIR / "fever-ranklist.json"
+RERANKEDLISTS_PATH = DATA_DIR / "fever-reranked.json"
+TOP_CLAIMS_PATH = DATA_DIR / "fever-claims-top.json"
+TOP_QRELS_PATH = DATA_DIR / "fever-qrel-top.json"
+TOP_RANKLISTS_PATH = DATA_DIR / "fever-ranklist-top.json"
 
 PROMPTS_DIR = SCRIPT_DIR.parent / "prompts"
 SYSTEM_TAG = "<<SYSTEM>>"

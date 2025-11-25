@@ -2,6 +2,7 @@ models/
 data/
 *.log
 logs/
+reranker/models/
 
 # Byte-compiled / optimized / compiled files
 __pycache__/

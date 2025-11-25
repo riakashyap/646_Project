@@ -27,6 +27,8 @@ class ModelClient(ABC):
     _prompts: Dict[str, str] = dict()
 
     def __init__(self, prompts_dir: str):
+        if prompts_dir is None:
+            return
         for file_name in os.listdir(prompts_dir):
             if file_name.endswith(".txt"):
                 prompt_path = prompts_dir / file_name
@@ -48,7 +50,7 @@ class ModelClient(ABC):
 
                 key = os.path.splitext(file_name)[0]
                 self._prompts[key] = (user_prompt, system_prompt)
-                
+
     @abstractmethod
     def send_query(self, user_prompt: str, system_prompt: str | None = None) -> str:
         """Send USER_PROMPT and SYSTEM_PROMPT if given to the model and return

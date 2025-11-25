@@ -2,6 +2,7 @@
 Copyright:
 
   Copyright © 2025 bdunahu
+  Copyright © 2025 uchuuronin
 
   You should have received a copy of the MIT license along with this file.
   If not, see https://mit-license.org/
@@ -163,7 +164,7 @@ class TestBM25(unittest.TestCase):
             retrieved_docs: dict[str, float] = {}
             for h in curr_q_hits:
                 retrieved_docs[h.docid] = float(h.score)
-                ranklists[claim_id] = retrieved_docs
+            ranklists[claim_id] = retrieved_docs
 
         with open(RANKLISTS_PATH, "w", encoding="utf8") as out:
             json.dump(ranklists, out, indent=2)

@@ -3,6 +3,7 @@ Copyright:
 
   Copyright © 2025 bdunahu
   Copyright © 2025 Eric
+  Copyright © 2025 uchuuronin
 
   You should have received a copy of the MIT license along with this file.
   If not, see https://mit-license.org/
@@ -27,27 +28,52 @@ class RagarCorag(Corag):
     _debate_stop: bool
     _debate_verdict: bool
 
-    def __init__(self, mc: ModelClient, debate_stop: bool, debate_verdict: bool):
+    def __init__(self, mc: ModelClient, debate_stop: bool, debate_verdict: bool, reranker=None):
         super().__init__()
         self._mc = mc
         self._debate_stop = debate_stop
         self._debate_verdict = debate_verdict
         self._searcher = LuceneSearcher(str(config.INDEX_DIR))
         self._searcher.set_bm25(1.2, 0.75)
+        self._reranker = reranker
+
+        if self._reranker is not None:
+            print(f"Reranker enabled: {self._reranker}")
 
     def init_question(self, claim: str) -> str:
         return self._mc.send_prompt("init_question", [claim]).strip()
 
     def answer(self, question: str) -> str:
-        hits = self._searcher.search(question, k=3)
+        bm25_k = 50 if self._reranker is not None else 3
+        ## TODO: Finalise after a few iterative tests
+
+        hits = self._searcher.search(question, k=bm25_k)
         search_results = []
-        for hit in hits:
-            doc = self._searcher.doc(hit.docid)
-            contents = doc.get("contents")
-            search_results.append(contents)
+
+        if self._reranker is not None:
+            docs = []
+            for hit in hits:
+                doc = self._searcher.doc(hit.docid)
+                contents = doc.get("contents")
+                if contents:
+                    docs.append((hit.docid, contents))
+
+            if docs:
+                reranked = self._reranker.rerank(
+                    question, docs, top_k=3
+                )
+                search_results = [contents for _, contents, _ in reranked]
+        else:
+            # Use BM25 results directly
+            for hit in hits:
+                doc = self._searcher.doc(hit.docid)
+                contents = doc.get("contents")
+                if contents:
+                    search_results.append(contents)
 
         output = "\n\n".join(search_results)
         return self._mc.send_prompt("answer", [output, question]).strip()
+
 
     def next_question(self, claim: str, qa_pairs: list[tuple[str, str]]) -> str:
         return self._mc.send_prompt("next_question", [claim, qa_pairs]).strip()
@@ -74,11 +100,11 @@ class RagarCorag(Corag):
 
         if not self._debate_verdict:
             return verdict, exp
-        
+
         exp_refined = run_madr(self._mc, claim, qa_pairs, exp)
         verdict_refined = parse_ternary(exp_refined)
 
         if verdict != verdict_refined:
-            config.LOGGER and config.LOGGER.info(f"MADR swapped to {verdict_refined}")
+            config.LOGGER.info(f"MADR swapped to {verdict_refined}")
 
         return verdict_refined, exp_refined
