@@ -156,7 +156,8 @@ if __name__ == "__main__":
     if not args.log_trace:
         flags = [
             "think_"       if args.think else "",
-            "ragar_"       if args.ragar else "",
+            "ragarorig_"   if args.ragar_orig else "",
+            "madrorig_"    if args.madr_orig else "",
             "rerank_"      if args.reranker else "",
             "madrstop_"    if args.debate_stop else "",
             "madrverdict_" if args.debate_verdict else "",
