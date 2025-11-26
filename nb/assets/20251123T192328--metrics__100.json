@@ -1,0 +1,1763 @@
+{
+  "config": {
+    "num_claims": 100,
+    "think_mode": false,
+    "ragar_prompts": false,
+    "reranker_enabled": false
+  },
+  "summary": {
+    "accuracy": 0.59,
+    "total_time": 412.9941997528076,
+    "time_per_claim": 4.129941997528076
+  },
+  "results": [
+    {
+      "claim_id": 0,
+      "claim": "In 2008, Jeff Ament released a solo record.",
+      "true_label": "SUPPORTS",
+      "predicted_label": "SUPPORTS",
+      "qa_pairs": [
+        [
+          "When was Jeff Ament's solo record released?",
+          "September 16, 2008."
+        ]
+      ],
+      "verdict_int": 1,
+      "verdict_raw": "True.  \nInconclusive"
+    },
+    {
+      "claim_id": 1,
+      "claim": "Franklin D. Roosevelt had a family that originated in New York.",
+      "true_label": "SUPPORTS",
+      "predicted_label": "SUPPORTS",
+      "qa_pairs": [
+        [
+          "What is the origin of Franklin D. Roosevelt's family?",
+          "Franklin D. Roosevelt's family originated from Dutch settlers in New York, with his ancestors tracing back to the 17th century. His direct lineage includes prominent figures such as his father, James Roosevelt, and his mother, Eleanor Roosevelt, who were part of influential American families."
+        ]
+      ],
+      "verdict_int": 1,
+      "verdict_raw": "True. The question-answer pairs fully confirm the claim that Franklin D. Roosevelt had a family that originated in New York."
+    },
+    {
+      "claim_id": 2,
+      "claim": "A phylogenetic tree is a branching diagram.",
+      "true_label": "SUPPORTS",
+      "predicted_label": "SUPPORTS",
+      "qa_pairs": [
+        [
+          "What is the primary purpose of a phylogenetic tree according to the statement?",
+          "The primary purpose of a phylogenetic tree is to represent a hypothesis about the evolutionary ancestry of a set of genes, species, or other taxa."
+        ],
+        [
+          "What type of diagram is a phylogenetic tree described as in the statement?",
+          "A phylogenetic tree is described as a branching diagram or \"tree\" in the statement."
+        ]
+      ],
+      "verdict_int": 1,
+      "verdict_raw": "The question-answer pairs fully confirm the claim.  \nTrue"
+    },
+    {
+      "claim_id": 3,
+      "claim": "Steffi Graf is an athlete.",
+      "true_label": "SUPPORTS",
+      "predicted_label": "SUPPORTS",
+      "qa_pairs": [
+        [
+          "Who is considered an athlete in the context of the statement about Steffi Graf?",
+          "Steffi Graf is considered an athlete in the context of the statement."
+        ]
+      ],
+      "verdict_int": 1,
+      "verdict_raw": "True.  \nInconclusive"
+    },
+    {
+      "claim_id": 4,
+      "claim": "Tommy Chong works in entertainment.",
+      "true_label": "SUPPORTS",
+      "predicted_label": "SUPPORTS",
+      "qa_pairs": [
+        [
+          "Who is Tommy Chong?",
+          "Tommy Chong is a Grammy Award-winning comedy duo member, along with Richard \"Cheech\" Marin, known for their films and stand-up routines based on the hippie and free love era, particularly the drug and counterculture movements, and their love for cannabis. He also directed the 1980 film \"Cheech & Chong's Next Movie\" and was a publicist for Brandie Knight."
+        ]
+      ],
+      "verdict_int": 1,
+      "verdict_raw": "True. The question-answer pair confirms that Tommy Chong is involved in entertainment through comedy, film, and stand-up routines, supporting the claim."
+    },
+    {
+      "claim_id": 5,
+      "claim": "Dangal (film) is set in Haryana.",
+      "true_label": "SUPPORTS",
+      "predicted_label": "SUPPORTS",
+      "qa_pairs": [
+        [
+          "Where is the film \"Dangal\" primarily set?",
+          "question too specific"
+        ],
+        [
+          "What region in Haryana is the film \"Dangal\" set in?",
+          "question too specific"
+        ],
+        [
+          "What is the significance of the setting in \"Dangal\" regarding Haryana?",
+          "The setting in \"Bharat Kesri Dangal\" is significant regarding Haryana as it is a freestyle wrestling competition organized by the Haryana Sports and Youth Affairs department to commemorate the martyrdom day of Shaheed Bhagat Singh, Rajguru, and Sukhdev."
+        ]
+      ],
+      "verdict_int": 1,
+      "verdict_raw": "The question-answer pairs confirm that the film \"Dangal\" is set in Haryana, as they mention the setting is significant to Haryana and reference a wrestling competition organized by the Haryana Sports and Youth Affairs department.  \nTrue."
+    },
+    {
+      "claim_id": 6,
+      "claim": "Suriname left the Kingdom of Netherlands in 1975.",
+      "true_label": "SUPPORTS",
+      "predicted_label": "SUPPORTS",
+      "qa_pairs": [
+        [
+          "When did Suriname leave the Kingdom of Netherlands?",
+          "Suriname left the Kingdom of the Netherlands on 25 November 1975."
+        ]
+      ],
+      "verdict_int": 1,
+      "verdict_raw": "True.  \nInconclusive"
+    },
+    {
+      "claim_id": 7,
+      "claim": "A subtype of anti-nuclear antibodies are anti-Ro antibodies.",
+      "true_label": "SUPPORTS",
+      "predicted_label": "SUPPORTS",
+      "qa_pairs": [
+        [
+          "Is the statement accurate that a subtype of anti-nuclear antibodies specifically includes anti-Ro antibodies?",
+          "Answer: Yes."
+        ]
+      ],
+      "verdict_int": 1,
+      "verdict_raw": "True.  \nInconclusive"
+    },
+    {
+      "claim_id": 8,
+      "claim": "Aaliyah was a United States citizen.",
+      "true_label": "SUPPORTS",
+      "predicted_label": "NOT ENOUGH INFO",
+      "qa_pairs": [
+        [
+          "Is Aaliyah's citizenship status confirmed by official U.S. records?",
+          "question too specific"
+        ],
+        [
+          "When was Aaliyah's citizenship status officially determined?",
+          "question too specific"
+        ],
+        [
+          "What is the basis for asserting that Aaliyah was a United States citizen?",
+          "The text does not provide information regarding the basis for asserting that Aaliyah was a United States citizen."
+        ]
+      ],
+      "verdict_int": 2,
+      "verdict_raw": "Inconclusive"
+    },
+    {
+      "claim_id": 9,
+      "claim": "Idris Elba was in Thor: The Dark World.",
+      "true_label": "SUPPORTS",
+      "predicted_label": "SUPPORTS",
+      "qa_pairs": [
+        [
+          "Is Idris Elba's appearance in Thor: The Dark World accurate?",
+          "Yes, Idris Elba's appearance in *Thor: The Dark World* is accurate. He played the character Heimdall in the film."
+        ]
+      ],
+      "verdict_int": 1,
+      "verdict_raw": "True. The question-answer pair confirms that Idris Elba was in *Thor: The Dark World* as Heimdall."
+    },
+    {
+      "claim_id": 10,
+      "claim": "Charles Marie de La Condamine died in 1774.",
+      "true_label": "SUPPORTS",
+      "predicted_label": "SUPPORTS",
+      "qa_pairs": [
+        [
+          "When did Charles Marie de La Condamine actually die?",
+          "13 February 1774."
+        ]
+      ],
+      "verdict_int": 1,
+      "verdict_raw": "True.  \nInconclusive"
+    },
+    {
+      "claim_id": 11,
+      "claim": "Her's genre was that of a romantic science-fiction drama.",
+      "true_label": "SUPPORTS",
+      "predicted_label": "NOT ENOUGH INFO",
+      "qa_pairs": [
+        [
+          "What is the specific genre classification of Her's narrative style?",
+          "question too specific"
+        ],
+        [
+          "What type of science-fiction elements are present in Her's narrative?",
+          "question too specific"
+        ],
+        [
+          "What era or time period does the romantic science-fiction drama of Her's take place in?",
+          "question too specific"
+        ]
+      ],
+      "verdict_int": 2,
+      "verdict_raw": "Inconclusive"
+    },
+    {
+      "claim_id": 12,
+      "claim": "Nepal is a sovereign Himalayan state.",
+      "true_label": "SUPPORTS",
+      "predicted_label": "SUPPORTS",
+      "qa_pairs": [
+        [
+          "Who determines the sovereignty of Nepal in the context of its Himalayan region?",
+          "The sovereignty of Nepal in the context of its Himalayan region is determined by the Government of Nepal, as it is the sovereign state encompassing the Himalayan region, including areas inhabited by groups like the Bhujel."
+        ]
+      ],
+      "verdict_int": 1,
+      "verdict_raw": "True. The question-answer pair confirms that Nepal is a sovereign state encompassing the Himalayan region, aligning with the claim."
+    },
+    {
+      "claim_id": 13,
+      "claim": "Louis Tomlinson was in a boy band.",
+      "true_label": "SUPPORTS",
+      "predicted_label": "SUPPORTS",
+      "qa_pairs": [
+        [
+          "When did Louis Tomlinson join a boy band?",
+          "Louis Tomlinson joined a boy band in 2010."
+        ]
+      ],
+      "verdict_int": 1,
+      "verdict_raw": "True.  \nInconclusive"
+    },
+    {
+      "claim_id": 14,
+      "claim": "The People vs. Larry Flynt is directed by Milos Forman.",
+      "true_label": "SUPPORTS",
+      "predicted_label": "SUPPORTS",
+      "qa_pairs": [
+        [
+          "Is the movie \"The People vs. Larry Flynt\" directed by Milos Forman?",
+          "Answer: Yes."
+        ]
+      ],
+      "verdict_int": 1,
+      "verdict_raw": "True."
+    },
+    {
+      "claim_id": 15,
+      "claim": "Globally, Twitter has more than 25 offices.",
+      "true_label": "SUPPORTS",
+      "predicted_label": "NOT ENOUGH INFO",
+      "qa_pairs": [
+        [
+          "How many offices does Twitter actually have worldwide?",
+          "question too specific"
+        ],
+        [
+          "What is the geographical distribution of Twitter's offices globally?",
+          "question too specific"
+        ],
+        [
+          "What is the total number of Twitter's offices worldwide?",
+          "question too specific"
+        ]
+      ],
+      "verdict_int": 2,
+      "verdict_raw": "Inconclusive"
+    },
+    {
+      "claim_id": 16,
+      "claim": "Adele has a song called Hello.",
+      "true_label": "SUPPORTS",
+      "predicted_label": "SUPPORTS",
+      "qa_pairs": [
+        [
+          "When was the song \"Hello\" by Adele released?",
+          "The song \"Hello\" by Adele was released on 23 October 2015."
+        ]
+      ],
+      "verdict_int": 1,
+      "verdict_raw": "True.  \nInconclusive"
+    },
+    {
+      "claim_id": 17,
+      "claim": "Bill Cosby was a comedian who did stand-up.",
+      "true_label": "SUPPORTS",
+      "predicted_label": "NOT ENOUGH INFO",
+      "qa_pairs": [
+        [
+          "Who is considered a comedian who did stand-up according to the statement?",
+          "Gabriel Iglesias is considered a comedian who did stand-up."
+        ],
+        [
+          "When did Bill Cosby start performing stand-up comedy?",
+          "The provided sources do not specify when Bill Cosby started performing stand-up comedy. Therefore, the answer is \"question too specific.\""
+        ]
+      ],
+      "verdict_int": 2,
+      "verdict_raw": "The question-answer pairs do not fully confirm or disprove the claim as they only mention Gabriel Iglesias as a stand-up comedian and lack specific information about Bill Cosby's start in stand-up comedy.  \nInconclusive"
+    },
+    {
+      "claim_id": 18,
+      "claim": "Priyanka Chopra advocates various causes.",
+      "true_label": "SUPPORTS",
+      "predicted_label": "NOT ENOUGH INFO",
+      "qa_pairs": [
+        [
+          "What specific causes does Priyanka Chopra advocate for?",
+          "question too specific"
+        ],
+        [
+          "When did Priyanka Chopra start advocating for various causes?",
+          "question too specific"
+        ],
+        [
+          "What organizations is Priyanka Chopra associated with in her advocacy work?",
+          "question too specific"
+        ]
+      ],
+      "verdict_int": 2,
+      "verdict_raw": "Inconclusive"
+    },
+    {
+      "claim_id": 19,
+      "claim": "Buddy Holly's style was influenced by gospel music.",
+      "true_label": "SUPPORTS",
+      "predicted_label": "NOT ENOUGH INFO",
+      "qa_pairs": [
+        [
+          "What specific elements of Buddy Holly's musical style are alleged to have been influenced by gospel music?",
+          "question too specific"
+        ],
+        [
+          "When did Buddy Holly's musical style begin to show influences from gospel music?",
+          "The sources indicate that Buddy Holly's musical style began to show influences from gospel music during his early years, as he grew up in a musical family during the Great Depression and learned to play guitar and sing alongside his siblings. However, the exact time when these influences began to manifest in his style is not specified. Therefore, the answer is: question too specific."
+        ],
+        [
+          "Where did Buddy Holly's early exposure to gospel music occur?",
+          "question too specific"
+        ]
+      ],
+      "verdict_int": 2,
+      "verdict_raw": "Inconclusive"
+    },
+    {
+      "claim_id": 20,
+      "claim": "Canada used to be inhabited by various aboriginal peoples.",
+      "true_label": "SUPPORTS",
+      "predicted_label": "SUPPORTS",
+      "qa_pairs": [
+        [
+          "Who were the specific aboriginal peoples that inhabited Canada before European contact?",
+          "The specific Aboriginal peoples that inhabited Canada before European contact include the First Nations, Inuit, and Métis peoples. However, the question is too specific as it asks for a precise list of specific groups without providing additional context or details from the sources."
+        ]
+      ],
+      "verdict_int": 1,
+      "verdict_raw": "True. The question-answer pairs confirm that Canada was inhabited by various aboriginal peoples, specifically mentioning First Nations, Inuit, and Métis, thereby supporting the claim."
+    },
+    {
+      "claim_id": 21,
+      "claim": "Boris Karloff was awarded two stars on the Hollywood Walk of Fame.",
+      "true_label": "SUPPORTS",
+      "predicted_label": "SUPPORTS",
+      "qa_pairs": [
+        [
+          "How many stars were awarded to Boris Karloff on the Hollywood Walk of Fame?",
+          "Answer: Two."
+        ]
+      ],
+      "verdict_int": 1,
+      "verdict_raw": "True.  \nInconclusive"
+    },
+    {
+      "claim_id": 22,
+      "claim": "Anne Hathaway was nominated for a Best Actress Award.",
+      "true_label": "SUPPORTS",
+      "predicted_label": "SUPPORTS",
+      "qa_pairs": [
+        [
+          "When was Anne Hathaway nominated for a Best Actress Award?",
+          "Anne Hathaway was nominated for a Best Actress Award for her performance in *Rachel Getting Married* in 2008. She also received a nomination for her role in *Brokeback Mountain* in 2005. Additionally, she was nominated for Best Actress in *Love & Other Drugs* in 2010."
+        ]
+      ],
+      "verdict_int": 1,
+      "verdict_raw": "True. The question-answer pairs confirm that Anne Hathaway was nominated for a Best Actress Award."
+    },
+    {
+      "claim_id": 23,
+      "claim": "Bradford is the location of a theater.",
+      "true_label": "SUPPORTS",
+      "predicted_label": "NOT ENOUGH INFO",
+      "qa_pairs": [
+        [
+          "Where is Bradford located?",
+          "Bradford is located in Merrimack County, New Hampshire, United States."
+        ],
+        [
+          "What county is Bradford located in?",
+          "Bradford is located in Gibson County, Tennessee."
+        ],
+        [
+          "What state is Bradford located in?",
+          "Answer: Minnesota."
+        ]
+      ],
+      "verdict_int": 2,
+      "verdict_raw": "The question-answer pairs contradict each other regarding the county and state of Bradford, making it impossible to determine the accuracy of the claim.  \nInconclusive"
+    },
+    {
+      "claim_id": 24,
+      "claim": "Ron Swanson loves meat.",
+      "true_label": "SUPPORTS",
+      "predicted_label": "SUPPORTS",
+      "qa_pairs": [
+        [
+          "What is the basis for the assertion that Ron Swanson loves meat?",
+          "The basis for the assertion that Ron Swanson loves meat is that he is described as loving meat in the provided information."
+        ],
+        [
+          "When did Ron Swanson's love for meat first become notable?",
+          "question too specific"
+        ],
+        [
+          "Who is Ron Swanson?",
+          "Ron Swanson is a character from the NBC sitcom *Parks and Recreation*, portrayed by Nick Offerman. He is a larger-than-life, optimistic, and somewhat gruff character known for his love of breakfast, woodworking, and his complex relationship with his ex-wife Tammy and his son, Ron Swanson Jr. The character is central to the show and is widely recognized for his distinctive personality and humor."
+        ]
+      ],
+      "verdict_int": 1,
+      "verdict_raw": "The question-answer pairs confirm the claim that Ron Swanson loves meat by directly stating it as the basis for the assertion.  \nTrue."
+    },
+    {
+      "claim_id": 25,
+      "claim": "Lisa Lopes was a member of a girl group based in the USA.",
+      "true_label": "SUPPORTS",
+      "predicted_label": "SUPPORTS",
+      "qa_pairs": [
+        [
+          "Which girl group was Lisa Lopes a member of?",
+          "TLC"
+        ]
+      ],
+      "verdict_int": 1,
+      "verdict_raw": "True.  \nInconclusive"
+    },
+    {
+      "claim_id": 26,
+      "claim": "Splatoon 2 is a third-person shooter.",
+      "true_label": "SUPPORTS",
+      "predicted_label": "SUPPORTS",
+      "qa_pairs": [
+        [
+          "What genre does Splatoon 2 primarily fall into?",
+          "Third-person shooter"
+        ]
+      ],
+      "verdict_int": 1,
+      "verdict_raw": "True.  \nInconclusive"
+    },
+    {
+      "claim_id": 27,
+      "claim": "Dwayne Johnson is a dual National.",
+      "true_label": "SUPPORTS",
+      "predicted_label": "NOT ENOUGH INFO",
+      "qa_pairs": [
+        [
+          "What is the basis for the assertion that Dwayne Johnson is a dual national?",
+          "question too specific"
+        ],
+        [
+          "What countries does Dwayne Johnson hold citizenship in?",
+          "question too specific"
+        ],
+        [
+          "What is a dual national?",
+          "A dual national is a person who holds citizenship in two countries."
+        ]
+      ],
+      "verdict_int": 2,
+      "verdict_raw": "Inconclusive"
+    },
+    {
+      "claim_id": 28,
+      "claim": "John Mayer plays music.",
+      "true_label": "SUPPORTS",
+      "predicted_label": "NOT ENOUGH INFO",
+      "qa_pairs": [
+        [
+          "When did John Mayer start playing music?",
+          "The provided sources do not address when John Mayer started playing music."
+        ],
+        [
+          "Where was John Mayer born?",
+          "John Mayer (composer) was born in Calcutta, Bengal, British India."
+        ],
+        [
+          "What is John Mayer's musical genre?",
+          "John Mayer's musical genre is a fusion of jazz with Indian music."
+        ]
+      ],
+      "verdict_int": 2,
+      "verdict_raw": "The question-answer pairs do not fully confirm or disprove the claim that John Mayer plays music, as they lack direct confirmation of his musical activity.  \nInconclusive"
+    },
+    {
+      "claim_id": 29,
+      "claim": "Xi Jinping was a vice-president from 2008 to 2013.",
+      "true_label": "SUPPORTS",
+      "predicted_label": "REFUTES",
+      "qa_pairs": [
+        [
+          "What position did Xi Jinping hold from 2008 to 2013?",
+          "The sources do not provide information on the specific position Xi Jinping held from 2008 to 2013. Therefore, the answer is \"question too specific.\""
+        ],
+        [
+          "What was Xi Jinping's role in the Chinese government from 2008 to 2013?",
+          "From 2008 to 2013, Xi Jinping served as the President of the People's Republic of China and the General Secretary of the Communist Party of China."
+        ]
+      ],
+      "verdict_int": 0,
+      "verdict_raw": "The question-answer pairs disprove the claim as the second answer explicitly states that Xi Jinping served as President of the People's Republic of China and General Secretary of the Communist Party of China from 2008 to 2013, not as a vice-president.  \nFalse."
+    },
+    {
+      "claim_id": 30,
+      "claim": "Superunknown debuted at number one on the Billboard 200.",
+      "true_label": "SUPPORTS",
+      "predicted_label": "SUPPORTS",
+      "qa_pairs": [
+        [
+          "When did Superunknown debut on the Billboard 200?",
+          "March 8, 1994."
+        ]
+      ],
+      "verdict_int": 1,
+      "verdict_raw": "True.  \nInconclusive"
+    },
+    {
+      "claim_id": 31,
+      "claim": "Oz the Great and Powerful was released through the Disney Digital 3-D format in 2013.",
+      "true_label": "SUPPORTS",
+      "predicted_label": "SUPPORTS",
+      "qa_pairs": [
+        [
+          "When was \"Oz the Great and Powerful\" released in the Disney Digital 3-D format?",
+          "March 8, 2013."
+        ]
+      ],
+      "verdict_int": 1,
+      "verdict_raw": "True.  \nInconclusive"
+    },
+    {
+      "claim_id": 32,
+      "claim": "Thomas Haden Church is a co-writer of the film Rolling Kansas.",
+      "true_label": "SUPPORTS",
+      "predicted_label": "SUPPORTS",
+      "qa_pairs": [
+        [
+          "Who is credited as the co-writer of the film \"Rolling Kansas\"?",
+          "Thomas Haden Church is credited as the co-writer of the film \"Rolling Kansas.\""
+        ]
+      ],
+      "verdict_int": 1,
+      "verdict_raw": "True.  \nInconclusive"
+    },
+    {
+      "claim_id": 33,
+      "claim": "Black Mirror is a science-fiction television series.",
+      "true_label": "SUPPORTS",
+      "predicted_label": "SUPPORTS",
+      "qa_pairs": [
+        [
+          "What genre does Black Mirror primarily fall under?",
+          "question too specific"
+        ],
+        [
+          "What type of television series is Black Mirror?",
+          "Black Mirror is a British science fiction television anthology series."
+        ]
+      ],
+      "verdict_int": 1,
+      "verdict_raw": "True. The question-answer pairs confirm that Black Mirror is a science-fiction television series."
+    },
+    {
+      "claim_id": 34,
+      "claim": "Jet Li was a person.",
+      "true_label": "SUPPORTS",
+      "predicted_label": "NOT ENOUGH INFO",
+      "qa_pairs": [
+        [
+          "Is the statement about Jet Li being a person accurate?",
+          "question too specific"
+        ],
+        [
+          "What is the basis for the assertion that Jet Li was a person?",
+          "question too specific"
+        ],
+        [
+          "When was Jet Li considered a person according to the statement?",
+          "question too specific"
+        ]
+      ],
+      "verdict_int": 2,
+      "verdict_raw": "Inconclusive"
+    },
+    {
+      "claim_id": 35,
+      "claim": "Warren G. Harding died in 1923.",
+      "true_label": "SUPPORTS",
+      "predicted_label": "SUPPORTS",
+      "qa_pairs": [
+        [
+          "When did Warren G. Harding die?",
+          "August 2, 1923."
+        ]
+      ],
+      "verdict_int": 1,
+      "verdict_raw": "True.  \nInconclusive"
+    },
+    {
+      "claim_id": 36,
+      "claim": "Jerry Lewis does humanitarian work.",
+      "true_label": "SUPPORTS",
+      "predicted_label": "SUPPORTS",
+      "qa_pairs": [
+        [
+          "What specific humanitarian work does Jerry Lewis engage in?",
+          "Jerry Lewis engages in humanitarian work by serving as national chairman of the Muscular Dystrophy Association and hosting the live Labor Day broadcast of the Jerry Lewis MDA Telethon for 44 years."
+        ]
+      ],
+      "verdict_int": 1,
+      "verdict_raw": "True. The question-answer pairs directly confirm that Jerry Lewis engages in humanitarian work through his role with the Muscular Dystrophy Association and hosting the MDA Telethon."
+    },
+    {
+      "claim_id": 37,
+      "claim": "Julia Louis-Dreyfus has a job.",
+      "true_label": "SUPPORTS",
+      "predicted_label": "SUPPORTS",
+      "qa_pairs": [
+        [
+          "What is the nature of Julia Louis-Dreyfus's job?",
+          "Julia Louis-Dreyfus is an actress, most known for her role as Elaine Benes on the sitcom *Seinfeld*."
+        ]
+      ],
+      "verdict_int": 1,
+      "verdict_raw": "True. The question-answer pair confirms that Julia Louis-Dreyfus is an actress, which constitutes having a job."
+    },
+    {
+      "claim_id": 38,
+      "claim": "Jim Crow laws were enacted by white Democrats.",
+      "true_label": "SUPPORTS",
+      "predicted_label": "SUPPORTS",
+      "qa_pairs": [
+        [
+          "Who specifically enacted the Jim Crow laws and what role did white Democrats play in their implementation?",
+          "White Democratic-dominated state legislatures enacted the Jim Crow laws in the late nineteenth century. They played a central role in their implementation, as these laws were designed to enforce racial segregation and maintain white supremacy in the Southern United States."
+        ]
+      ],
+      "verdict_int": 1,
+      "verdict_raw": "True. The question-answer pairs fully confirm the claim that Jim Crow laws were enacted by white Democrats."
+    },
+    {
+      "claim_id": 39,
+      "claim": "In 2009, Joe Biden became the Vice President.",
+      "true_label": "SUPPORTS",
+      "predicted_label": "REFUTES",
+      "qa_pairs": [
+        [
+          "When did Joe Biden become the Vice President?",
+          "Joe Biden became the Vice President of the United States in 1978, when he was elected as the 47th Vice President."
+        ]
+      ],
+      "verdict_int": 0,
+      "verdict_raw": "False.  \nInconclusive"
+    },
+    {
+      "claim_id": 40,
+      "claim": "Jun Ji-hyun is in the South Korean film called Windstruck.",
+      "true_label": "SUPPORTS",
+      "predicted_label": "SUPPORTS",
+      "qa_pairs": [
+        [
+          "Is Jun Ji-hyun featured in the South Korean film \"Windstruck\"?",
+          "Answer: Yes."
+        ]
+      ],
+      "verdict_int": 1,
+      "verdict_raw": "True."
+    },
+    {
+      "claim_id": 41,
+      "claim": "Screenwriting is one of D. B. Weiss's professions.",
+      "true_label": "SUPPORTS",
+      "predicted_label": "SUPPORTS",
+      "qa_pairs": [
+        [
+          "What specific role or responsibility does D. B. Weiss have in screenwriting according to the statement?",
+          "question too specific"
+        ],
+        [
+          "When did D. B. Weiss start working in screenwriting?",
+          "The sources do not specify when D. B. Weiss started working in screenwriting."
+        ],
+        [
+          "Where has D. B. Weiss worked as a screenwriter?",
+          "D. B. Weiss has worked as a screenwriter for HBO's fantasy television series Game of Thrones."
+        ]
+      ],
+      "verdict_int": 1,
+      "verdict_raw": "True. The question-answer pairs confirm that D. B. Weiss has worked as a screenwriter for HBO's *Game of Thrones*, supporting the claim that screenwriting is one of his professions.  \nVerdict: True"
+    },
+    {
+      "claim_id": 42,
+      "claim": "Jared Padalecki grew up in the US.",
+      "true_label": "SUPPORTS",
+      "predicted_label": "SUPPORTS",
+      "qa_pairs": [
+        [
+          "Where was Jared Padalecki born and raised?",
+          "Jared Padalecki was born and raised in Texas."
+        ]
+      ],
+      "verdict_int": 1,
+      "verdict_raw": "True.  \nInconclusive."
+    },
+    {
+      "claim_id": 43,
+      "claim": "Birth of the Dragon's principal photography began in Vancouver, Canada.",
+      "true_label": "SUPPORTS",
+      "predicted_label": "SUPPORTS",
+      "qa_pairs": [
+        [
+          "Where was the principal photography for *Birth of the Dragon* actually conducted?",
+          "The principal photography for *Birth of the Dragon* was conducted in Vancouver."
+        ]
+      ],
+      "verdict_int": 1,
+      "verdict_raw": "True.  \nInconclusive"
+    },
+    {
+      "claim_id": 44,
+      "claim": "Vera Farmiga has been dubbed as a scream queen.",
+      "true_label": "SUPPORTS",
+      "predicted_label": "SUPPORTS",
+      "qa_pairs": [
+        [
+          "What criteria were used to label Vera Farmiga as a scream queen?",
+          "question too specific"
+        ],
+        [
+          "When was Vera Farmiga first referred to as a scream queen?",
+          "question too specific"
+        ],
+        [
+          "What defines a \"scream queen\" in the context of Vera Farmiga's career?",
+          "A \"scream queen\" in the context of Vera Farmiga's career refers to her association with horror films and her roles that involve elements of fear, supernatural phenomena, or intense psychological tension, such as her portrayal of Lorraine Warren in the *Conjuring* films and her role as Norma Louise Bates in *Bates Motel*."
+        ]
+      ],
+      "verdict_int": 1,
+      "verdict_raw": "The question-answer pairs provide a definition of \"scream queen\" in the context of Vera Farmiga's career, supporting the claim that she has been dubbed as a scream queen.  \nTrue."
+    },
+    {
+      "claim_id": 45,
+      "claim": "Absolute Beginners starred David Bowie.",
+      "true_label": "SUPPORTS",
+      "predicted_label": "SUPPORTS",
+      "qa_pairs": [
+        [
+          "Did David Bowie appear in the film \"Absolute Beginners\"?",
+          "Yes, David Bowie appeared in the film \"Absolute Beginners.\""
+        ]
+      ],
+      "verdict_int": 1,
+      "verdict_raw": "True.  \nInconclusive."
+    },
+    {
+      "claim_id": 46,
+      "claim": "Sarah Michelle Gellar was in a movie.",
+      "true_label": "SUPPORTS",
+      "predicted_label": "SUPPORTS",
+      "qa_pairs": [
+        [
+          "When was Sarah Michelle Gellar in a movie?",
+          "Sarah Michelle Gellar was in a movie in 1999 and 2009."
+        ]
+      ],
+      "verdict_int": 1,
+      "verdict_raw": "True.  \nInconclusive"
+    },
+    {
+      "claim_id": 47,
+      "claim": "Taal was romantic.",
+      "true_label": "SUPPORTS",
+      "predicted_label": "NOT ENOUGH INFO",
+      "qa_pairs": [
+        [
+          "What historical evidence supports the assertion that Taal was romantic?",
+          "question too specific"
+        ],
+        [
+          "When did Taal exhibit romantic behavior?",
+          "question too specific"
+        ],
+        [
+          "Who is considered to have been romantic in the claim about Taal?",
+          "question too specific"
+        ]
+      ],
+      "verdict_int": 2,
+      "verdict_raw": "Inconclusive"
+    },
+    {
+      "claim_id": 48,
+      "claim": "Her stars American actress Rooney Mara.",
+      "true_label": "SUPPORTS",
+      "predicted_label": "REFUTES",
+      "qa_pairs": [
+        [
+          "Who is the American actress associated with the stars mentioned in the statement?",
+          "The American actress associated with the stars mentioned in the statement is Kelly Greyson."
+        ],
+        [
+          "What is the name of the American actress mentioned in the claim?",
+          "Elinor Fair"
+        ],
+        [
+          "What is the correct name of the American actress associated with the stars mentioned in the statement?",
+          "question too specific"
+        ]
+      ],
+      "verdict_int": 0,
+      "verdict_raw": "The question-answer pairs disprove the claim as they identify different actresses (Kelly Greyson and Elinor Fair) associated with the stars, contradicting the claim of Rooney Mara.  \nFalse"
+    },
+    {
+      "claim_id": 49,
+      "claim": "J. R. R. Tolkien created Gimli.",
+      "true_label": "SUPPORTS",
+      "predicted_label": "SUPPORTS",
+      "qa_pairs": [
+        [
+          "Who is credited with creating the character Gimli in the context of J. R. R. Tolkien's works?",
+          "J. R. R. Tolkien is credited with creating the character Gimli in the context of his works."
+        ]
+      ],
+      "verdict_int": 1,
+      "verdict_raw": "True.  \nInconclusive"
+    },
+    {
+      "claim_id": 50,
+      "claim": "Super Street Fighter II Turbo is the oldest active singing game.",
+      "true_label": "REFUTES",
+      "predicted_label": "NOT ENOUGH INFO",
+      "qa_pairs": [
+        [
+          "When was Super Street Fighter II Turbo released?",
+          "Super Street Fighter II Turbo was released in 1994."
+        ],
+        [
+          "Who is considered the oldest active singing game according to the claim?",
+          "question too specific"
+        ],
+        [
+          "What is the definition of an \"active singing game\" in the context of this claim?",
+          "question too specific"
+        ]
+      ],
+      "verdict_int": 2,
+      "verdict_raw": "Inconclusive"
+    },
+    {
+      "claim_id": 51,
+      "claim": "Appian Way Productions is a film direction agency.",
+      "true_label": "REFUTES",
+      "predicted_label": "SUPPORTS",
+      "qa_pairs": [
+        [
+          "What is the primary function or focus of Appian Way Productions?",
+          "The primary function or focus of Appian Way Productions is film production."
+        ]
+      ],
+      "verdict_int": 1,
+      "verdict_raw": "The question-answer pair confirms the claim that Appian Way Productions is a film direction agency, as it states the primary function is film production.  \nTrue."
+    },
+    {
+      "claim_id": 52,
+      "claim": "John Wick: Chapter 2 was theatrically released in AMC Theatres.",
+      "true_label": "REFUTES",
+      "predicted_label": "NOT ENOUGH INFO",
+      "qa_pairs": [
+        [
+          "When was John Wick: Chapter 2 theatrically released?",
+          "February 10, 2017."
+        ]
+      ],
+      "verdict_int": 2,
+      "verdict_raw": "The question-answer pair confirms the theatrical release date of John Wick: Chapter 2 but does not specifically mention AMC Theatres, so it does not fully confirm the claim.  \nInconclusive."
+    },
+    {
+      "claim_id": 53,
+      "claim": "Emilio Estevez has never written anything.",
+      "true_label": "REFUTES",
+      "predicted_label": "NOT ENOUGH INFO",
+      "qa_pairs": [
+        [
+          "Does Emilio Estevez have any published written works?",
+          "Based on the provided sources, there is no mention of Emilio Estevez having any published written works."
+        ],
+        [
+          "Have any of Emilio Estevez's written works been published in reputable literary journals or books?",
+          "question too specific"
+        ],
+        [
+          "Have any of Emilio Estevez's written works been published in any form?",
+          "question too specific"
+        ]
+      ],
+      "verdict_int": 2,
+      "verdict_raw": "The question-answer pairs partially confirm the claim by stating there is no mention of Emilio Estevez having any published written works, but they also contain responses that are too specific to fully evaluate the claim.  \nInconclusive"
+    },
+    {
+      "claim_id": 54,
+      "claim": "Hugh Hefer was born May 9, 1926.",
+      "true_label": "REFUTES",
+      "predicted_label": "NOT ENOUGH INFO",
+      "qa_pairs": [
+        [
+          "What is the source of the information regarding Hugh Hefer's birth date?",
+          "question too specific"
+        ],
+        [
+          "When was Hugh Hefer's birth date confirmed or verified?",
+          "question too specific"
+        ],
+        [
+          "Who verified Hugh Hefer's birth date?",
+          "question too specific"
+        ]
+      ],
+      "verdict_int": 2,
+      "verdict_raw": "Inconclusive"
+    },
+    {
+      "claim_id": 55,
+      "claim": "Ronaldo Maczinski's birthday is May 11.",
+      "true_label": "REFUTES",
+      "predicted_label": "REFUTES",
+      "qa_pairs": [
+        [
+          "When was Ronaldo Maczinski actually born?",
+          "Answer: 11 September 1980."
+        ]
+      ],
+      "verdict_int": 0,
+      "verdict_raw": "False.  \nInconclusive"
+    },
+    {
+      "claim_id": 56,
+      "claim": "Matt Damon is not an actor.",
+      "true_label": "REFUTES",
+      "predicted_label": "NOT ENOUGH INFO",
+      "qa_pairs": [
+        [
+          "Who is considered an actor in the context of this statement?",
+          "The term \"actor\" in the context of this statement refers to individuals or entities involved in the process of problematization, particularly within the framework of actor-network theory (ANT). These actors are participants in the network and are involved in the interdefinition of actors and the definition of the problem/topic/action program. Specific actors are not named in the provided text."
+        ],
+        [
+          "What is the definition of \"actor\" used in the statement?",
+          "question too specific"
+        ],
+        [
+          "What is the basis for the assertion that Matt Damon is not an actor?",
+          "question too specific"
+        ]
+      ],
+      "verdict_int": 2,
+      "verdict_raw": "Inconclusive"
+    },
+    {
+      "claim_id": 57,
+      "claim": "Royal Rumble (2002) was produced by nobody.",
+      "true_label": "REFUTES",
+      "predicted_label": "REFUTES",
+      "qa_pairs": [
+        [
+          "Who was responsible for producing the 2002 Royal Rumble event?",
+          "The World Wrestling Federation (WWF) was responsible for producing the 2002 Royal Rumble event."
+        ]
+      ],
+      "verdict_int": 0,
+      "verdict_raw": "False.  \nInconclusive"
+    },
+    {
+      "claim_id": 58,
+      "claim": "Tequila is made from a plant primarily found around the woods.",
+      "true_label": "REFUTES",
+      "predicted_label": "REFUTES",
+      "qa_pairs": [
+        [
+          "What plant is tequila primarily made from?",
+          "The plant tequila is primarily made from is the blue agave plant."
+        ]
+      ],
+      "verdict_int": 0,
+      "verdict_raw": "False. The blue agave plant is not primarily found around the woods; it is primarily found in the desert regions of Mexico.  \nInconclusive"
+    },
+    {
+      "claim_id": 59,
+      "claim": "Hayden Panetierre has not yet acted on TV.",
+      "true_label": "REFUTES",
+      "predicted_label": "NOT ENOUGH INFO",
+      "qa_pairs": [
+        [
+          "When did Hayden Panetierre first appear in a television role?",
+          "question too specific"
+        ],
+        [
+          "What television roles has Hayden Panetierre appeared in?",
+          "question too specific"
+        ],
+        [
+          "Has Hayden Panetierre appeared in any television shows to date?",
+          "question too specific"
+        ]
+      ],
+      "verdict_int": 2,
+      "verdict_raw": "Inconclusive"
+    },
+    {
+      "claim_id": 60,
+      "claim": "Pawn Sacrifice stars Tobey Maguire as Boris Spassky.",
+      "true_label": "REFUTES",
+      "predicted_label": "REFUTES",
+      "qa_pairs": [
+        [
+          "Who played the role of Boris Spassky in the movie \"Pawn Sacrifice\"?",
+          "Liev Schreiber played the role of Boris Spassky in the movie \"Pawn Sacrifice\"."
+        ]
+      ],
+      "verdict_int": 0,
+      "verdict_raw": "False.  \nInconclusive"
+    },
+    {
+      "claim_id": 61,
+      "claim": "Aaron Carter's only middle name is Jeff.",
+      "true_label": "REFUTES",
+      "predicted_label": "NOT ENOUGH INFO",
+      "qa_pairs": [
+        [
+          "What is the source of the information that Aaron Carter's only middle name is Jeff?",
+          "question too specific"
+        ],
+        [
+          "When was Aaron Carter's middle name officially recorded?",
+          "question too specific"
+        ],
+        [
+          "What is Aaron Carter's full name?",
+          "Aaron Carter's full name is Aaron Carter."
+        ]
+      ],
+      "verdict_int": 2,
+      "verdict_raw": "Inconclusive"
+    },
+    {
+      "claim_id": 62,
+      "claim": "Saskatchewan is bordered on the west by Edmonton.",
+      "true_label": "REFUTES",
+      "predicted_label": "REFUTES",
+      "qa_pairs": [
+        [
+          "Is Edmonton located on the western border of Saskatchewan?",
+          "No. Edmonton is not located on the western border of Saskatchewan. It is located in the southern part of the province, and the western border of Saskatchewan is near the Northwest Territories."
+        ]
+      ],
+      "verdict_int": 0,
+      "verdict_raw": "False. The question-answer pair directly contradicts the claim by stating Edmonton is not on the western border of Saskatchewan.  \nVerdict: False"
+    },
+    {
+      "claim_id": 63,
+      "claim": "Big Boi has yet to create music.",
+      "true_label": "REFUTES",
+      "predicted_label": "REFUTES",
+      "qa_pairs": [
+        [
+          "When was Big Boi last known to have released a music album or single?",
+          "Big Boi's last known release was his second studio album, *Vicious Lies and Dangerous Rumors*, which was released on December 11, 2012."
+        ]
+      ],
+      "verdict_int": 0,
+      "verdict_raw": "The question-answer pairs disprove the claim.  \nVerdict: False"
+    },
+    {
+      "claim_id": 64,
+      "claim": "Gustave Eiffel has yet to retire from engineering.",
+      "true_label": "REFUTES",
+      "predicted_label": "REFUTES",
+      "qa_pairs": [
+        [
+          "When did Gustave Eiffel retire from engineering?",
+          "Gustave Eiffel retired from engineering after his contributions to meteorology and aerodynamics, but the exact date of his retirement is not specified in the provided sources."
+        ],
+        [
+          "What was Gustave Eiffel's role in meteorology and aerodynamics after retiring from engineering?",
+          "After retiring from engineering, Gustave Eiffel focused on research into meteorology and aerodynamics, making significant contributions in both fields."
+        ],
+        [
+          "What was Gustave Eiffel's primary occupation before he retired from engineering?",
+          "Gustave Eiffel's primary occupation before he retired from engineering was a civil engineer and architect."
+        ]
+      ],
+      "verdict_int": 0,
+      "verdict_raw": "The question-answer pairs do not provide a definitive date for Gustave Eiffel's retirement, but they confirm he retired from engineering and transitioned to meteorology and aerodynamics, making it impossible to confirm the claim that he \"has yet to retire.\"  \nVerdict: False"
+    },
+    {
+      "claim_id": 65,
+      "claim": "Peter Cetera was entirely absent from the album Chicago Transit Authority.",
+      "true_label": "REFUTES",
+      "predicted_label": "REFUTES",
+      "qa_pairs": [
+        [
+          "Is Peter Cetera's absence from the album Chicago Transit Authority accurate?",
+          "No, Peter Cetera's absence from the album *Chicago Transit Authority* is not accurate. He was a member of the band at the time and contributed to the album, though his role as a bassist and vocalist is more prominently featured on later albums."
+        ]
+      ],
+      "verdict_int": 0,
+      "verdict_raw": "False. The question-answer pair directly refutes the claim by stating that Peter Cetera was not entirely absent from the album *Chicago Transit Authority* and was a member of the band at the time, contributing to the album."
+    },
+    {
+      "claim_id": 66,
+      "claim": "The Voice brought in Jennifer Hudson as a new coach in the thirteenth season in 2009.",
+      "true_label": "REFUTES",
+      "predicted_label": "NOT ENOUGH INFO",
+      "qa_pairs": [
+        [
+          "When was Jennifer Hudson added as a coach to The Voice?",
+          "Jennifer Hudson was added as a coach to The Voice UK for its 2017 series and as a coach to The Voice's thirteenth season."
+        ]
+      ],
+      "verdict_int": 2,
+      "verdict_raw": "The question-answer pairs partially confirm the claim, as they state Jennifer Hudson was a coach for The Voice's thirteenth season, but also mention The Voice UK, which is a different version of the show, making the claim partially accurate but not fully confirmed.  \nInconclusive"
+    },
+    {
+      "claim_id": 67,
+      "claim": "We Found Love is a romance novel.",
+      "true_label": "REFUTES",
+      "predicted_label": "NOT ENOUGH INFO",
+      "qa_pairs": [
+        [
+          "What genre does the book \"We Found Love\" belong to?",
+          "question too specific"
+        ],
+        [
+          "What is the main theme of \"We Found Love\"?",
+          "question too specific"
+        ],
+        [
+          "What is the author of \"We Found Love\"?",
+          "question too specific"
+        ]
+      ],
+      "verdict_int": 2,
+      "verdict_raw": "Inconclusive"
+    },
+    {
+      "claim_id": 68,
+      "claim": "Stars Dance is a podcast.",
+      "true_label": "REFUTES",
+      "predicted_label": "NOT ENOUGH INFO",
+      "qa_pairs": [
+        [
+          "Is \"Stars Dance\" a podcast?",
+          "question too specific"
+        ],
+        [
+          "What is the subject matter of \"Stars Dance\"?",
+          "question too specific"
+        ],
+        [
+          "When was \"Stars Dance\" first released as a podcast?",
+          "question too specific"
+        ]
+      ],
+      "verdict_int": 2,
+      "verdict_raw": "Inconclusive"
+    },
+    {
+      "claim_id": 69,
+      "claim": "Boris Karloff has avoided the film industry entirely.",
+      "true_label": "REFUTES",
+      "predicted_label": "REFUTES",
+      "qa_pairs": [
+        [
+          "When did Boris Karloff last appear in a film?",
+          "Boris Karloff's last film was \"The Ape\" in 1940."
+        ],
+        [
+          "What year did Boris Karloff stop acting in films?",
+          "question too specific"
+        ],
+        [
+          "What specific roles or activities has Boris Karloff been involved in after 1940?",
+          "Boris Karloff was involved in the following roles or activities after 1940: starring in \"The Ape\" (1940), starring as Mr. Wong in \"Doomed to Die\" (1940), and continuing his film career in various roles, including his iconic portrayal of Frankenstein's monster in \"Bride of Frankenstein\" (1935), though this was before 1940. However, specific details about his roles strictly after 1940 are not provided in the sources."
+        ]
+      ],
+      "verdict_int": 0,
+      "verdict_raw": "The question-answer pairs disprove the claim by indicating Boris Karloff continued to appear in films after 1940, including \"The Ape\" (1940) and other roles, thus showing he did not avoid the film industry entirely.  \nVerdict: False"
+    },
+    {
+      "claim_id": 70,
+      "claim": "Nick Jonas released his third studio album in 2017.",
+      "true_label": "REFUTES",
+      "predicted_label": "REFUTES",
+      "qa_pairs": [
+        [
+          "When was Nick Jonas' third studio album actually released?",
+          "Answer: Nick Jonas' third studio album, Last Year Was Complicated, was released on June 10, 2016."
+        ]
+      ],
+      "verdict_int": 0,
+      "verdict_raw": "False.  \nInconclusive"
+    },
+    {
+      "claim_id": 71,
+      "claim": "Anonymous is a local group.",
+      "true_label": "REFUTES",
+      "predicted_label": "NOT ENOUGH INFO",
+      "qa_pairs": [
+        [
+          "Who is considered part of the group referred to as \"Anonymous\"?",
+          "The group referred to as \"Anonymous\" includes internet users who participate in collective actions, often online, and are associated with the group's activities, such as Operation Tunisia. The term \"Anonymous\" typically refers to a decentralized group of individuals who engage in online activism, hacking, and other activities under the collective name."
+        ]
+      ],
+      "verdict_int": 2,
+      "verdict_raw": "The question-answer pair does not fully confirm or disprove the claim that \"Anonymous is a local group,\" as it describes the group as decentralized and associated with online activities rather than specifying a local nature.  \nInconclusive"
+    },
+    {
+      "claim_id": 72,
+      "claim": "Lauren Graham did not receive two Screen Actors Guild Award nominations.",
+      "true_label": "REFUTES",
+      "predicted_label": "NOT ENOUGH INFO",
+      "qa_pairs": [
+        [
+          "Did Lauren Graham receive two Screen Actors Guild Award nominations?",
+          "question too specific"
+        ],
+        [
+          "How many Screen Actors Guild Award nominations did Lauren Graham actually receive?",
+          "question too specific"
+        ],
+        [
+          "What is the exact number of Screen Actors Guild Award nominations Lauren Graham has received?",
+          "question too specific"
+        ]
+      ],
+      "verdict_int": 2,
+      "verdict_raw": "Inconclusive"
+    },
+    {
+      "claim_id": 73,
+      "claim": "Jim Carrey only played the character Colonel Stars and Stripes in Kick-Ass 1.",
+      "true_label": "REFUTES",
+      "predicted_label": "NOT ENOUGH INFO",
+      "qa_pairs": [
+        [
+          "Who else portrayed the character Colonel Stars and Stripes in Kick-Ass 1 besides Jim Carrey?",
+          "question too specific"
+        ],
+        [
+          "When was Jim Carrey's portrayal of Colonel Stars and Stripes in Kick-Ass 1 released?",
+          "question too specific"
+        ],
+        [
+          "What movie features Jim Carrey's portrayal of Colonel Stars and Stripes?",
+          "question too specific"
+        ]
+      ],
+      "verdict_int": 2,
+      "verdict_raw": "Inconclusive"
+    },
+    {
+      "claim_id": 74,
+      "claim": "Gunday was written by Aditya Chopra.",
+      "true_label": "REFUTES",
+      "predicted_label": "NOT ENOUGH INFO",
+      "qa_pairs": [
+        [
+          "Who is the actual author of the book \"Gunday\"?",
+          "The question is too specific."
+        ],
+        [
+          "When was the book \"Gunday\" written?",
+          "question too specific"
+        ],
+        [
+          "What is the correct author of the book \"Gunday\"?",
+          "question too specific"
+        ]
+      ],
+      "verdict_int": 2,
+      "verdict_raw": "Inconclusive"
+    },
+    {
+      "claim_id": 75,
+      "claim": "Shia LaBeouf was not in a American political thriller movie.",
+      "true_label": "REFUTES",
+      "predicted_label": "NOT ENOUGH INFO",
+      "qa_pairs": [
+        [
+          "Is Shia LaBeouf part of the cast in any American political thriller movie?",
+          "question too specific"
+        ],
+        [
+          "Who is considered a political thriller movie in the context of this claim?",
+          "Rakhtbeej is considered a political thriller movie in the context of this claim."
+        ],
+        [
+          "What is the definition of a political thriller movie used in this context?",
+          "A political thriller movie, as used in this context, is a thriller set against the backdrop of a political power struggle, often involving extra-legal plots to gain political power, with themes such as political corruption, terrorism, and warfare. It can be based on true events and overlaps with the conspiracy thriller genre."
+        ]
+      ],
+      "verdict_int": 2,
+      "verdict_raw": "Inconclusive"
+    },
+    {
+      "claim_id": 76,
+      "claim": "Pierce Brosnan is absent from \"Mamma Mia!\".",
+      "true_label": "REFUTES",
+      "predicted_label": "NOT ENOUGH INFO",
+      "qa_pairs": [
+        [
+          "Who is responsible for Pierce Brosnan's absence from \"Mamma Mia!\"?",
+          "question too specific"
+        ],
+        [
+          "When did Pierce Brosnan's absence from \"Mamma Mia!\" occur?",
+          "question too specific"
+        ],
+        [
+          "Why was Pierce Brosnan not included in the cast of \"Mamma Mia!\"?",
+          "question too specific"
+        ]
+      ],
+      "verdict_int": 2,
+      "verdict_raw": "Inconclusive"
+    },
+    {
+      "claim_id": 77,
+      "claim": "Independence Day: Resurgence is a drama film.",
+      "true_label": "REFUTES",
+      "predicted_label": "REFUTES",
+      "qa_pairs": [
+        [
+          "What genre does Independence Day: Resurgence belong to?",
+          "question too specific"
+        ],
+        [
+          "What type of film is Independence Day: Resurgence?",
+          "Science fiction action film."
+        ]
+      ],
+      "verdict_int": 0,
+      "verdict_raw": "The question-answer pairs provide a direct answer stating that *Independence Day: Resurgence* is a \"science fiction action film,\" which contradicts the claim that it is a \"drama film.\"  \nFalse."
+    },
+    {
+      "claim_id": 78,
+      "claim": "Warren Harding died of pneumonia.",
+      "true_label": "REFUTES",
+      "predicted_label": "REFUTES",
+      "qa_pairs": [
+        [
+          "What is the exact cause of death attributed to Warren Harding?",
+          "The exact cause of death attributed to Warren Harding was an acute illness, specifically an acute abdomen, which led to peritonitis and septic shock."
+        ]
+      ],
+      "verdict_int": 0,
+      "verdict_raw": "False. The question-answer pairs disprove the claim by specifying that Warren Harding died from an acute abdomen leading to peritonitis and septic shock, not pneumonia."
+    },
+    {
+      "claim_id": 79,
+      "claim": "Friendship has been studied only in sociology.",
+      "true_label": "REFUTES",
+      "predicted_label": "REFUTES",
+      "qa_pairs": [
+        [
+          "Who conducted the studies on friendship mentioned in the claim?",
+          "question too specific"
+        ],
+        [
+          "What disciplines have studied friendship besides sociology?",
+          "Communication, social psychology, anthropology, and philosophy."
+        ]
+      ],
+      "verdict_int": 0,
+      "verdict_raw": "The question-answer pairs disprove the claim by showing that friendship has been studied in disciplines beyond sociology.  \nFalse"
+    },
+    {
+      "claim_id": 80,
+      "claim": "Bruce Willis chose to do anything but be a singer.",
+      "true_label": "REFUTES",
+      "predicted_label": "NOT ENOUGH INFO",
+      "qa_pairs": [
+        [
+          "What evidence supports the assertion that Bruce Willis avoided a singing career?",
+          "question too specific"
+        ],
+        [
+          "When did Bruce Willis make decisions regarding his career path?",
+          "question too specific"
+        ],
+        [
+          "What factors influenced Bruce Willis's decision to pursue acting over singing?",
+          "question too specific"
+        ]
+      ],
+      "verdict_int": 2,
+      "verdict_raw": "Inconclusive"
+    },
+    {
+      "claim_id": 81,
+      "claim": "Lions are the smallest living cat.",
+      "true_label": "REFUTES",
+      "predicted_label": "REFUTES",
+      "qa_pairs": [
+        [
+          "What is the smallest living cat species?",
+          "The smallest living cat species is the Kodkod (Leopardus guigna), which is the smallest cat in the Americas. Additionally, the black-footed cat (Felis nigripes) is noted as the smallest species in the genus Felis. However, the Kodkod is generally recognized as the smallest living cat species."
+        ]
+      ],
+      "verdict_int": 0,
+      "verdict_raw": "The question-answer pairs disprove the claim.  \nVerdict: False"
+    },
+    {
+      "claim_id": 82,
+      "claim": "The Place Beyond the Pines is an American crime comedy film.",
+      "true_label": "REFUTES",
+      "predicted_label": "REFUTES",
+      "qa_pairs": [
+        [
+          "What genre is \"The Place Beyond the Pines\"?",
+          "The genre of \"The Place Beyond the Pines\" is crime drama."
+        ]
+      ],
+      "verdict_int": 0,
+      "verdict_raw": "False. The question-answer pair states that \"The Place Beyond the Pines\" is a crime drama, not a crime comedy, thereby disproving the claim."
+    },
+    {
+      "claim_id": 83,
+      "claim": "H. H. Holmes's full name was H. H. Holmes Bryant Johnson.",
+      "true_label": "REFUTES",
+      "predicted_label": "REFUTES",
+      "qa_pairs": [
+        [
+          "What is the correct full name of H. H. Holmes?",
+          "Herman Webster Mudgett"
+        ]
+      ],
+      "verdict_int": 0,
+      "verdict_raw": "False.  \nInconclusive"
+    },
+    {
+      "claim_id": 84,
+      "claim": "To the Bone is a horror film.",
+      "true_label": "REFUTES",
+      "predicted_label": "NOT ENOUGH INFO",
+      "qa_pairs": [
+        [
+          "What genre is \"To the Bone\"?",
+          "question too specific"
+        ],
+        [
+          "What type of film is \"To the Bone\"?",
+          "question too specific"
+        ],
+        [
+          "What is the subject matter of \"To the Bone\"?",
+          "question too specific"
+        ]
+      ],
+      "verdict_int": 2,
+      "verdict_raw": "Inconclusive"
+    },
+    {
+      "claim_id": 85,
+      "claim": "Crystal Palace F.C. does not play in Selhurst Park.",
+      "true_label": "REFUTES",
+      "predicted_label": "REFUTES",
+      "qa_pairs": [
+        [
+          "Where does Crystal Palace F.C. play its home matches?",
+          "The answer to the question is: The current home matches of Crystal Palace F.C. are played at Selhurst Park."
+        ]
+      ],
+      "verdict_int": 0,
+      "verdict_raw": "False.  \nInconclusive"
+    },
+    {
+      "claim_id": 86,
+      "claim": "Matt Damon has not received Emmy Award nominations.",
+      "true_label": "REFUTES",
+      "predicted_label": "REFUTES",
+      "qa_pairs": [
+        [
+          "Are there any Emmy Award nominations that Matt Damon has received?",
+          "Answer: Yes, Matt Damon has received Emmy Award nominations for his portrayal of Scott Thorson in the biopic Behind the Candelabra and for producing the reality series Project Greenlight."
+        ]
+      ],
+      "verdict_int": 0,
+      "verdict_raw": "False.  \nInconclusive"
+    },
+    {
+      "claim_id": 87,
+      "claim": "Red Velvet (band) is only a ventriloquist act formed by a British software company.",
+      "true_label": "REFUTES",
+      "predicted_label": "NOT ENOUGH INFO",
+      "qa_pairs": [
+        [
+          "Who formed Red Velvet (band) according to the statement?",
+          "The provided sources do not specify who formed Red Velvet (band)."
+        ]
+      ],
+      "verdict_int": 2,
+      "verdict_raw": "Inconclusive"
+    },
+    {
+      "claim_id": 88,
+      "claim": "Tom Cruise has not been nominated for Academy Awards.",
+      "true_label": "REFUTES",
+      "predicted_label": "REFUTES",
+      "qa_pairs": [
+        [
+          "When was Tom Cruise first nominated for an Academy Award?",
+          "Tom Cruise was first nominated for an Academy Award in 1996 for his role in *Jerry Maguire*."
+        ]
+      ],
+      "verdict_int": 0,
+      "verdict_raw": "False.  \nInconclusive"
+    },
+    {
+      "claim_id": 89,
+      "claim": "The Nashville Songwriters Association International is a Louisiana based trade organization.",
+      "true_label": "REFUTES",
+      "predicted_label": "NOT ENOUGH INFO",
+      "qa_pairs": [
+        [
+          "What is the actual state of incorporation for the Nashville Songwriters Association International?",
+          "The actual state of incorporation for the Nashville Songwriters Association International is not specified in the provided sources."
+        ],
+        [
+          "Who is the actual state of incorporation for the Nashville Songwriters Association International?",
+          "The question is too specific."
+        ],
+        [
+          "What is the actual headquarters location of the Nashville Songwriters Association International?",
+          "The actual headquarters location of the Nashville Songwriters Association International is not explicitly stated in the provided sources."
+        ]
+      ],
+      "verdict_int": 2,
+      "verdict_raw": "Inconclusive"
+    },
+    {
+      "claim_id": 90,
+      "claim": "Julie Christie avoided acting altogether.",
+      "true_label": "REFUTES",
+      "predicted_label": "NOT ENOUGH INFO",
+      "qa_pairs": [
+        [
+          "When did Julie Christie avoid acting altogether?",
+          "question too specific"
+        ],
+        [
+          "What is the basis for the assertion that Julie Christie avoided acting altogether?",
+          "question too specific"
+        ],
+        [
+          "Who is being referred to as Julie Christie in the context of this statement?",
+          "question too specific"
+        ]
+      ],
+      "verdict_int": 2,
+      "verdict_raw": "Inconclusive"
+    },
+    {
+      "claim_id": 91,
+      "claim": "Steven Spielberg is not a screenwriter.",
+      "true_label": "REFUTES",
+      "predicted_label": "SUPPORTS",
+      "qa_pairs": [
+        [
+          "What is the basis for stating that Steven Spielberg is not a screenwriter?",
+          "The basis for stating that Steven Spielberg is not a screenwriter is that the provided information identifies Anne Spielberg as the screenwriter, while Steven Spielberg is described as a film director and producer."
+        ],
+        [
+          "Who is credited as the screenwriter in the provided information?",
+          "question too specific"
+        ],
+        [
+          "What role did Steven Spielberg play in the films mentioned?",
+          "question too specific"
+        ]
+      ],
+      "verdict_int": 1,
+      "verdict_raw": "The question-answer pairs partially confirm the claim by indicating that Anne Spielberg is credited as the screenwriter, while Steven Spielberg is described as a director and producer, thus supporting the claim that he is not a screenwriter.  \nTrue."
+    },
+    {
+      "claim_id": 92,
+      "claim": "Robert F. Kennedy began his political career as a mayor.",
+      "true_label": "REFUTES",
+      "predicted_label": "REFUTES",
+      "qa_pairs": [
+        [
+          "When did Robert F. Kennedy start his political career as a mayor?",
+          "question too specific"
+        ],
+        [
+          "What position did Robert F. Kennedy hold before becoming a mayor?",
+          "Robert F. Kennedy held the position of Attorney General of the United States before becoming a mayor."
+        ],
+        [
+          "What was Robert F. Kennedy's first political office before becoming a mayor?",
+          "Robert F. Kennedy's first political office before becoming a mayor was as a member of the New York State Senate."
+        ]
+      ],
+      "verdict_int": 0,
+      "verdict_raw": "The question-answer pairs disprove the claim by indicating that Robert F. Kennedy held positions such as Attorney General of the United States and a member of the New York State Senate before any potential mayoral role, thus showing he did not begin his political career as a mayor.  \nFalse"
+    },
+    {
+      "claim_id": 93,
+      "claim": "Frank Sinatra is not an actor.",
+      "true_label": "REFUTES",
+      "predicted_label": "NOT ENOUGH INFO",
+      "qa_pairs": [
+        [
+          "Who is considered an actor in the context of this statement?",
+          "The term \"actor\" in the context of this statement refers to individuals or entities that are involved in the process of problematization, particularly within the framework of actor-network theory (ANT). These actors are participants in the network and are involved in the interdefinition of actors and the definition of the problem/topic/action program. Specific actors are not named in the statement, but they are understood as those who contribute to the creation and transformation of situations through their actions and interactions."
+        ],
+        [
+          "What is the definition of \"actor\" used in the statement?",
+          "question too specific"
+        ],
+        [
+          "What is the basis for determining that Frank Sinatra is not an actor?",
+          "The basis for determining that Frank Sinatra is not an actor is not provided in the given sources."
+        ]
+      ],
+      "verdict_int": 2,
+      "verdict_raw": "Inconclusive"
+    },
+    {
+      "claim_id": 94,
+      "claim": "Shawn Michaels was a 2013 WWE Hall of Fame inductee.",
+      "true_label": "REFUTES",
+      "predicted_label": "NOT ENOUGH INFO",
+      "qa_pairs": [
+        [
+          "When was Shawn Michaels inducted into the WWE Hall of Fame?",
+          "question too specific"
+        ],
+        [
+          "Who was inducted into the WWE Hall of Fame in 2013?",
+          "question too specific"
+        ],
+        [
+          "What year was Shawn Michaels inducted into the WWE Hall of Fame?",
+          "question too specific"
+        ]
+      ],
+      "verdict_int": 2,
+      "verdict_raw": "Inconclusive"
+    },
+    {
+      "claim_id": 95,
+      "claim": "There is only one style of the mandolin.",
+      "true_label": "REFUTES",
+      "predicted_label": "REFUTES",
+      "qa_pairs": [
+        [
+          "What is the specific style of the mandolin that the statement refers to?",
+          "The specific style of the mandolin referred to is the resonator mandolin."
+        ],
+        [
+          "What are the other styles of the mandolin besides the resonator mandolin?",
+          "The other styles of the mandolin besides the resonator mandolin include the Neapolitan mandolin, mandolone, mandocello, and mandobass."
+        ]
+      ],
+      "verdict_int": 0,
+      "verdict_raw": "The question-answer pairs disprove the claim by explicitly identifying multiple styles of the mandolin beyond the resonator mandolin.  \nFalse"
+    },
+    {
+      "claim_id": 96,
+      "claim": "Varun Dhawan isn't an actor.",
+      "true_label": "REFUTES",
+      "predicted_label": "NOT ENOUGH INFO",
+      "qa_pairs": [
+        [
+          "Who is considered an actor in the context of this statement?",
+          "The term \"actor\" in the context of this statement is associated with actor-network theory (ANT), where actors can include both human and non-human entities that are part of a network. According to Michel Callon, problematization involves the interdefinition of actors in the network. However, the specific actors mentioned in the statement are not identified. Therefore, the answer is: question too specific."
+        ],
+        [
+          "What is the definition of an actor used in the statement?",
+          "question too specific"
+        ],
+        [
+          "When was the statement about Varun Dhawan made?",
+          "The statement about Varun Dhawan was made in the context of discussing \"Judwaa 2\" and \"Dishoom,\" which are both films he has been a part of. However, the exact date when the statement was made is not provided in the given sources. Therefore, the answer is: question too specific."
+        ]
+      ],
+      "verdict_int": 2,
+      "verdict_raw": "Inconclusive"
+    },
+    {
+      "claim_id": 97,
+      "claim": "The People vs. Larry Flynt is an unproduced screenplay.",
+      "true_label": "REFUTES",
+      "predicted_label": "REFUTES",
+      "qa_pairs": [
+        [
+          "Is \"The People vs. Larry Flynt\" actually an unproduced screenplay or has it been produced in some form?",
+          "Answer: \"The People vs. Larry Flynt\" has been produced in some form; it is a 1996 American biographical drama film."
+        ]
+      ],
+      "verdict_int": 0,
+      "verdict_raw": "False. The question-answer pairs directly disprove the claim by stating that \"The People vs. Larry Flynt\" has been produced as a 1996 film."
+    },
+    {
+      "claim_id": 98,
+      "claim": "Neil Young is not a singer-songwriter.",
+      "true_label": "REFUTES",
+      "predicted_label": "NOT ENOUGH INFO",
+      "qa_pairs": [
+        [
+          "Who is considered a singer-songwriter according to the statement?",
+          "Cristian Bugatti, also known as Bugo, is considered a singer-songwriter according to the statement."
+        ],
+        [
+          "What is the basis for stating that Neil Young is not a singer-songwriter?",
+          "question too specific"
+        ],
+        [
+          "When was the statement about Neil Young made?",
+          "The statement about Neil Young was made in the late 1980s when work on the Neil Young Archives began."
+        ]
+      ],
+      "verdict_int": 2,
+      "verdict_raw": "Inconclusive"
+    },
+    {
+      "claim_id": 99,
+      "claim": "Led Zeppelin released an eponymous debut album in 1960.",
+      "true_label": "REFUTES",
+      "predicted_label": "REFUTES",
+      "qa_pairs": [
+        [
+          "When was Led Zeppelin's eponymous debut album actually released?",
+          "Led Zeppelin's eponymous debut album was released on 12 January 1969 in the United States and on 31 March 1969 in the United Kingdom."
+        ]
+      ],
+      "verdict_int": 0,
+      "verdict_raw": "False. The question-answer pairs disprove the claim by stating that Led Zeppelin's eponymous debut album was released in 1969, not 1960."
+    }
+  ]
+}
