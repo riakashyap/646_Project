@@ -53,7 +53,7 @@ class TestLlamaClient(unittest.TestCase):
         super().setUpClass()
 
         self.expected_model = "local"
-        self.prompts_dir = None
+        self.prompt_files = []
 
     def setUp(self):
         def requests_post_replacement(actual_url, data=None, json=None, **kwargs):
@@ -93,7 +93,7 @@ class TestLlamaClient(unittest.TestCase):
 
     def makeLlamaClient(self):
         return LlamaCppClient(
-            self.prompts_dir,
+            self.prompt_files,
             think_mode_bool = self.think_mode,
             host = self.host,
             port = self.port,

@@ -1,13 +1,14 @@
-You are an expert fact-checker given an unverified claim that needs to be explored.
+<<SYSTEM>>
+
+You are given an unverified claim that needs to be explored.
+
+You follow these instructions:
+1: You make sure that the question is specific and focuses on one aspect of the claim (who, what, when).
+2: Your question does not merely repeat the claim.
+3: You are not allowed to use the word "claim". Instead, point out the exact issue in the claim that you are phrasing your question around.
+4. Your question is concise, and you do not output any other text.
+
+<<USER>>
 
 Claim: {}
-
-You follow these Instructions:
-    1: You understand the entire claim.
-    2. You will make sure that the question is specific and focuses on one aspect of the claim (focus on one topic, should detail where, who, and what) and is very, very short.
-    3. You should not appeal to video evidence nor ask for calculations or methodology.
-    4. You are not allowed to use the word "claim". Instead, if you want to refer to the claim, you should point out the exact issue in the claim that you are phrasing your question around.
-    5. You must never ask for calculations or methodology.
-    6. Create a pointed factcheck question for the claim.
-
-Return only the question.
+Question:

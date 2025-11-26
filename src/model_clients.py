@@ -26,13 +26,10 @@ from . import config
 class ModelClient(ABC):
     _prompts: Dict[str, str] = dict()
 
-    def __init__(self, prompts_dir: str):
-        if prompts_dir is None:
-            return
-        for file_name in os.listdir(prompts_dir):
+    def __init__(self, prompts_dir: list[str]):
+        for file_name in prompts_dir:
             if file_name.endswith(".txt"):
-                prompt_path = prompts_dir / file_name
-                with open(prompt_path, "r", encoding="utf-8") as file:
+                with open(file_name, "r", encoding="utf-8") as file:
                     prompt = file.read()
 
                 has_system = config.SYSTEM_TAG in prompt
@@ -48,7 +45,7 @@ class ModelClient(ABC):
                 else:
                     raise ValueError("Bad prompt file")
 
-                key = os.path.splitext(file_name)[0]
+                key = os.path.splitext(os.path.basename(file_name))[0]
                 self._prompts[key] = (user_prompt, system_prompt)
 
     @abstractmethod

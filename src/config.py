@@ -38,6 +38,10 @@ TOP_QRELS_PATH = DATA_DIR / "fever-qrel-top.json"
 TOP_RANKLISTS_PATH = DATA_DIR / "fever-ranklist-top.json"
 
 PROMPTS_DIR = SCRIPT_DIR.parent / "prompts"
+RAGAR_DIR = PROMPTS_DIR / "ragar"
+MADR_DIR = PROMPTS_DIR / "madr"
+RAGAR_ORIG_DIR = PROMPTS_DIR / "ragar_orig"
+MADR_ORIG_DIR = PROMPTS_DIR / "madr_orig"
 SYSTEM_TAG = "<<SYSTEM>>"
 USER_TAG = "<<USER>>"
 

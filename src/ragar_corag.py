@@ -19,7 +19,7 @@ from .corag import Corag
 from .model_clients import ModelClient
 from . import config
 from pyserini.search.lucene import LuceneSearcher
-from .parsers import parse_ternary, parse_conclusive
+from .utils import parse_ternary, parse_conclusive
 from .madr import run_madr
 
 class RagarCorag(Corag):

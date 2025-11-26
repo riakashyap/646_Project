@@ -14,10 +14,10 @@ Code:
 """
 
 from src.madr import run_madr
-from src.config import PROMPTS_DIR
+from src.config import RAGAR_DIR, MADR_DIR
 from tests.mock_model_client import MockModelClient, SeqMockClient
 import unittest
-from src.parsers import parse_boolean, parse_ternary, parse_conclusive
+from src.utils import parse_boolean, parse_ternary, parse_conclusive, get_prompt_files
 
 class TestMadr(unittest.TestCase):
 
@@ -32,8 +32,8 @@ class TestMadr(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
+        cls.prompt_files = get_prompt_files(RAGAR_DIR, MADR_DIR)
         super().setUpClass()
-        cls.prompts_dir = PROMPTS_DIR / "custom"
 
     def test_run_madr_full_flow(self):
         # Response sequence: f1_init, f2_init, judge(False), f1_cross, f2_cross, judge(True), final_revise
@@ -47,15 +47,15 @@ class TestMadr(unittest.TestCase):
             "final_revised",
         ]
 
-        client = SeqMockClient(PROMPTS_DIR / "custom", responses)
+        client = SeqMockClient(self.prompt_files, responses)
 
         final = run_madr(client, self.claim, self.qa_pairs, self.explanation, max_iters=2)
 
         self.assertEqual("final_revised", final)
 
         # Validate that initial prompts were formatted with the claim/qa_pairs/explanation
-        exp1, _ = self.get_expected_prompts(client, "madr_init_fb1", [self.claim, self.qa_pairs, self.explanation])
-        exp2, _ = self.get_expected_prompts(client, "madr_init_fb2", [self.claim, self.qa_pairs, self.explanation])
+        exp1, _ = self.get_expected_prompts(client, "init_fb1", [self.claim, self.qa_pairs, self.explanation])
+        exp2, _ = self.get_expected_prompts(client, "init_fb2", [self.claim, self.qa_pairs, self.explanation])
 
         sent_user_prompts = [h[0] for h in client.history]
 
@@ -71,7 +71,7 @@ class TestMadr(unittest.TestCase):
     def test_run_madr_immediate_judge_true(self):
         # Sequence: f1_init, f2_init, judge(True), final_revise
         responses = ["f1_init", "f2_init", "True", "final_revised"]
-        client = SeqMockClient(PROMPTS_DIR / "custom", responses)
+        client = SeqMockClient(self.prompt_files, responses)
 
         final = run_madr(client, self.claim, self.qa_pairs, self.explanation, max_iters=3)
 
@@ -81,42 +81,42 @@ class TestMadr(unittest.TestCase):
     def test_prompt_templates_match_expected(self):
         # Build a predictable response queue so we can assert exact prompt formatting
         responses = ["f1_init", "f2_init", "False", "f1_cross", "f2_cross", "True", "final_revised"]
-        client = SeqMockClient(PROMPTS_DIR / "custom", responses.copy())
+        client = SeqMockClient(self.prompt_files, responses.copy())
 
         _ = run_madr(client, self.claim, self.qa_pairs, self.explanation, max_iters=2)
 
         # init_fb1
-        exp1, _ = self.get_expected_prompts(client, "madr_init_fb1", [self.claim, self.qa_pairs, self.explanation])
+        exp1, _ = self.get_expected_prompts(client, "init_fb1", [self.claim, self.qa_pairs, self.explanation])
         self.assertEqual(exp1, client.history[0][0])
 
         # init_fb2
-        exp2, _ = self.get_expected_prompts(client, "madr_init_fb2", [self.claim, self.qa_pairs, self.explanation])
+        exp2, _ = self.get_expected_prompts(client, "init_fb2", [self.claim, self.qa_pairs, self.explanation])
         self.assertEqual(exp2, client.history[1][0])
 
         # judge should receive f1_init, f2_init
         f1 = responses[0]
         f2 = responses[1]
-        exp_j1, _ = self.get_expected_prompts(client, "madr_judge", [f1, f2])
+        exp_j1, _ = self.get_expected_prompts(client, "judge", [f1, f2])
         self.assertEqual(exp_j1, client.history[2][0])
 
         # cross feedbacks: first cross receives (f1_init, f2_init), second receives (f2_init, f1_init)
-        exp_cross1, _ = self.get_expected_prompts(client, "madr_cross_fb", [responses[0], responses[1]])
+        exp_cross1, _ = self.get_expected_prompts(client, "cross_fb", [responses[0], responses[1]])
 
-        # The second cross feedback call receives the revised feedback returned by the first cross step 
-        exp_cross2, _ = self.get_expected_prompts(client, "madr_cross_fb", [responses[1], responses[3]])
+        # The second cross feedback call receives the revised feedback returned by the first cross step
+        exp_cross2, _ = self.get_expected_prompts(client, "cross_fb", [responses[1], responses[3]])
         self.assertEqual(exp_cross1, client.history[3][0])
         self.assertEqual(exp_cross2, client.history[4][0])
 
         # final revise prompt contains f1_cross, f2_cross and explanation
         f1_final = responses[3]
         f2_final = responses[4]
-        exp_rev, _ = self.get_expected_prompts(client, "madr_revise", [f1_final, f2_final, self.explanation])
+        exp_rev, _ = self.get_expected_prompts(client, "revise", [f1_final, f2_final, self.explanation])
         self.assertEqual(exp_rev, client.history[-1][0])
 
     def test_run_madr_call_counts(self):
         # Ensure the number of model calls matches the MADR flow we expect
         responses = ["f1_init", "f2_init", "False", "f1_cross", "f2_cross", "True", "final_revised"]
-        client = SeqMockClient(PROMPTS_DIR / "custom", responses.copy())
+        client = SeqMockClient(self.prompt_files, responses.copy())
 
         _ = run_madr(client, self.claim, self.qa_pairs, self.explanation, max_iters=2)
 
