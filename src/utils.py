@@ -9,10 +9,14 @@ Copyright:
 
 Commentary:
 
-  This file contains various utility AI-response parsers.
+  This file contains various utility files:
+    - AI-response parsers
+    - OS/Dir common operations
 
 Code:
 """
+
+import os
 
 def parse_boolean(text: str) -> bool:
     lower = text.lower()
@@ -36,3 +40,12 @@ def parse_conclusive(text: str) -> bool:
     has_inconclusive = "inconclusive" in lower
     has_conclusive = "conclusive" in lower and not has_inconclusive
     return has_conclusive and not has_inconclusive
+
+def get_prompt_files(*dirs) -> list[str]:
+    files = []
+    for d in dirs:
+        if os.path.isdir(d):
+            for f in os.listdir(d):
+                if os.path.isfile(os.path.join(d, f)):
+                    files.append(os.path.join(d, f))
+    return files
