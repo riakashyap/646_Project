@@ -39,7 +39,62 @@ class LayerwiseCEKLLoss():
     2. Intermediate layers should be consistent with final layer (via KL)
     """
     
-    
+class LayerwiseCEKLLoss(nn.Module):
+    """
+    E2Rank loss: layer-wise cross-entropy + KL divergence.
+
+    Expected model outputs (per forward pass):
+        {
+            "layer_logits": List[Tensor],   # each tensor: (batch, 2)
+            "final_logits": Tensor          # (batch, 2)
+        }
+    """
+
+    def __init__(self, temperature: float = 1.0):
+        super().__init__()
+        self.temperature = temperature
+        self.ce = nn.CrossEntropyLoss()
+        self.kl = nn.KLDivLoss(reduction="batchmean")
+
+    def forward(self, model_outputs, labels):
+        """
+        Args:
+            model_outputs: dict with:
+                - layer_logits: list of tensors (batch, 2)
+                - final_logits: tensor (batch, 2)
+            labels: tensor of shape (batch,) with {0/1}
+        """
+
+        layer_logits: list = model_outputs["layer_logits"]
+        final_logits: torch.Tensor = model_outputs["final_logits"]
+
+        num_layers = len(layer_logits)
+        if num_layers == 0:
+            raise ValueError("model_outputs['layer_logits'] is empty")
+
+        # -----------------------------
+        # 1. CE loss on each layer
+        # -----------------------------
+        ce_losses = []
+        for logits in layer_logits:
+            ce_losses.append(self.ce(logits, labels))
+        L_ce = sum(ce_losses) / num_layers
+
+        # -----------------------------
+        # 2. KL divergence: each layer vs final layer
+        # -----------------------------
+        final_probs = F.softmax(final_logits / self.temperature, dim=-1)
+
+        kl_losses = []
+        for logits in layer_logits[:-1]:  # exclude final layer
+            layer_log_probs = F.log_softmax(logits / self.temperature, dim=-1)
+            kl_losses.append(self.kl(layer_log_probs, final_probs))
+
+        L_kl = sum(kl_losses) / max(1, (num_layers - 1))
+
+        return L_ce + L_kl
+
+
 class PairwiseRankingLoss(nn.Module):
     """
     Pairwise ranking loss with exponential penalty (from Assignment 2).
