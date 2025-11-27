@@ -120,8 +120,80 @@ class TestReranker(unittest.TestCase):
         rerank_metrics = {k: round(v, 3) for k, v in rerank_metrics.items()}
 
         print("Reranker metrics:", rerank_metrics)
-        # TODO: add assertions based on expected performance
-                 
+
+        self.assertTrue(
+            all(0 <= v <= 1 for v in rerank_metrics.values()),
+            f"All metrics not in valid range [0,1]. Got: {rerank_metrics}"
+        )
+        
+    def test_compute_score(self):
+        query = "Who is the president of the United States?"
+        doc = "Joe Biden is the current president of the United States."
+        
+        scores = [round(self.reranker.compute_score(query, doc), 5) for _ in range(5)]
+        unique_scores = len(set(scores))
+        print(f"Model is {'consistent in scoring' if unique_scores == 1 else f'inconsistent wit {unique_scores}/5 unique scores'} for singular query-doc pair")
+        self.assertEqual(
+            unique_scores, 1,
+            f"In five calls, got {unique_scores} unique score: {scores}. Model appears to not be consistent in scoring."
+        )
+
+    def test_batch_scores(self):
+        query = "What is the capital of France?"
+        docs = [
+            "Paris is the capital of France.",
+            "London is the capital of England.",
+            "The weather today is sunny."
+        ]
+        
+        runs = [
+            [round(s, 5) for s in self.reranker.batch_compute_scores(query, docs)]
+            for _ in range(5)
+        ]
+        
+        non_deterministic_docs = [] # records doc if scores varied for that doc across runs
+        for doc_idx in range(len(docs)):
+            doc_scores = [run[doc_idx] for run in runs]
+            unique = len(set(doc_scores))
+            if unique > 1:
+                non_deterministic_docs.append((doc_idx, unique))
+                
+        print(f"Model is {'consistent' if not non_deterministic_docs else f'inconsistent on {len(non_deterministic_docs)}/3 docs'} for singular query multiple doc batch scoring.")
+        
+        self.assertEqual(
+            unique, 1,
+            f"Model is not consistent in scoring across batch runs for all docs."
+        ) 
+
+    def test_rerank(self):
+        query = "Who invented the telephone?"
+        doc_pairs = [
+            ("doc1", "Alexander Graham Bell invented the telephone."),
+            ("doc2", "Thomas Edison invented the light bulb."),
+            ("doc3", "The telephone was invented in 1876."),
+        ]
+        
+        orderings = []
+        score_sets = []
+        for _ in range(5):
+            reranked = self.reranker.rerank(query, doc_pairs, top_k=3)
+            order = tuple(doc_id for doc_id, _, _ in reranked)
+            scores = tuple(round(score, 5) for _, _, score in reranked)
+            orderings.append(order)
+            score_sets.append(scores)
+        
+        unique_orderings = len(set(orderings))
+        unique_score_sets = len(set(score_sets)) 
+        print(f"Model is {'consistent' if unique_orderings == 1 else 'inconsistent'} as 3 docs were reordered and had {unique_orderings} unique orderings in 5 runs.")
+        self.assertTrue(
+            all(len(order) == 3 for order in orderings),
+            f"Rankings failed to returne 3 docs, not following top_k parameter."
+        )
+        self.assertEqual( 
+            unique_orderings, 1, 
+            f"{unique_orderings} ordering variations for docs indicating model is not consistent." 
+        )
+
     @classmethod
     def write_reranked_lists(self,
                           raw_claims: list[dict],
@@ -166,4 +238,3 @@ class TestReranker(unittest.TestCase):
         print(f"\nWriting {len(reranked_lists)} reranked results to {RERANKEDLISTS_PATH}...")
         with open(RERANKEDLISTS_PATH, "w", encoding="utf8") as out:
             json.dump(reranked_lists, out, indent=2)
-        
