@@ -53,6 +53,7 @@ class TestReranker(unittest.TestCase):
         
         regenerate_ranklists = False
         regenerate_reranklists = False
+        has_gpu = torch.cuda.is_available()
 
         if not (os.path.exists(TOP_QRELS_PATH) and \
                 os.path.exists(TOP_CLAIMS_PATH)):
@@ -79,12 +80,13 @@ class TestReranker(unittest.TestCase):
         with open(TOP_RANKLISTS_PATH, "r", encoding="utf8") as f:
             self.fever_ranklists = json.load(f)
 
-        if not os.path.exists(RERANKEDLISTS_PATH) or regenerate_reranklists:
+        if (not os.path.exists(RERANKEDLISTS_PATH) or regenerate_reranklists) and has_gpu:
             print(f"Preparing {RERANKEDLISTS_PATH}  (this will take awhile)...")
             self.write_reranked_lists(claims, 10)
 
-        with open(RERANKEDLISTS_PATH, "r", encoding="utf8") as f:
-            self.reranked_ranklists = json.load(f)
+        if os.path.exists(RERANKEDLISTS_PATH):
+            with open(RERANKEDLISTS_PATH, "r", encoding="utf8") as f:
+                self.reranked_ranklists = json.load(f)
 
     def test_fever_evaluation(self):
         expected = {
@@ -106,6 +108,7 @@ class TestReranker(unittest.TestCase):
         self.assertEqual(expected, actual, "BM25 evaluation on the fever dataset"
                          " was significantly different than expected!")
 
+    @unittest.skipIf(not os.path.exists(RERANKEDLISTS_PATH), "Reranked lists not generated. Run with GPU to generate.")
     def test_can_rerank(self):
         claim_id = list(self.reranked_ranklists.keys())[0]
         reranked_docs = self.reranked_ranklists[claim_id]
@@ -114,12 +117,11 @@ class TestReranker(unittest.TestCase):
                           "Reranker returned no documents.")
         self.assertLessEqual(len(reranked_docs), 10,
                             "Reranker returned more than top-10 docs")
-        
+    
+    @unittest.skipIf(not os.path.exists(RERANKEDLISTS_PATH), "Reranked lists not generated. Run with GPU to generate.")
     def test_reranker_evaluation(self):
         rerank_metrics = eval_on_fever(self.qrels, self.reranked_ranklists, max_k=50)
         rerank_metrics = {k: round(v, 3) for k, v in rerank_metrics.items()}
-
-        print("Reranker metrics:", rerank_metrics)
 
         self.assertTrue(
             all(0 <= v <= 1 for v in rerank_metrics.values()),
@@ -132,7 +134,6 @@ class TestReranker(unittest.TestCase):
         
         scores = [round(self.reranker.compute_score(query, doc), 5) for _ in range(5)]
         unique_scores = len(set(scores))
-        print(f"Model is {'consistent in scoring' if unique_scores == 1 else f'inconsistent wit {unique_scores}/5 unique scores'} for singular query-doc pair")
         self.assertEqual(
             unique_scores, 1,
             f"In five calls, got {unique_scores} unique score: {scores}. Model appears to not be consistent in scoring."
@@ -158,8 +159,6 @@ class TestReranker(unittest.TestCase):
             if unique > 1:
                 non_deterministic_docs.append((doc_idx, unique))
                 
-        print(f"Model is {'consistent' if not non_deterministic_docs else f'inconsistent on {len(non_deterministic_docs)}/3 docs'} for singular query multiple doc batch scoring.")
-        
         self.assertEqual(
             unique, 1,
             f"Model is not consistent in scoring across batch runs for all docs."
@@ -184,7 +183,6 @@ class TestReranker(unittest.TestCase):
         
         unique_orderings = len(set(orderings))
         unique_score_sets = len(set(score_sets)) 
-        print(f"Model is {'consistent' if unique_orderings == 1 else 'inconsistent'} as 3 docs were reordered and had {unique_orderings} unique orderings in 5 runs.")
         self.assertTrue(
             all(len(order) == 3 for order in orderings),
             f"Rankings failed to returne 3 docs, not following top_k parameter."
@@ -201,9 +199,6 @@ class TestReranker(unittest.TestCase):
         reranked_lists: dict[str, dict[str, float]] = {}
         with open(TOP_RANKLISTS_PATH, "r", encoding="utf8") as f:
             bm25_ranklists = json.load(f)
-            
-        if torch.cuda.is_available():
-            print(f"GPU memory allocated: {torch.cuda.memory_allocated(0) / 1024**2:.2f} MB")
             
         for claim_entry in raw_claims: 
             claim_id = claim_entry['id']
@@ -235,6 +230,5 @@ class TestReranker(unittest.TestCase):
                 for (docid, _text, score) in reranked
             }
 
-        print(f"\nWriting {len(reranked_lists)} reranked results to {RERANKEDLISTS_PATH}...")
         with open(RERANKEDLISTS_PATH, "w", encoding="utf8") as out:
             json.dump(reranked_lists, out, indent=2)
