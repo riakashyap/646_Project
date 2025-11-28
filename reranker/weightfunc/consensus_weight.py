@@ -22,6 +22,7 @@ from src.config import LOGGER as logger
 import math
 from collections import Counter
 import numpy as np
+import torch
 
 class ConsensusWeightFunction(BaseWeightFunction):
   def __init__(self, min_similarity: float = 0.3, multiplier: float = 1.3, sim_method: str = "tdidf", device: str = None, embedding_model: SentenceTransformer = 'all-MiniLM-L6-v2'):
@@ -121,8 +122,9 @@ class ConsensusWeightFunction(BaseWeightFunction):
       embeddings = self.embedding_model.encode(
         doc_texts, 
         convert_to_numpy=True,
-        show_progress_bar=False
-      )
+        show_progress_bar=False,
+        batch_size=32  
+        )
       similarities = np.zeros((n_docs, n_docs))
       for i in range(n_docs):
         for j in range(i + 1, n_docs):
