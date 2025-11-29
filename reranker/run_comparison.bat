@@ -1,3 +1,10 @@
+@REM Copyright:
+
+@REM   Copyright © 2025 Ananya-Jha-code
+
+@REM   You should have received a copy of the MIT license along with this file.
+@REM   If not, see https://mit-license.org/
+
 @echo off
 REM Set JAVA_HOME to your JDK 21 installation
 set JAVA_HOME="C:\Program Files\Microsoft\jdk-21.0.9.10-hotspot"
