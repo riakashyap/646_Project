@@ -48,7 +48,8 @@ class BaseWeightFunction(ABC):
   def apply(
     self,
     query: str,
-    documents: List[Tuple[str, str, float]]
+    documents: List[Tuple[str, str, float]],
+    alpha: float = 1.0
     ) -> List[Tuple[str, str, float]]:
       """
       Apply weighting to documents and return reweighted results.
@@ -56,6 +57,7 @@ class BaseWeightFunction(ABC):
       Args:
           query: The search query/claim
           documents: List of (doc_id, doc_text, base_score) tuples
+          alpha: Weight dampening factor (0.0-1.0)
           
       Returns:
           List of (doc_id, doc_text, weighted_score) tuples
@@ -66,6 +68,6 @@ class BaseWeightFunction(ABC):
       weights = self.compute_weights(query, documents)
       
       return [
-          (doc_id, doc_text, score * weight)
+          (doc_id, doc_text, score * (1.0 + alpha * (weight - 1.0)))
           for (doc_id, doc_text, score), weight in zip(documents, weights)
       ]
