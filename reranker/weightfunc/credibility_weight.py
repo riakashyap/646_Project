@@ -7,7 +7,7 @@ Copyright:
   If not, see https://mit-license.org/
 
 Commentary:
-    Weight function that prioritizes credible/trusted sources.
+    Weight function that prioritizes credible/trusted sources. (For FEVER/Wikipedia_only disabled)
     Can use Stanford Guidelines for Web Credibility: https://credibility.stanford.edu/guidelines/index.html
     Summary of adapted guidelines:
     1. Source Authority (Taking #2, #3, #4): Asses domain reputation and organisation's credibility
@@ -154,9 +154,9 @@ class CredibilityWeightFunction(BaseWeightFunction):
     weights = []
     for (doc_id, doc_text, _), domain in zip(documents, domains):
       source_score = 1.0 if self.wikipedia_only else self._assess_source_authority(domain)
-      quality_score = self._assess_content_quality(doc_text)
-      objectivity_score = self._assess_objectivity(doc_text)
-      professional_score = self._assess_professionalism(doc_text, domain)
+      quality_score = 1.0 if self.wikipedia_only else self._assess_content_quality(doc_text)
+      objectivity_score = 1.0 if self.wikipedia_only else  self._assess_objectivity(doc_text)
+      professional_score = 1.0 if self.wikipedia_only else self._assess_professionalism(doc_text, domain)
       
       final_score = (
         source_score * self.weights['source_authority'] +
