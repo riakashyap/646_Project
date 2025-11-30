@@ -382,10 +382,7 @@ class WeightFunctionEvaluator:
         valid_results = {k: v for k, v in results.items() if v is not None}
         if valid_results:
             best_config = max(valid_results.items(), key=lambda x: x[1]['MAP_10'])
-            print(f"BEST: {best_config[0]}")
-            print(f"\tMAP@3:  {best_config[1]['MAP_3']:.3f}")
-            print(f"\tMAP@5:  {best_config[1]['MAP_5']:.3f}")
-            print(f"\tMAP@10: {best_config[1]['MAP_10']:.3f}")
+            print(f"Best performing model (Based on MAP): {best_config}")
 
 
 def main():
