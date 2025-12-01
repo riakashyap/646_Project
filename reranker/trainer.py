@@ -3,7 +3,7 @@ Copyright:
 
   Copyright © 2025 Ananya-Jha-code
   Copyright © 2025 uchuuronin
-
+  Copyright © 2025 Ria
 
   You should have received a copy of the MIT license along with this file.
   If not, see https://mit-license.org/
@@ -33,9 +33,9 @@ import torch.nn.functional as F
 from torch.utils.data import Dataset, DataLoader
 from transformers import (
     AutoTokenizer,
-    AutoModelForSequenceClassification,
-    AdamW
+    AutoModelForSequenceClassification
 )
+from torch.optim import AdamW
 from tqdm import tqdm
 from pathlib import Path
 
@@ -56,18 +56,18 @@ class FeverRerankDataset(Dataset):
         claims_path: Path,
         qrels_path: Path,
         ranklist_path: Path,
-        pages_dir: Path,
+        index_path: Path | None = None,
         max_negatives: int = 1
     ):
         self.claims_path = claims_path
         self.qrels_path = qrels_path
         self.ranklist_path = ranklist_path
-        self.pages_dir = pages_dir
+        self.index_path = index_path if index_path is not None else INDEX_DIR
         self.max_negatives = max_negatives
 
         # Initialize searcher for fast doc lookup
         try:
-            self.searcher = LuceneSearcher(str(INDEX_DIR))
+            self.searcher = LuceneSearcher(str(self.index_path))
         except Exception as e:
             print(f"Warning: Could not initialize LuceneSearcher: {e}")
             self.searcher = None
