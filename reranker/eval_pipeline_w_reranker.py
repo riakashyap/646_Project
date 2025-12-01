@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """
 Copyright:
 
@@ -274,7 +273,7 @@ class RerankerEvaluator:
 
     def main():
         evaluator = RerankerEvaluator(
-            num_claims=4,
+            num_claims=50,
             think_mode=False,
             use_ragar_prompts=True,
             model_size="8b" 
