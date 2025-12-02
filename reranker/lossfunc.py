@@ -19,26 +19,6 @@ Code:
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-
-class LayerwiseCEKLLoss():
-    """
-    E2Rank loss: Layerwise cross-entropy + KL divergence. (pg3 of paper for reference)
-    
-    L_total = L_layerwise + L_divergence
-    
-    Where:
-    - L_layerwise = (1/|L|) * SUM_OF CE(y_l, y) over layers
-    where y_l is the probability distribution at the l-th layer, 
-    and y is the target one,
-    
-    - L_divergence = (1/(|L|-1)) * SUM_OF KL(y_l || y_final) over intermediate layers
-    where y_l is the probability distribution at the l-th layer (student) 
-    where y_l is the probability distribution at the l-th layer (teacher)
-
-    Goal:
-    1. Each layer should be able to rank positive doc highest (via CE)
-    2. Intermediate layers should be consistent with final layer (via KL)
-    """
     
 class LayerwiseCEKLLoss(nn.Module):
     """
@@ -152,3 +132,148 @@ class PairwiseRankingLoss(nn.Module):
             return loss.sum()
         else:  # 'none'
             return loss
+
+
+class PointwiseBCELoss(nn.Module):
+    """
+    Pointwise binary classification loss on (query, doc) scores.
+
+    Expects:
+        - scores: (batch,) or (batch, 1), raw logits
+        - labels: (batch,) in {0, 1}
+    """
+
+    def __init__(self, pos_weight: float | None = None):
+        super().__init__()
+        # store the scalar, we’ll build the Tensor on the correct device in forward
+        self.pos_weight_value = pos_weight
+
+    def forward(self, scores: torch.Tensor, labels: torch.Tensor) -> torch.Tensor:
+        scores = scores.view(-1)          # (batch,)
+        labels = labels.float().view(-1)  # (batch,)
+
+        if scores.shape != labels.shape:
+            raise ValueError(
+                f"Shape mismatch: scores {scores.shape} vs labels {labels.shape}"
+            )
+
+        if self.pos_weight_value is not None:
+            # pos_weight > 1.0 if positives are rare
+            pos_weight = torch.tensor(
+                self.pos_weight_value,
+                device=scores.device,
+                dtype=scores.dtype,
+            )
+            loss_fn = nn.BCEWithLogitsLoss(pos_weight=pos_weight)
+        else:
+            loss_fn = nn.BCEWithLogitsLoss()
+
+        return loss_fn(scores, labels)
+
+
+class PairwiseHingeLoss(nn.Module):
+    """
+    Margin-based pairwise ranking loss on scalar scores:
+
+        L = max(0, margin - (z_pos - z_neg))
+
+    Encourages: z_pos >= z_neg + margin
+
+    Typically used in ranking / metric learning when you want a hard margin.
+    """
+
+    def __init__(self, margin: float = 1.0, reduction: str = "mean"):
+        super().__init__()
+        assert reduction in ("mean", "sum", "none")
+        self.margin = margin
+        self.reduction = reduction
+
+    def forward(self, pos_scores: torch.Tensor, neg_scores: torch.Tensor) -> torch.Tensor:
+        # (batch,) or (batch, 1) → flatten to (batch,)
+        pos_scores = pos_scores.view(-1)
+        neg_scores = neg_scores.view(-1)
+
+        if pos_scores.shape != neg_scores.shape:
+            raise ValueError(
+                f"Shape mismatch: pos_scores {pos_scores.shape} vs neg_scores {neg_scores.shape}"
+            )
+
+        # diff = z_pos - z_neg
+        diff = pos_scores - neg_scores
+
+        # hinge loss = max(0, margin - diff)
+        loss = F.relu(self.margin - diff)
+
+        if self.reduction == "mean":
+            return loss.mean()
+        elif self.reduction == "sum":
+            return loss.sum()
+        else:  # 'none'
+            return loss
+
+
+class ListwiseCELoss(nn.Module):
+    """
+    Listwise cross-entropy loss when each query has *exactly one* positive doc.
+
+    Expected:
+        scores: (batch, n_docs)
+        labels: (batch, n_docs) with exactly one '1' per row.
+
+    This is equivalent to CE over the document list for each query.
+    """
+
+    def __init__(self):
+        super().__init__()
+        self.ce = nn.CrossEntropyLoss()
+
+    def forward(self, scores: torch.Tensor, labels: torch.Tensor) -> torch.Tensor:
+        # Input validation
+        if scores.dim() != 2 or labels.dim() != 2:
+            raise ValueError(
+                f"scores and labels must both be (batch, n_docs), "
+                f"got scores={scores.shape}, labels={labels.shape}"
+            )
+
+        if scores.shape != labels.shape:
+            raise ValueError(
+                f"Shape mismatch: scores {scores.shape} vs labels {labels.shape}"
+            )
+
+        # Check one-positive-per-row (optional but helpful)
+        if not torch.all(labels.sum(dim=1) == 1):
+            raise ValueError(
+                "Each row in labels must contain exactly one positive ('1')."
+            )
+
+        # Convert one-hot → target index
+        targets = labels.argmax(dim=-1)  # (batch,)
+
+        # CE between list scores and positive index
+        return self.ce(scores, targets)
+
+
+LOSS_REGISTRY = {
+    "layerwise_ce_kl": LayerwiseCEKLLoss,   # E2Rank
+    "pairwise_exp": PairwiseRankingLoss,    # softplus-based
+    "pairwise_hinge": PairwiseHingeLoss,    # margin-based
+    "pointwise_bce": PointwiseBCELoss,      # BCE on single scores
+    "listwise_ce": ListwiseCELoss,          # listwise CE with one positive
+}
+
+
+def get_loss(name: str, **kwargs) -> nn.Module:
+    """
+    Factory to instantiate a loss by name.
+
+    Example:
+        loss_fn = get_loss("pairwise_exp")
+        loss_fn = get_loss("pointwise_bce", pos_weight=2.0)
+        loss_fn = get_loss("pairwise_hinge", margin=1.0)
+    """
+    if name not in LOSS_REGISTRY:
+        raise ValueError(
+            f"Unknown loss name '{name}'. "
+            f"Available: {list(LOSS_REGISTRY.keys())}"
+        )
+    return LOSS_REGISTRY[name](**kwargs)

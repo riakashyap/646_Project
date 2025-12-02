@@ -2,7 +2,7 @@
 Copyright:
 
   Copyright © 2025 Ananya-Jha-code
-
+  Copyright © 2025 Ria
 
   You should have received a copy of the MIT license along with this file.
   If not, see https://mit-license.org/
@@ -21,22 +21,31 @@ Usage:
 import argparse
 from pathlib import Path
 
-from trainer import RerankerTrainer, FeverRerankDataset
+from .trainer import RerankerTrainer, FeverRerankDataset
 from src.config import (
-    CLAIMS_PATH, QRELS_PATH, RANKLISTS_PATH,
-    PAGES_DIR
+    CLAIMS_PATH, QRELS_PATH, RANKLISTS_PATH, INDEX_DIR
 )
 
 
 def parse_args():
     parser = argparse.ArgumentParser()
-
     parser.add_argument(
         "--model_type",
+        type=str,
         choices=["pairwise", "e2rank"],
         default="pairwise",
-        help="Training approach"
+        help="Which reranker architecture to train"
     )
+    parser.add_argument(
+        "--loss",
+        type=str,
+        choices=["pairwise_exp", "pairwise_hinge", "listwise_ce", "pointwise_bce"],
+        default="pairwise_exp",
+        help="Which loss function to use"
+    )
+
+    parser.add_argument("--margin", type=float, default=1.0, help="Margin for hinge loss")
+    parser.add_argument("--pos_weight", type=float, default=None, help="Positive weight for BCE")
 
     parser.add_argument("--batch_size", type=int, default=4)
     parser.add_argument("--epochs", type=int, default=2)
@@ -63,22 +72,27 @@ def parse_args():
 def main():
     args = parse_args()
 
+
+    # 1. Build Dataset
     print("\n=== Building FEVER Dataset ===")
     dataset = FeverRerankDataset(
         claims_path=Path(CLAIMS_PATH),
         qrels_path=Path(QRELS_PATH),
         ranklist_path=Path(RANKLISTS_PATH),
-        pages_dir=Path(PAGES_DIR),
+        index_path=Path(INDEX_DIR),
         max_negatives=args.max_negatives
     )
 
+    # 3. Initialize Trainer
     print("\n=== Initializing Trainer ===")
     trainer = RerankerTrainer(
         model_type=args.model_type,
         model_name=args.model_name,
-        lr=args.lr
+        lr=args.lr,
+        use_layerwise=(args.model_type == "e2rank")
     )
 
+    # 4. Train
     print("\n=== Starting Training ===")
     trainer.train(
         dataset=dataset,
@@ -86,6 +100,7 @@ def main():
         num_epochs=args.epochs
     )
 
+    # 5. Save model
     print("\n=== Saving Model ===")
     trainer.save(args.save_dir)
 
