@@ -44,7 +44,7 @@ def main():
 
     count = 0
     for item in tqdm(dataset):
-        if item['label'] != 'NOT ENOUGH INFO': 
+        if item['label'] not in ['SUPPORTS','REFUTES']: 
             continue
             
         claim_id = str(item['id'])
