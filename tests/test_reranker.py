@@ -36,6 +36,9 @@ import pytrec_eval
 import random
 from reranker import E2RankReranker
 
+HAS_GPU = torch.cuda.is_available()
+
+@unittest.skipIf(not HAS_GPU, "Reranker tests require GPU, wwhich is not enabled. Skipping unittest...")
 class TestReranker(unittest.TestCase):
 
     searcher: LuceneSearcher
@@ -53,7 +56,6 @@ class TestReranker(unittest.TestCase):
         
         regenerate_ranklists = False
         regenerate_reranklists = False
-        has_gpu = torch.cuda.is_available()
 
         if not (os.path.exists(TOP_QRELS_PATH) and \
                 os.path.exists(TOP_CLAIMS_PATH)):
@@ -80,7 +82,7 @@ class TestReranker(unittest.TestCase):
         with open(TOP_RANKLISTS_PATH, "r", encoding="utf8") as f:
             self.fever_ranklists = json.load(f)
 
-        if (not os.path.exists(RERANKEDLISTS_PATH) or regenerate_reranklists) and has_gpu:
+        if (not os.path.exists(RERANKEDLISTS_PATH) or regenerate_reranklists):
             print(f"Preparing {RERANKEDLISTS_PATH}  (this will take awhile)...")
             self.write_reranked_lists(claims, 10)
 
