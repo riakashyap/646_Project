@@ -18,21 +18,29 @@ from pathlib import Path
 # --- 1. Set JAVA_HOME explicitly for Pyserini ---
 # Check environment variable first
 if "JAVA_HOME" not in os.environ:
-    # Try standard Linux/Windows paths
-    candidates = [
-        "/usr/lib/jvm/java-21-openjdk-amd64",  # Linux default
-        "/usr/lib/jvm/java-17-openjdk-amd64",
-        r"C:\Program Files\Java\jdk-21",        # Windows default
-        r"C:\Program Files\Microsoft\jdk-21.0.9.10-hotspot" # Your machine specific
-    ]
-    for c in candidates:
-        if os.path.exists(c):
-            os.environ["JAVA_HOME"] = c
-            print(f"[Setup] Automatically set JAVA_HOME to {c}")
-            break
+    # # Try standard Linux/Windows paths
+    # candidates = [
+    #     "/usr/lib/jvm/java-21-openjdk-amd64",  # Linux default
+    #     "/usr/lib/jvm/java-17-openjdk-amd64",
+    #     r"C:\Program Files\Java\jdk-21",        # Windows default
+    #     r"C:\Program Files\Microsoft\jdk-21.0.9.10-hotspot" # Your machine specific
+    # ]
+    # for c in candidates:
+    #     if os.path.exists(c):
+    #         os.environ["JAVA_HOME"] = c
+    #         print(f"[Setup] Automatically set JAVA_HOME to {c}")
+    #         break
     
-    if "JAVA_HOME" not in os.environ:
-        print("[Warning] JAVA_HOME not found. Pyserini might fail.")
+    # if "JAVA_HOME" not in os.environ:
+    #     print("[Warning] JAVA_HOME not found. Pyserini might fail.")
+    print("\n[ERROR] JAVA_HOME environment variable is not set.")
+    print("Pyserini requires a Java 11+ (ideally 21) JDK to be installed and JAVA_HOME set.")
+    print("\nTo set it:")
+    print("  - Windows (PowerShell): $env:JAVA_HOME = 'C:\\Path\\To\\JDK'")
+    print("  - Windows (CMD): set JAVA_HOME=C:\\Path\\To\\JDK")
+    print("  - Linux/macOS: export JAVA_HOME=/path/to/jdk")
+    print("\nPlease set JAVA_HOME and try again.\n")
+    sys.exit(1)
 
 # Add src to path to find config
 sys.path.append(str(Path(__file__).parent))

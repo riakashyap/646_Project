@@ -6,11 +6,19 @@
 @REM   If not, see https://mit-license.org/
 
 @echo off
-REM Set JAVA_HOME to your JDK 21 installation
-set JAVA_HOME="C:\Program Files\Microsoft\jdk-21.0.9.10-hotspot"
+@REM REM Set JAVA_HOME to your JDK 21 installation
+@REM set JAVA_HOME="C:\Program Files\Microsoft\jdk-21.0.9.10-hotspot"
+REM Check if JAVA_HOME is set
+if "%JAVA_HOME%"=="" (
+    echo [ERROR] JAVA_HOME is not set.
+    echo Please set JAVA_HOME to your JDK 21 installation path.
+    echo Example: set JAVA_HOME="C:\Program Files\Java\jdk-21"
+    pause
+    exit /b 1
+)
 
 REM Activate Virtual Environment
-call .\venv\Scripts\Activate.ps1
+call .\venv\Scripts\Activate.bat
 
 echo Starting Complete Comparison Run...
 
