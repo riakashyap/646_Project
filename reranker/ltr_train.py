@@ -1,16 +1,23 @@
 import json
 import numpy as np
 from pyserini.search.lucene import LuceneSearcher
-from reranker.e2rank_reranker import E2RankReranker
-from reranker.weightfunc.consensus_weight import ConsensusWeightFunction
-from reranker.weightfunc.credibility_weight import CredibilityWeightFunction
-from reranker.weightfunc.temporal_weight import TemporalWeightFunction
 from src.config import INDEX_DIR, DATA_DIR
 from datasets import load_dataset
 import torch
-from reranker.combine_weights import NeuralCombinerTrainer
 import pickle
+import sys
+from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).parent.parent))
+
+from .e2rank_reranker import E2RankReranker
+from .weightfunc.consensus_weight import ConsensusWeightFunction
+from .weightfunc.credibility_weight import CredibilityWeightFunction
+from .weightfunc.temporal_weight import TemporalWeightFunction
+from .combine_weights import NeuralCombinerTrainer
+
+# Keep absolute import for src
+from src.config import INDEX_DIR, DATA_DIR
 
 def prepare_training_data(max_samples=500):
     print("Loading FEVER dataset...")
@@ -79,9 +86,9 @@ def prepare_training_data(max_samples=500):
     print(f"\tTrain: {len(train_data)}")
     print(f"\tVal:   {len(val_data)}")
     
-    with open("reranker/models/neural_combiner_train.pkl", "wb") as f:
+    with open("models/neural_combiner_train.pkl", "wb") as f:
         pickle.dump(train_data, f)
-    with open("reranker/models/neural_combiner_val.pkl", "wb") as f:
+    with open("models/neural_combiner_val.pkl", "wb") as f:
         pickle.dump(val_data, f)
     print(f"Saved training and validation data in folder reranker/models/")
     
@@ -90,9 +97,9 @@ def prepare_training_data(max_samples=500):
 
 def train_neural_combiner():
     print("Loading training data...")
-    with open("reranker/models/neural_combiner_train.pkl", "rb") as f:
+    with open("models/neural_combiner_train.pkl", "rb") as f:
         train_data = pickle.load(f)
-    with open("reranker/models/neural_combiner_val.pkl", "rb") as f:
+    with open("models/neural_combiner_val.pkl", "rb") as f:
         val_data = pickle.load(f)
     
     print(f"Train:\t{len(train_data)} examples")
@@ -112,7 +119,7 @@ def train_neural_combiner():
         batch_size=64
     )
     
-    model_path = "reranker/models/neural_combiner.pt"
+    model_path = "models/neural_combiner.pt"
     trainer.save_model(str(model_path))
     print(f"Model saved to {model_path}")
 
