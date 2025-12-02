@@ -261,40 +261,6 @@ class WeightFunctionEvaluator:
         
         return metrics
     
-    def evaluate_consensus_tfidf(self):
-        print("WEIGHT: Consensus (TF-IDF)")
-        
-        if not self.use_gpu:
-            print("SKIPPED (GPU required for reranker)")
-            return None
-        
-        ranklists = self._generate_weighted_ranklists(
-            weight_functions=[self.consensus_tfidf],
-            top_k=10
-        )
-        
-        metrics = eval_on_fever(self.qrels, ranklists, max_k=10)
-        self._print_metrics(metrics)
-        
-        return metrics
-    
-    def evaluate_consensus_dense(self):
-        print("WEIGHT: Consensus (Dense Embeddings)")
-        
-        if not self.use_gpu:
-            print("SKIPPED (GPU required)")
-            return None
-        
-        ranklists = self._generate_weighted_ranklists(
-            weight_functions=[self.consensus_dense],
-            top_k=10
-        )
-        
-        metrics = eval_on_fever(self.qrels, ranklists, max_k=10)
-        self._print_metrics(metrics)
-        
-        return metrics
-    
     def evaluate_combined_strategy(
         self,
         consensus_method: str,
@@ -337,20 +303,17 @@ class WeightFunctionEvaluator:
         results["BM25 Only"] = self.evaluate_baseline_bm25()
         results["Reranker Only"] = self.evaluate_baseline_reranker()
         
-        # results["Consensus (TF-IDF)"] = self.evaluate_consensus_tfidf()
-        # results["Consensus (Dense)"] = self.evaluate_consensus_dense()
+        results["TF-IDF + Others (Harmonic)"] = self.evaluate_combined_strategy("tfidf", "harmonic")
+        results["TF-IDF + Others (Additive)"] = self.evaluate_combined_strategy("tfidf", "additive")
         
-        results["TF-IDF + Neutrals (Harmonic)"] = self.evaluate_combined_strategy("tfidf", "harmonic")
-        results["TF-IDF + Neutrals (Additive)"] = self.evaluate_combined_strategy("tfidf", "additive")
-        
-        results["Dense + Neutrals (Harmonic)"] = self.evaluate_combined_strategy("dense", "harmonic")
-        results["Dense + Neutrals (Additive)"] = self.evaluate_combined_strategy("dense", "additive")
+        results["Dense + Others (Harmonic)"] = self.evaluate_combined_strategy("dense", "harmonic")
+        results["Dense + Others (Additive)"] = self.evaluate_combined_strategy("dense", "additive")
         
         if os.path.exists("reranker/models/neural_combiner.pt"):
-            results["Dense + Neutrals (Neural LTR)"] = self.evaluate_combined_strategy(
+            results["Dense + Others (Neural LTR)"] = self.evaluate_combined_strategy(
                 "dense", "neural", "reranker/models/neural_combiner.pt"
             )
-            results["TF-IDF + Neutrals (Neural LTR)"] = self.evaluate_combined_strategy(
+            results["TF-IDF + Others (Neural LTR)"] = self.evaluate_combined_strategy(
                 "tfidf", "neural", "reranker/models/neural_combiner.pt"
             )
         else:
