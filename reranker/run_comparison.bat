@@ -6,8 +6,6 @@
 @REM   If not, see https://mit-license.org/
 
 @echo off
-@REM REM Set JAVA_HOME to your JDK 21 installation
-@REM set JAVA_HOME="C:\Program Files\Microsoft\jdk-21.0.9.10-hotspot"
 REM Check if JAVA_HOME is set
 if "%JAVA_HOME%"=="" (
     echo [ERROR] JAVA_HOME is not set.
@@ -17,8 +15,9 @@ if "%JAVA_HOME%"=="" (
     exit /b 1
 )
 
+
 REM Activate Virtual Environment
-call .\venv\Scripts\Activate.bat
+call .\venv\Scripts\activate.bat
 
 echo Starting Complete Comparison Run...
 
@@ -26,7 +25,7 @@ echo.
 echo ==========================================
 echo Step 1: Generating Training Data (Small Subset)
 echo ==========================================
-python src/prepare_training_data.py --limit 50
+python src/setup_data.py
 
 echo.
 echo ==========================================
