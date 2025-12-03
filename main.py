@@ -22,15 +22,13 @@ from datasets import load_dataset, Dataset, concatenate_datasets
 from datetime import datetime
 from pathlib import Path
 from reranker import E2RankReranker
-from sklearn.metrics import classification_report
 from src import config
 from src.model_clients import LlamaCppClient
 from src.ragar_corag import RagarCorag
-from src.utils import get_prompt_files
+from src.utils import get_prompt_files, compute_metrics
 from tqdm import tqdm
 import argparse
 import json
-import numpy as np
 import time
 
 
@@ -109,7 +107,7 @@ if __name__ == "__main__":
             print(f"ERROR: Model files not found or download failed: {e}")
             reranker = None
 
-    fever_labels = {0: "REFUTES", 1: "SUPPORTS", 2: "NOT ENOUGH INFO"}
+    fever_labels = {0: "REFUTES", 1: "SUPPORTS", 2: "NOT ENOUGH INFO", 3: "NONE"}
     fever_split = setup_fever(args.num_claims)
 
     # Setup CoRAG system here
@@ -135,21 +133,7 @@ if __name__ == "__main__":
     print(preds)
 
     # Compute metrics
-    report = classification_report(golds, preds, output_dict=True, zero_division=0)
-    metrics = {
-        "time_elapsed": elapsed,
-        "accuracy": sum(pred == gold for pred, gold in zip(preds, golds)) / len(preds),
-        "support_preds": preds.count("SUPPORTS"),
-        "refute_preds": preds.count("REFUTES"),
-        "nei_preds": preds.count("NOT ENOUGH INFO"),
-        "failed_preds": preds.count(None),
-        "tpc": elapsed / len(preds),
-        "avg_iters": np.mean(iters),
-        "support_f1": report.get("SUPPORTS", {}).get("f1-score", 0),
-        "refute_f1": report.get("REFUTES", {}).get("f1-score", 0),
-        "weighted_f1": report["weighted avg"]["f1-score"]
-    }
-
+    metrics = compute_metrics(elapsed, iters, preds, golds)
     print(json.dumps(metrics, indent=4))
 
     # don't output if we're just logging.
