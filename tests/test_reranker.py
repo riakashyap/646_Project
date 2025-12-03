@@ -36,6 +36,9 @@ import pytrec_eval
 import random
 from reranker import E2RankReranker
 
+HAS_GPU = torch.cuda.is_available()
+
+@unittest.skipIf(not HAS_GPU, "Reranker tests require GPU, wwhich is not enabled. Skipping unittest...")
 class TestReranker(unittest.TestCase):
 
     searcher: LuceneSearcher
@@ -79,12 +82,13 @@ class TestReranker(unittest.TestCase):
         with open(TOP_RANKLISTS_PATH, "r", encoding="utf8") as f:
             self.fever_ranklists = json.load(f)
 
-        if not os.path.exists(RERANKEDLISTS_PATH) or regenerate_reranklists:
+        if (not os.path.exists(RERANKEDLISTS_PATH) or regenerate_reranklists):
             print(f"Preparing {RERANKEDLISTS_PATH}  (this will take awhile)...")
             self.write_reranked_lists(claims, 10)
 
-        with open(RERANKEDLISTS_PATH, "r", encoding="utf8") as f:
-            self.reranked_ranklists = json.load(f)
+        if os.path.exists(RERANKEDLISTS_PATH):
+            with open(RERANKEDLISTS_PATH, "r", encoding="utf8") as f:
+                self.reranked_ranklists = json.load(f)
 
     def test_fever_evaluation(self):
         expected = {
@@ -106,6 +110,7 @@ class TestReranker(unittest.TestCase):
         self.assertEqual(expected, actual, "BM25 evaluation on the fever dataset"
                          " was significantly different than expected!")
 
+    @unittest.skipIf(not os.path.exists(RERANKEDLISTS_PATH), "Reranked lists not generated. Run with GPU to generate.")
     def test_can_rerank(self):
         claim_id = list(self.reranked_ranklists.keys())[0]
         reranked_docs = self.reranked_ranklists[claim_id]
@@ -114,14 +119,81 @@ class TestReranker(unittest.TestCase):
                           "Reranker returned no documents.")
         self.assertLessEqual(len(reranked_docs), 10,
                             "Reranker returned more than top-10 docs")
-        
+    
+    @unittest.skipIf(not os.path.exists(RERANKEDLISTS_PATH), "Reranked lists not generated. Run with GPU to generate.")
     def test_reranker_evaluation(self):
         rerank_metrics = eval_on_fever(self.qrels, self.reranked_ranklists, max_k=50)
         rerank_metrics = {k: round(v, 3) for k, v in rerank_metrics.items()}
 
-        print("Reranker metrics:", rerank_metrics)
-        # TODO: add assertions based on expected performance
-                 
+        self.assertTrue(
+            all(0 <= v <= 1 for v in rerank_metrics.values()),
+            f"All metrics not in valid range [0,1]. Got: {rerank_metrics}"
+        )
+        
+    def test_compute_score(self):
+        query = "Who is the president of the United States?"
+        doc = "Joe Biden is the current president of the United States."
+        
+        scores = [round(self.reranker.compute_score(query, doc), 5) for _ in range(5)]
+        unique_scores = len(set(scores))
+        self.assertEqual(
+            unique_scores, 1,
+            f"In five calls, got {unique_scores} unique score: {scores}. Model appears to not be consistent in scoring."
+        )
+
+    def test_batch_scores(self):
+        query = "What is the capital of France?"
+        docs = [
+            "Paris is the capital of France.",
+            "London is the capital of England.",
+            "The weather today is sunny."
+        ]
+        
+        runs = [
+            [round(s, 5) for s in self.reranker.batch_compute_scores(query, docs)]
+            for _ in range(5)
+        ]
+        
+        non_deterministic_docs = [] # records doc if scores varied for that doc across runs
+        for doc_idx in range(len(docs)):
+            doc_scores = [run[doc_idx] for run in runs]
+            unique = len(set(doc_scores))
+            if unique > 1:
+                non_deterministic_docs.append((doc_idx, unique))
+                
+        self.assertEqual(
+            unique, 1,
+            f"Model is not consistent in scoring across batch runs for all docs."
+        ) 
+
+    def test_rerank(self):
+        query = "Who invented the telephone?"
+        doc_pairs = [
+            ("doc1", "Alexander Graham Bell invented the telephone."),
+            ("doc2", "Thomas Edison invented the light bulb."),
+            ("doc3", "The telephone was invented in 1876."),
+        ]
+        
+        orderings = []
+        score_sets = []
+        for _ in range(5):
+            reranked = self.reranker.rerank(query, doc_pairs, top_k=3)
+            order = tuple(doc_id for doc_id, _, _ in reranked)
+            scores = tuple(round(score, 5) for _, _, score in reranked)
+            orderings.append(order)
+            score_sets.append(scores)
+        
+        unique_orderings = len(set(orderings))
+        unique_score_sets = len(set(score_sets)) 
+        self.assertTrue(
+            all(len(order) == 3 for order in orderings),
+            f"Rankings failed to returne 3 docs, not following top_k parameter."
+        )
+        self.assertEqual( 
+            unique_orderings, 1, 
+            f"{unique_orderings} ordering variations for docs indicating model is not consistent." 
+        )
+
     @classmethod
     def write_reranked_lists(self,
                           raw_claims: list[dict],
@@ -129,9 +201,6 @@ class TestReranker(unittest.TestCase):
         reranked_lists: dict[str, dict[str, float]] = {}
         with open(TOP_RANKLISTS_PATH, "r", encoding="utf8") as f:
             bm25_ranklists = json.load(f)
-            
-        if torch.cuda.is_available():
-            print(f"GPU memory allocated: {torch.cuda.memory_allocated(0) / 1024**2:.2f} MB")
             
         for claim_entry in raw_claims: 
             claim_id = claim_entry['id']
@@ -163,7 +232,5 @@ class TestReranker(unittest.TestCase):
                 for (docid, _text, score) in reranked
             }
 
-        print(f"\nWriting {len(reranked_lists)} reranked results to {RERANKEDLISTS_PATH}...")
         with open(RERANKEDLISTS_PATH, "w", encoding="utf8") as out:
             json.dump(reranked_lists, out, indent=2)
-        

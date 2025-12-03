@@ -20,16 +20,15 @@ Code:
 from collections import Counter
 from datasets import load_dataset, Dataset, concatenate_datasets
 from datetime import datetime
+from pathlib import Path
 from reranker import E2RankReranker
-from sklearn.metrics import classification_report
 from src import config
 from src.model_clients import LlamaCppClient
 from src.ragar_corag import RagarCorag
+from src.utils import get_prompt_files, compute_metrics
 from tqdm import tqdm
 import argparse
 import json
-import numpy as np
-import os
 import time
 
 
@@ -42,8 +41,11 @@ def parse_arguments():
                         help='Whether the Qwen model should think before '
                         'answering. Affects runtime.',
                         action='store_true')
-    parser.add_argument('-r', '--ragar',
+    parser.add_argument('-r', '--ragar-orig',
                         help='Use the original RAGAR prompts.',
+                        action='store_true')
+    parser.add_argument('-m', '--madr-orig',
+                        help='Use the original MADR prompts. This option does nothing without including --debate-stop or --debate-verdict.',
                         action='store_true')
     parser.add_argument('-n', '--num-claims',
                         help='The number of claims to process.',
@@ -73,9 +75,6 @@ def parse_arguments():
         config.LOGGER.info("\n" + "═" * 40)
         config.LOGGER.info("Starting pipeline...")
 
-    if args.debate_stop or args.debate_verdict:
-        args.ragar = False
-
     return args
 
 def setup_fever(num_claims: int):
@@ -90,14 +89,16 @@ def setup_fever(num_claims: int):
 if __name__ == "__main__":
     args = parse_arguments()
 
-    if args.ragar:
-        config.LOGGER.info("Using RAGAR prompts.")
-        prompts_dir = config.PROMPTS_DIR / "ragar"
-    else:
-        config.LOGGER.info("Using CUSTOM prompts.")
-        prompts_dir = config.PROMPTS_DIR / "custom"
+    ragar_dir = config.RAGAR_DIR
+    madr_dir = config.MADR_DIR
+    if args.ragar_orig:
+        ragar_dir = config.RAGAR_ORIG_DIR
+        config.LOGGER.info("Using original RAGAR prompts.")
+    if args.madr_orig:
+        madr_dir = config.MADR_ORIG_DIR
+        config.LOGGER.info("Using original MADR prompts.")
+    prompt_files = get_prompt_files(ragar_dir, madr_dir)
 
-    # Initialize reranker if requested
     reranker = None
     if args.reranker:
         try:
@@ -106,11 +107,11 @@ if __name__ == "__main__":
             print(f"ERROR: Model files not found or download failed: {e}")
             reranker = None
 
-    fever_labels = {0: "REFUTES", 1: "SUPPORTS", 2: "NOT ENOUGH INFO"}
+    fever_labels = {0: "REFUTES", 1: "SUPPORTS", 2: "NOT ENOUGH INFO", 3: "NONE"}
     fever_split = setup_fever(args.num_claims)
 
     # Setup CoRAG system here
-    mc = LlamaCppClient(prompts_dir, think_mode_bool=args.think)
+    mc = LlamaCppClient(prompt_files, think_mode_bool=args.think)
     corag = RagarCorag(mc, args.debate_stop, args.debate_verdict, reranker=reranker)
 
     # Run pipeline on claims
@@ -132,36 +133,25 @@ if __name__ == "__main__":
     print(preds)
 
     # Compute metrics
-    report = classification_report(golds, preds, output_dict=True, zero_division=0)
-    metrics = {
-        "time_elapsed": elapsed,
-        "accuracy": sum(pred == gold for pred, gold in zip(preds, golds)) / len(preds),
-        "support_preds": preds.count("SUPPORTS"),
-        "refute_preds": preds.count("REFUTES"),
-        "nei_preds": preds.count("NOT ENOUGH INFO"),
-        "failed_preds": preds.count(None),
-        "tpc": elapsed / len(preds),
-        "avg_iters": np.mean(iters),
-        "support_f1": report.get("SUPPORTS", {}).get("f1-score", 0),
-        "refute_f1": report.get("REFUTES", {}).get("f1-score", 0),
-        "weighted_f1": report["weighted avg"]["f1-score"]
-    }
-
+    metrics = compute_metrics(elapsed, iters, preds, golds)
     print(json.dumps(metrics, indent=4))
 
-    flags = [
-        "think_"       if args.think else "",
-        "ragar_"       if args.ragar else "",
-        "rerank_"      if args.reranker else "",
-        "madrstop_"    if args.debate_stop else "",
-        "madrverdict_" if args.debate_verdict else "",
-    ]
-    timestamp = datetime.now().strftime("%Y%m%dT%H%M%S")
-    to_write = str(config.LOGS_DIR / (
-        f"{timestamp}--{config.EVAL_OUT_FNAME_BASE}__"
-        + f"".join(flags)
-        + f"{args.num_claims}.json"
-    ))
-    with open(to_write, "w") as file:
-        json.dump(metrics, file, indent=4)
-    print(f"Wrote {to_write}.")
+    # don't output if we're just logging.
+    if not args.log_trace:
+        flags = [
+            "think_"       if args.think else "",
+            "ragarorig_"   if args.ragar_orig else "",
+            "madrorig_"    if args.madr_orig else "",
+            "rerank_"      if args.reranker else "",
+            "madrstop_"    if args.debate_stop else "",
+            "madrverdict_" if args.debate_verdict else "",
+        ]
+        timestamp = datetime.now().strftime("%Y%m%dT%H%M%S")
+        to_write = str(config.LOGS_DIR / (
+            f"{timestamp}--{config.EVAL_OUT_FNAME_BASE}__"
+            + f"".join(flags)
+            + f"{args.num_claims}.json"
+        ))
+        with open(to_write, "w") as file:
+            json.dump(metrics, file, indent=4)
+        print(f"Wrote {to_write}.")

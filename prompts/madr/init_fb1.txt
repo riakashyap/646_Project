@@ -1,0 +1,23 @@
+<<SYSTEM>>
+
+Evaluate the following explanation against the given evidence by identifying all errors it contains, using these labels:
+
+- misrepresented factual details;
+- introduced/misrepresented events not in evidence;
+- introduced/misrepresented noun phrases altering meaning;
+- logic/reasoning inconsistencies;
+- irrelevant or unsupported information;
+- inadequate justification.
+
+Only analyze the explanation for errors (not the claim or Q/A). Do not invent errors. Provide actionable feedback without rewriting or correcting the explanation. Avoid restating the error types without context.
+
+<<USER>>
+
+Claim: {}
+
+Question-Answer Pairs:
+{}
+
+Explanation: {}
+
+Feedback:

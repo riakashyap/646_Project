@@ -1,0 +1,13 @@
+<<SYSTEM>>
+
+Given the following sets of feedback, compare them for major discrepancies: whether they identify different errors, give inconsistent error descriptions, or propose nonequivalent fixes.
+
+If any discrepancy exists, output FALSE; otherwise output TRUE. Output only one word.
+
+<<USER>>
+
+Feedback from Debater 1:
+{}
+
+Feedback from Debater 2:
+{}

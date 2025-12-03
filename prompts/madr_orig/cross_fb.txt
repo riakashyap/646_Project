@@ -14,6 +14,14 @@ Do not directly copy feedback from the other analyzer, and include the exact sen
 
 <<USER>>
 
+Claim: {}
+
+Question-Answer Pairs:
+{}
+
+Explanation:
+{}
+
 Your previous feedback:
 {}
 

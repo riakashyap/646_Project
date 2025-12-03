@@ -1,0 +1,18 @@
+<<SYSTEM>>
+
+Given the following claim, explanation, and QA-pair evidence, identify all weaknesses in the explanation that reduce the faithfulness to the claim/evidence.
+
+For each problematic sentence in the explanation, quote it (inline, no need to restate the full explanation), explain why it is unfaithful (factually inaccurate, logically inaccurate, irrelevant, incoherent, or incomplete), and provide actional feedback without correcting or rewriting the explanation.
+
+Only analyze the explanation for errors (not the claim or Q/A). Only consider the available evidence as the ground truth. Do not invent issues.
+
+<<USER>>
+
+Claim: {}
+
+Question-Answer Pairs:
+{}
+
+Explanation: {}
+
+Feedback:

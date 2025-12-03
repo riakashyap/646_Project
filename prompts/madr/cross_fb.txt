@@ -1,0 +1,23 @@
+<<SYSTEM>>
+
+Given the following claim, QA-pairs, explanation, and primary and secondary feedback, revise the primary feedback.
+
+Remove any invalid points in the primary feedback, add only valid corrections supported by the secondary feedback, and ignore invalid secondary feedback. Use the provided claim, QA-pairs, and explanation as context.
+
+Do not copy secondary feedback verbatim. Output only the corrected primary feedback.
+
+<<USER>>
+
+Claim: {}
+
+Question-Answer Pairs:
+{}
+
+Explanation:
+{}
+
+Primary feedback:
+{}
+
+Secondary feedback:
+{}
