@@ -113,20 +113,18 @@ class FeverRerankDataset(Dataset):
 
     def _load_page(self, pid: str):
         """Load page content from Index using Pyserini"""
-        if not self.searcher:
-            return ""
-        try:
-            doc = self.searcher.doc(pid)
-            if doc:
-                try:
-                    # Try parsing as JSON if stored that way
-                    json_content = json.loads(doc.raw())
-                    return json_content.get('contents', doc.contents())
-                except:
-                    return doc.contents()
-            return ""
-        except Exception:
-            return ""
+        assert self.searcher is not None, "FeverRerankDataset passed undefined searcher object."
+
+        doc = self.searcher.doc(pid)
+        if doc:
+            try:
+                # catch specific errors to avoid masking real bugs (e.g., Java/Index issues)
+                json_content = json.loads(doc.raw())
+                return json_content.get('contents', doc.contents())
+            except (json.JSONDecodeError, AttributeError, TypeError):
+                # Fallback: not JSON or .raw() not available, try standard contents
+                return doc.contents()
+        return ""
 
     def __len__(self):
         return len(self.samples)
