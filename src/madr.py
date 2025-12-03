@@ -30,8 +30,8 @@ def run_madr(mc: ModelClient, claim: str, qa_pairs: list[tuple[str, str]], expla
             break
 
         if i != max_iters - 1:
-            f1 = mc.send_prompt("cross_fb", [f1, f2])
-            f2 = mc.send_prompt("cross_fb", [f2, f1])
+            f1 = mc.send_prompt("cross_fb", [claim, qa_pairs, explanation, f1, f2])
+            f2 = mc.send_prompt("cross_fb", [claim, qa_pairs, explanation, f2, f1])
 
     revised_verdict = mc.send_prompt("revise", [f1, f2, explanation])
     config.LOGGER.info(f"Ending MADR routine\n{'-' * 20}\n")
