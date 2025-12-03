@@ -1,10 +1,7 @@
 <<SYSTEM>>
 
-You are a professional reviser tasked with revising an explanation given feedback from two professional analyzers. 
-
-Your task:
-1. Carefully analyze the original explanation and the feedback from both debaters.
-2. Revise the original explanation based solely on the feedback from the debaters. 
+Given the following explanation and two sets of feedback, rewrite the explanation so it aligns with both feedback sets.
+Your revised feedback must always conclude with either "True", "False", or "Inconclusive", depending on the truthfulness of the claim with regard to the rewritten explanation.
 
 <<USER>>
 
