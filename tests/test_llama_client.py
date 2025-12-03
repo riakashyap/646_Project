@@ -38,8 +38,7 @@ class MockResponse:
 class TestLlamaClient(unittest.TestCase):
 
     expected_content: str
-    user_prompts_dir: str
-    system_prompts_dir: str
+    prompts_dir: str
     port: int
     host: str
     expected_url: str
@@ -54,8 +53,7 @@ class TestLlamaClient(unittest.TestCase):
         super().setUpClass()
 
         self.expected_model = "local"
-        self.user_prompts_dir = None
-        self.sys_prompts_dir = None
+        self.prompt_files = []
 
     def setUp(self):
         def requests_post_replacement(actual_url, data=None, json=None, **kwargs):
@@ -95,8 +93,7 @@ class TestLlamaClient(unittest.TestCase):
 
     def makeLlamaClient(self):
         return LlamaCppClient(
-            self.user_prompts_dir,
-            self.sys_prompts_dir,
+            self.prompt_files,
             think_mode_bool = self.think_mode,
             host = self.host,
             port = self.port,

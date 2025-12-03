@@ -1,5 +1,10 @@
-Given the sources provided, tersely answer the following question:
+<<SYSTEM>>
+
+Given the sources provided, tersely answer the following question. In the event the sources do not address the question, respond with "question too specific".
+
+<<USER>>
 
 {}
 
 Question: {}
+Answer:

@@ -8,7 +8,7 @@ if __name__ == '__main__':
     sys.path.append('src/')
     t_loader = unittest.defaultTestLoader
     t_runner = unittest.TextTestRunner(verbosity=2)
-    t = ['test_index', 'test_bm25', 'test_corag', 'test_llama_client', 'test_reranker']
+    t = ['test_index', 'test_bm25', 'test_corag', 'test_llama_client', 'test_madr', 'test_reranker']
 
     t_suite = t_loader.loadTestsFromNames(t)
     result = t_runner.run(t_suite)

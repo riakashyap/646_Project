@@ -1,5 +1,0 @@
-Claim: {}
-Question-Answer Pairs:
-{}
-
-Question:

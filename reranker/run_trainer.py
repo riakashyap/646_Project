@@ -21,7 +21,7 @@ Usage:
 import argparse
 from pathlib import Path
 
-from trainer import RerankerTrainer, FeverRerankDataset
+from reranker.trainer import RerankerTrainer, FeverRerankDataset
 from src.config import (
     CLAIMS_PATH, QRELS_PATH, RANKLISTS_PATH,
     PAGES_DIR

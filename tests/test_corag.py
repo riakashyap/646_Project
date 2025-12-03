@@ -14,8 +14,9 @@ Code:
 """
 
 
+from src.config import RAGAR_ORIG_DIR
 from src.ragar_corag import RagarCorag
-from src.config import PROMPTS_DIR
+from src.utils import get_prompt_files
 from tests.mock_model_client import MockModelClient
 from typing import Tuple
 import unittest
@@ -34,12 +35,10 @@ class TestCorag(unittest.TestCase):
     def setUpClass(self):
         super().setUpClass()
 
-        ragar_user_prompts_dir = PROMPTS_DIR / "ragar"
-        ragar_sys_prompts_dir = None
+        prompt_files = get_prompt_files(RAGAR_ORIG_DIR)
 
-        self.ragar_client = \
-            MockModelClient(ragar_user_prompts_dir, ragar_sys_prompts_dir)
-        self.ragar = RagarCorag(self.ragar_client)
+        self.ragar_client = MockModelClient(prompt_files)
+        self.ragar = RagarCorag(self.ragar_client, False, False)
 
     @classmethod
     def get_expected_prompts(self, client: MockModelClient,

@@ -1,0 +1,20 @@
+<<SYSTEM>>
+
+You are a professional reviser tasked with revising an explanation given feedback from two professional analyzers. 
+
+Your task:
+1. Carefully analyze the original explanation and the feedback from both debaters.
+2. Revise the original explanation based solely on the feedback from the debaters. 
+
+<<USER>>
+
+Feedback from Debater 1:
+{}
+
+Feedback from Debater 2:
+{}
+
+Original explanation:
+{}
+
+Final revised explanation:
