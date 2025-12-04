@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 
-LOCAL_DIR="reranker/models/naver/trecdl22-crossencoder-debertav3"
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" && pwd )
+
+LOCAL_DIR="$SCRIPT_DIR/models/naver/trecdl22-crossencoder-debertav3"
 URL="https://huggingface.co/naver/trecdl22-crossencoder-debertav3"
 
 mkdir -p "$LOCAL_DIR"
