@@ -33,7 +33,7 @@ class E2RankReranker(BaseReranker):
         use_layerwise: bool = True,
         reranking_block_map: Dict[int, int] = None,
         use_nli_classification: bool = False,
-        fever_label_idx: int = 1, # "SUPPORTS" label
+        fever_label_idx: int = 0, # "SUPPORTS" label
         **kwargs
     ):
         super().__init__(model_path, device, **kwargs)
@@ -41,7 +41,9 @@ class E2RankReranker(BaseReranker):
         self.max_length = max_length
         self.use_layerwise = use_layerwise
         self.use_nli_classification = use_nli_classification     
-        self.fever_label_idx = fever_label_idx      
+        self.fever_label_idx = fever_label_idx 
+        # future refernce: print(config.id2label) after config = AutoConfig.from_pretrained to see which idx is SUPPORTS
+        # {0: 'entailment', 1: 'neutral', 2: 'contradiction'} for "MoritzLaurer/DeBERTa-v3-large-mnli-fever-anli-ling-wanli"
 
         # Progressively reduce candidates: Layers : Top-K Docs to keep
         if reranking_block_map is None:
@@ -81,7 +83,6 @@ class E2RankReranker(BaseReranker):
                 )
                 
                 state_dict = remap_state_dict(state_dict)
-                self.model.load_state_dict(state_dict, strict=False)
             except FileNotFoundError:
                 print(
                     f"Could not find pytorch_model.bin at {self.model_path}. "
@@ -91,7 +92,7 @@ class E2RankReranker(BaseReranker):
                     self.model_path
                 )
                 state_dict = remap_state_dict(base_model.state_dict()) 
-                self.model.load_state_dict(state_dict, strict=False)
+            self.model.load_state_dict(state_dict, strict=False)
 
             self.model.to(self.device)
             self.model.eval()
@@ -122,7 +123,10 @@ class E2RankReranker(BaseReranker):
 
         doc_ids, doc_texts = zip(*documents)
 
-        pairs = [[f"Query: {query}\n", f"Document: {text}\n"] for text in doc_texts]
+        if self.use_nli_classification:
+            pairs = [[text, query] for text in doc_texts] # found doc before query worked better for nli
+        else:
+            pairs = [[f"Query: {query}\n", f"Document: {text}\n"] for text in doc_texts]
 
         inputs = self.tokenizer(
             pairs,
@@ -141,7 +145,10 @@ class E2RankReranker(BaseReranker):
                 )
                 reranked_indices = reranked_indices.cpu().tolist()[:top_k]
 
-                final_pairs = [[f"Query: {query}\n", f"Document: {doc_texts[idx]}\n"] for idx in reranked_indices]
+                if self.use_nli_classification:
+                    final_pairs = [[doc_texts[idx], query] for idx in reranked_indices]
+                else:
+                    final_pairs = [[f"Query: {query}\n", f"Document: {doc_texts[idx]}\n"] for idx in reranked_indices]
                 final_inputs = self.tokenizer(
                     final_pairs,
                     padding=True,
@@ -184,7 +191,10 @@ class E2RankReranker(BaseReranker):
         return results
 
     def compute_score(self, query: str, document: str) -> float:
-        pair = [[f"Query: {query}\n", f"Document: {document}\n"]]
+        if self.use_nli_classification:
+            pair = [[document, query]]
+        else:
+            pair = [[f"Query: {query}\n", f"Document: {document}\n"]]
 
         inputs = self.tokenizer(
             pair,
@@ -213,7 +223,10 @@ class E2RankReranker(BaseReranker):
         if not documents:
             return []
 
-        pairs = [[f"Query: {query}\n", f"Document: {doc}\n"] for doc in documents]
+        if self.use_nli_classification:
+            pairs = [[doc, query] for doc in documents] 
+        else:
+            pairs = [[f"Query: {query}\n", f"Document: {doc}\n"] for doc in documents]
 
         inputs = self.tokenizer(
             pairs,
