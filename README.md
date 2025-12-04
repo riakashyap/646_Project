@@ -1,5 +1,4 @@
-# Description
-This repository implements a multi-agent [CoRAG](https://arxiv.org/abs/2404.12065) pipeline for automated fact verification. It is evaluated on the [FEVER](https://fever.ai/dataset/fever.html) dataset. Our goal was to experiment with how incorporating reranking and multi-agent debates can improve the ability of agentic RAG systems to verify real-world claims. 
+FABLE is a multi-agent [CoRAG](https://arxiv.org/abs/2404.12065) pipeline for automated fact verification. It is evaluated on the [FEVER](https://fever.ai/dataset/fever.html) dataset. Our goal was to experiment with how incorporating reranking and multi-agent debates can improve the ability of agentic RAG systems to verify real-world claims. 
 
 # Installation
 The repository is written and tested for Python 3.11. Start by creating a fresh [conda](https://anaconda.org/channels/anaconda/packages/conda/overview) environment:
