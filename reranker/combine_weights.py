@@ -40,6 +40,7 @@ class WeightCombiner:
             self.device = device
         
         self.neural_model = None
+        self.scaler = None
         if self.combination_method == "neural":
             if model_path is None:
                 logger.warning("No model_path provided for ltr")
@@ -49,10 +50,14 @@ class WeightCombiner:
                 logger.info(f"Loaded neural ltr combiner from {model_path} on {self.device}")
     
     def _load_neural_model(self, model_path: str):
-        n_features = len(self.weight_functions) + 1 
+        checkpoint = torch.load(model_path, map_location=self.device)
+        n_features = checkpoint.get('n_features', len(self.weight_functions) + 1)
         self.neural_model = NeuralCombiner(n_features).to(self.device)
-        self.neural_model.load_state_dict(torch.load(model_path, map_location=self.device))
+        self.neural_model.load_state_dict(checkpoint['model_state_dict'])
         self.neural_model.eval()
+        self.scaler = checkpoint.get('scaler', None)  # ← ADD THIS
+        if self.scaler:
+            logger.info("Loaded feature scaler from checkpoint")
     
     def _combine_harmonic(self, weights_matrix: np.ndarray) -> np.ndarray:
         n_funcs = weights_matrix.shape[1]
@@ -70,11 +75,17 @@ class WeightCombiner:
     
     def _combine_neural(self, weights_matrix: np.ndarray, base_scores: np.ndarray) -> np.ndarray:
         features = np.concatenate([weights_matrix, base_scores.reshape(-1, 1)], axis=1)
+        
+        if self.scaler is not None:
+            features = self.scaler.transform(features)
         features_tensor = torch.FloatTensor(features).to(self.device)
         
         with torch.no_grad():
-            combined = self.neural_model(features_tensor).cpu().numpy().flatten()
-        return combined
+            raw_logits = self.neural_model(features_tensor).cpu().numpy().flatten()
+            # Map to [0.5, 1.5] range with 1.0 as neutral
+            weights = 0.5 + torch.sigmoid(torch.FloatTensor(raw_logits)).numpy()
+            
+        return weights
     
     def compute_combined_weights(
         self,
@@ -140,64 +151,106 @@ class NeuralCombiner(nn.Module):
     
     def forward(self, x):
         return self.net(x).squeeze(-1)
-
-
+    
+    
 class NeuralCombinerTrainer:    
+    """Updated trainer with pairwise ranking loss"""
     def __init__(self, n_features: int, device: str = None):
         self.device = device or ("cuda" if torch.cuda.is_available() else "cpu")
-        self.model = NeuralCombiner(n_features).to(self.device)
-        self.optimizer = torch.optim.Adam(self.model.parameters(), lr=0.001)
-        self.criterion = nn.BCEWithLogitsLoss()
+        self.model = NeuralCombiner(n_features, hidden_dim=64).to(self.device)  # Bigger hidden
+        self.optimizer = torch.optim.Adam(self.model.parameters(), lr=0.001, weight_decay=1e-5)
+        self.criterion = nn.MarginRankingLoss(margin=1.0)  # ← CHANGED FROM BCEWithLogitsLoss
+        self.scaler = None
     
     def train(
         self,
-        train_data: List[Tuple[np.ndarray, int]],
-        val_data: List[Tuple[np.ndarray, int]],
+        train_data: List[Tuple[np.ndarray, np.ndarray]],  # ← CHANGED: now pairs (pos, neg)
+        val_data: List[Tuple[np.ndarray, np.ndarray]],
         epochs: int = 50,
-        batch_size: int = 32
+        batch_size: int = 128  # ← Bigger batch
     ):
-        print(f"Training on {len(train_data)} samples, validating on {len(val_data)}")
+        print(f"Training on {len(train_data)} pairs, validating on {len(val_data)}")
+        
+        best_val_loss = float('inf')
+        patience = 10
+        patience_counter = 0
         
         for epoch in range(epochs):
             self.model.train()
             train_loss = 0.0
+            train_correct = 0
             
             for i in range(0, len(train_data), batch_size):
                 batch = train_data[i:i+batch_size]
-                features = np.array([x for x, _ in batch])
-                labels = np.array([y for _, y in batch])
-                features = torch.FloatTensor(features).to(self.device)
-                labels = torch.FloatTensor(labels).to(self.device)
+                pos_features = np.array([pos for pos, _ in batch])
+                neg_features = np.array([neg for _, neg in batch])
+                
+                pos_tensor = torch.FloatTensor(pos_features).to(self.device)
+                neg_tensor = torch.FloatTensor(neg_features).to(self.device)
                 
                 self.optimizer.zero_grad()
-                outputs = self.model(features)
-                loss = self.criterion(outputs, labels)
+                
+                pos_scores = self.model(pos_tensor)
+                neg_scores = self.model(neg_tensor)
+                
+                # We want pos_score > neg_score
+                target = torch.ones(pos_scores.size(0)).to(self.device)
+                loss = self.criterion(pos_scores, neg_scores, target)
+                
                 loss.backward()
                 self.optimizer.step()
                 
                 train_loss += loss.item()
+                train_correct += (pos_scores > neg_scores).sum().item()
             
-            if (epoch + 1) % 10 == 0:
-                val_loss = self._validate(val_data)
-                print(f"Epoch {epoch+1}/{epochs}: "
-                      f"Train Loss = {train_loss/len(train_data):.4f}, "
-                      f"Val Loss = {val_loss:.4f}")
+            avg_train_loss = train_loss / len(train_data)
+            train_acc = train_correct / len(train_data)
+            
+            # Validation
+            val_loss, val_acc = self._validate(val_data)
+            
+            print(f"Epoch {epoch+1}/{epochs}: "
+                  f"Train Loss={avg_train_loss:.4f}, Acc={train_acc:.3f} | "
+                  f"Val Loss={val_loss:.4f}, Acc={val_acc:.3f}")
+            
+            # Early stopping
+            if val_loss < best_val_loss:
+                best_val_loss = val_loss
+                patience_counter = 0
+            else:
+                patience_counter += 1
+                if patience_counter >= patience:
+                    print(f"Early stopping at epoch {epoch+1}")
+                    break
     
     def _validate(self, val_data):
         self.model.eval()
         val_loss = 0.0
+        val_correct = 0
         
         with torch.no_grad():
-            features = np.array([x for x, _ in val_data])
-            labels = np.array([y for _, y in val_data])
-            features = torch.FloatTensor(features).to(self.device)
-            labels = torch.FloatTensor(labels).to(self.device)
-            outputs = self.model(features)
-            loss = self.criterion(outputs, labels)
+            pos_features = np.array([pos for pos, _ in val_data])
+            neg_features = np.array([neg for _, neg in val_data])
+            
+            pos_tensor = torch.FloatTensor(pos_features).to(self.device)
+            neg_tensor = torch.FloatTensor(neg_features).to(self.device)
+            
+            pos_scores = self.model(pos_tensor)
+            neg_scores = self.model(neg_tensor)
+            
+            target = torch.ones(pos_scores.size(0)).to(self.device)
+            loss = self.criterion(pos_scores, neg_scores, target)
+            
             val_loss = loss.item()
+            val_correct = (pos_scores > neg_scores).sum().item()
         
-        return val_loss
+        return val_loss, val_correct / len(val_data)
     
     def save_model(self, path: str):
-        torch.save(self.model.state_dict(), path)
+        """Save model with metadata"""
+        torch.save({
+            'model_state_dict': self.model.state_dict(),
+            'n_features': self.model.net[0].in_features,
+            'scaler': self.scaler
+        }, path)
         print(f"Model saved to {path}")

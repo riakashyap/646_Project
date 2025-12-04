@@ -42,7 +42,7 @@ from src.config import (
     RERANKEDLISTS_PATH,
 )
 from tests.utils import write_qrels, write_ranklists, eval_on_fever
-from reranker import E2RankReranker
+from reranker import E2RankReranker, CrossEncoderReranker
 from reranker.weightfunc.consensus_weight import ConsensusWeightFunction
 from reranker.weightfunc.credibility_weight import CredibilityWeightFunction
 from reranker.weightfunc.temporal_weight import TemporalWeightFunction
@@ -144,10 +144,8 @@ class WeightFunctionEvaluator:
         
         # Reranker
         if self.use_gpu:
-            self.reranker = E2RankReranker(
-                reranking_block_map={8: 50, 16: 28, 24: 10}
-            )
-            print(f"Loaded E2Rank reranker")
+            self.reranker = CrossEncoderReranker()
+            print(f"Loaded crossencoder reranker")
         else:
             self.reranker = None
             print(f"Skipping reranker (GPU required)")
@@ -174,9 +172,58 @@ class WeightFunctionEvaluator:
         print(f"Initialized Credibility")
         self.temporal = TemporalWeightFunction(for_fever=True)
         print(f"Initialized Temporal")
-        
     
     def _generate_weighted_ranklists(
+        self,
+        weight_functions: list,
+        combination_method: str = "harmonic",
+        model_path: str = None,
+        top_k: int = 10
+    ) -> dict:
+        if combination_method == "neural":
+            if model_path is None:
+                model_path = "models/neural_combiner.pt"
+            combiner = WeightCombiner(
+                weight_functions=weight_functions,
+                combination_method=combination_method,
+                model_path=model_path
+            )
+        else:
+            combiner = WeightCombiner(
+                weight_functions=weight_functions,
+                combination_method=combination_method
+            )
+        
+        weighted_ranklists = {}
+        
+        for claim_entry in self.claims:
+            claim_id = claim_entry['id']
+            query = claim_entry['input']
+            
+            if claim_id not in self.fever_ranklists:
+                continue
+            
+            bm25_scores = self.fever_ranklists[claim_id]
+            
+            bm25_results = []
+            for docid, score in bm25_scores.items():
+                doc = self.searcher.doc(docid)
+                if doc is not None:
+                    doc_text = doc.contents()
+                    bm25_results.append((docid, doc_text, score))
+            
+            bm25_results.sort(key=lambda x: x[2], reverse=True)
+            
+            weighted = combiner.apply(query, bm25_results[:50], alpha=0.5)  
+            
+            weighted_ranklists[claim_id] = {
+                docid: float(score)
+                for (docid, _text, score) in weighted[:top_k]
+            }
+        
+        return weighted_ranklists
+    
+    def _generate_weighted_reranklists(
         self,
         weight_functions: list,
         combination_method: str = "harmonic",
@@ -251,7 +298,7 @@ class WeightFunctionEvaluator:
             print("SKIPPED (GPU required)")
             return None
         
-        ranklists = self._generate_weighted_ranklists(
+        ranklists = self._generate_weighted_reranklists(
             weight_functions=[],  # No weights
             top_k=10
         )
@@ -274,6 +321,32 @@ class WeightFunctionEvaluator:
         if not self.use_gpu:
             print("SKIPPED (GPU required)")
             return None
+        
+        if consensus_fn is None:
+            print(f"SKIPPED (Consensus {consensus_method} not available)")
+            return None
+        
+        ranklists = self._generate_weighted_reranklists(
+            weight_functions=[consensus_fn, self.credibility, self.temporal],
+            combination_method=combination_strategy,
+            model_path=model_path,
+            top_k=10
+        )
+        
+        metrics = eval_on_fever(self.qrels, ranklists, max_k=10)
+        self._print_metrics(metrics)
+        
+        return metrics
+    
+    def evaluate_bm25_combined_strategy(
+        self,
+        consensus_method: str,
+        combination_strategy: str,
+        model_path: str = None
+    ):
+        consensus_fn = self.consensus_tfidf if consensus_method == "tfidf" else self.consensus_dense
+        
+        print(f"BM25 + Consensus ({consensus_method.upper()}) + Credibility + Temporal ({combination_strategy.upper()})")
         
         if consensus_fn is None:
             print(f"SKIPPED (Consensus {consensus_method} not available)")
@@ -303,6 +376,14 @@ class WeightFunctionEvaluator:
         results["BM25 Only"] = self.evaluate_baseline_bm25()
         results["Reranker Only"] = self.evaluate_baseline_reranker()
         
+        results["BM25 + TF-IDF+Others (Harmonic)"] = self.evaluate_bm25_combined_strategy("tfidf", "harmonic")
+        results["BM25 + TF-IDF+Others (Additive)"] = self.evaluate_bm25_combined_strategy("tfidf", "additive")
+        
+        if self.use_gpu:
+            results["BM25 + Dense+Others (Harmonic)"] = self.evaluate_bm25_combined_strategy("dense", "harmonic")
+            results["BM25 + Dense+Others (Additive)"] = self.evaluate_bm25_combined_strategy("dense", "additive")
+    
+        
         results["TF-IDF + Others (Harmonic)"] = self.evaluate_combined_strategy("tfidf", "harmonic")
         results["TF-IDF + Others (Additive)"] = self.evaluate_combined_strategy("tfidf", "additive")
         
@@ -310,6 +391,13 @@ class WeightFunctionEvaluator:
         results["Dense + Others (Additive)"] = self.evaluate_combined_strategy("dense", "additive")
         
         if os.path.exists("reranker/models/neural_combiner.pt"):
+            results["BM25 + TF-IDF+Others (Neural LTR)"] = self.evaluate_bm25_combined_strategy(
+                "tfidf", "neural", "reranker/models/neural_combiner.pt"
+            )
+            results["BM25 + Dense+Others (Neural LTR)"] = self.evaluate_bm25_combined_strategy(
+                "dense", "neural", "reranker/models/neural_combiner.pt"
+            )
+        
             results["Dense + Others (Neural LTR)"] = self.evaluate_combined_strategy(
                 "dense", "neural", "reranker/models/neural_combiner.pt"
             )
