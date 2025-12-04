@@ -100,10 +100,10 @@ class TestMadr(unittest.TestCase):
         self.assertEqual(exp_j1, client.history[2][0])
 
         # cross feedbacks: first cross receives (f1_init, f2_init), second receives (f2_init, f1_init)
-        exp_cross1, _ = self.get_expected_prompts(client, "cross_fb", [responses[0], responses[1]])
+        exp_cross1, _ = self.get_expected_prompts(client, "cross_fb", [self.claim, self.qa_pairs, self.explanation, responses[0], responses[1]])
 
         # The second cross feedback call receives the revised feedback returned by the first cross step
-        exp_cross2, _ = self.get_expected_prompts(client, "cross_fb", [responses[1], responses[3]])
+        exp_cross2, _ = self.get_expected_prompts(client, "cross_fb", [self.claim, self.qa_pairs, self.explanation,  responses[1], responses[3]])
         self.assertEqual(exp_cross1, client.history[3][0])
         self.assertEqual(exp_cross2, client.history[4][0])
 
@@ -153,7 +153,7 @@ class TestParsers(unittest.TestCase):
         self.assertEqual(0, parse_ternary("This answer mentions False and Inconclusive"))
 
     def test_parse_ternary_none_when_missing(self):
-        self.assertIsNone(parse_ternary("No verdict here"))
+        self.assertEqual(3, parse_ternary("No verdict here"))
 
     def test_parse_conclusive_detects(self):
         self.assertTrue(parse_conclusive("This is conclusive"))

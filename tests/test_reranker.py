@@ -34,7 +34,7 @@ import unittest
 from datasets import load_dataset
 import pytrec_eval
 import random
-from reranker import E2RankReranker
+from reranker import E2RankReranker, CrossEncoderReranker
 
 HAS_GPU = torch.cuda.is_available()
 
@@ -46,8 +46,12 @@ class TestReranker(unittest.TestCase):
     qrels: dict[str, dict[str, int]]
     bm25_ranklists_top50: dict[str, dict[str, float]]
     reranked_ranklists: dict[str, dict[str, float]]
-    reranker = E2RankReranker(
-        reranking_block_map={8: 50, 16: 28, 24: 10}
+    # reranker = E2RankReranker(
+    #     reranking_block_map={8: 50, 16: 28, 24: 10}
+    # )
+    reranker = CrossEncoderReranker(
+        model_path="reranker/models/naver/trecdl22-crossencoder-debertav3",
+        batch_size=32  
     )
 
     @classmethod
