@@ -3,7 +3,7 @@ transformers==4.45.0
 requests
 tqdm
 sentencepiece
-pyserini==0.38.0
+pyserini==1.2.0
 faiss-cpu
 rank_bm25
 sentence-transformers
