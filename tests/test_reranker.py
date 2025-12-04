@@ -90,6 +90,19 @@ class TestReranker(unittest.TestCase):
             with open(RERANKEDLISTS_PATH, "r", encoding="utf8") as f:
                 self.reranked_ranklists = json.load(f)
 
+    def test_sanity_check(self):
+        score = self.reranker.compute_score(
+            "The Earth orbits the Sun",
+            "The Earth revolves around the Sun in an elliptical orbit."
+        )
+        print(f"Relevant doc score: {score}")
+
+        score2 = self.reranker.compute_score(
+            "The Earth orbits the Sun", 
+            "I like pizza and ice cream."
+        )
+        print(f"Irrelevant doc score: {score2}")
+        
     def test_fever_evaluation(self):
         expected = {
             "P_3": 0.107,
@@ -124,6 +137,7 @@ class TestReranker(unittest.TestCase):
     def test_reranker_evaluation(self):
         rerank_metrics = eval_on_fever(self.qrels, self.reranked_ranklists, max_k=50)
         rerank_metrics = {k: round(v, 3) for k, v in rerank_metrics.items()}
+        print(rerank_metrics)
 
         self.assertTrue(
             all(0 <= v <= 1 for v in rerank_metrics.values()),
