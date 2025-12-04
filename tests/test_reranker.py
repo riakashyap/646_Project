@@ -89,19 +89,6 @@ class TestReranker(unittest.TestCase):
         if os.path.exists(RERANKEDLISTS_PATH):
             with open(RERANKEDLISTS_PATH, "r", encoding="utf8") as f:
                 self.reranked_ranklists = json.load(f)
-
-    def test_sanity_check(self):
-        score = self.reranker.compute_score(
-            "The Earth orbits the Sun",
-            "The Earth revolves around the Sun in an elliptical orbit."
-        )
-        print(f"Relevant doc score: {score}")
-
-        score2 = self.reranker.compute_score(
-            "The Earth orbits the Sun", 
-            "I like pizza and ice cream."
-        )
-        print(f"Irrelevant doc score: {score2}")
         
     def test_fever_evaluation(self):
         expected = {
@@ -137,11 +124,18 @@ class TestReranker(unittest.TestCase):
     def test_reranker_evaluation(self):
         rerank_metrics = eval_on_fever(self.qrels, self.reranked_ranklists, max_k=50)
         rerank_metrics = {k: round(v, 3) for k, v in rerank_metrics.items()}
-        print(rerank_metrics)
+        bm25_metrics = eval_on_fever(self.qrels, self.fever_ranklists, max_k=50)
+        bm25_metrics = {k: round(v, 3) for k, v in bm25_metrics.items()}
+
 
         self.assertTrue(
             all(0 <= v <= 1 for v in rerank_metrics.values()),
             f"All metrics not in valid range [0,1]. Got: {rerank_metrics}"
+        )
+        self.assertGreaterEqual(
+            rerank_metrics['MAP_10'], 
+            bm25_metrics['MAP_10'],
+            f"Reranker underperformed BM25 on MAP_10"
         )
         
     def test_compute_score(self):
