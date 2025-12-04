@@ -151,7 +151,7 @@ class TestCorag(unittest.TestCase):
         self.ragar_client.set_ret(expected_res)
         verdict, res = self.ragar.verdict(self.claim, self.qa_pairs)
 
-        self.assertIsNone(verdict)
+        self.assertEqual(3, verdict)
         self.assertEqual(expected_res, res)
 
     def test_ragar_run(self):
@@ -160,7 +160,7 @@ class TestCorag(unittest.TestCase):
         self.ragar_client.set_ret(response)
         results = self.ragar.run(self.claim, 3)
 
-        self.assertIsNone(results["verdict"])
+        self.assertEqual(3, results["verdict"])
         self.assertEqual(response, results["verdict_raw"])
         self.assertEqual(self.claim, results["claim"])
         self.assertEqual(3, len(results["qa_pairs"]))
