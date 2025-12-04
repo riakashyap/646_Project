@@ -20,7 +20,7 @@ from typing import List, Tuple, Dict, Optional
 from .reranker import BaseReranker
 import logging
 from transformers import AutoTokenizer, AutoConfig, AutoModelForSequenceClassification
-from .grouped_debertav2 import GroupedDebertaV2ForSequenceClassification
+from .grouped_debertav2 import GroupedDebertaV2ForSequenceClassification, remap_state_dict
 from src.config import LOGGER as logger
 
 
@@ -69,17 +69,19 @@ class E2RankReranker(BaseReranker):
                     f"{self.model_path}/pytorch_model.bin",
                     map_location=self.device
                 )
+                
+                state_dict = remap_state_dict(state_dict)
                 self.model.load_state_dict(state_dict, strict=False)
             except FileNotFoundError:
                 print(
                     f"Could not find pytorch_model.bin at {self.model_path}. "
                     "Loading from HuggingFace Hub..."
                 )
-
                 base_model = AutoModelForSequenceClassification.from_pretrained(
                     self.model_path
                 )
-                self.model.load_state_dict(base_model.state_dict(), strict=False)
+                state_dict = remap_state_dict(base_model.state_dict()) 
+                self.model.load_state_dict(state_dict, strict=False)
 
             self.model.to(self.device)
             self.model.eval()
