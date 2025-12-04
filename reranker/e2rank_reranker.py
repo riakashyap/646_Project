@@ -32,12 +32,16 @@ class E2RankReranker(BaseReranker):
         max_length: int = 512,
         use_layerwise: bool = True,
         reranking_block_map: Dict[int, int] = None,
+        use_nli_classification: bool = False,
+        fever_label_idx: int = 1, # "SUPPORTS" label
         **kwargs
     ):
         super().__init__(model_path, device, **kwargs)
 
         self.max_length = max_length
         self.use_layerwise = use_layerwise
+        self.use_nli_classification = use_nli_classification     
+        self.fever_label_idx = fever_label_idx      
 
         # Progressively reduce candidates: Layers : Top-K Docs to keep
         if reranking_block_map is None:
@@ -61,6 +65,12 @@ class E2RankReranker(BaseReranker):
         try:
             self.tokenizer = AutoTokenizer.from_pretrained(self.model_path)
             config = AutoConfig.from_pretrained(self.model_path)
+            num_labels = getattr(config, 'num_labels', 1)
+
+            if self.use_nli_classification and num_labels != 3:
+                logger.error(f"use_nli_classification flag TRUE but model has {num_labels} labels (expected 3)")
+            elif not self.use_nli_classification and num_labels != 1:
+                logger.error(f"Binanry reranking mode but model has {num_labels} labels (expected 1)")
 
             self.model = GroupedDebertaV2ForSequenceClassification(config)
 
@@ -141,8 +151,12 @@ class E2RankReranker(BaseReranker):
                 ).to(self.device)
 
                 final_outputs = self.model(**final_inputs)
-                final_logits = final_outputs.logits.squeeze(-1)
-                final_scores = final_logits.cpu().tolist()
+                final_logits = final_outputs.logits
+                if self.use_nli_classification:
+                    probs = torch.softmax(final_logits, dim=-1)
+                    final_scores = probs[:, self.fever_label_idx].cpu().tolist()
+                else:
+                    final_scores = final_logits.squeeze(-1).cpu().tolist()
 
                 # Handle single document case (k=1)
                 if not isinstance(final_scores, list):
@@ -155,8 +169,12 @@ class E2RankReranker(BaseReranker):
             else:
                 # Standard full-model reranking for small sets
                 outputs = self.model(**inputs)
-                logits = outputs.logits.squeeze(-1)
-                scores = logits.cpu().tolist()
+                logits = outputs.logits
+                if self.use_nli_classification:
+                    probs = torch.softmax(logits, dim=-1)
+                    scores = probs[:, self.fever_label_idx].cpu().tolist()
+                else:
+                    scores = logits.squeeze(-1).cpu().tolist()
 
                 # Sort by score descending
                 scored_docs = list(zip(doc_ids, doc_texts, scores))
@@ -178,7 +196,12 @@ class E2RankReranker(BaseReranker):
 
         with torch.no_grad():
             outputs = self.model(**inputs)
-            score = outputs.logits.squeeze(-1).item()
+            logits = outputs.logits
+            if self.use_nli_classification:
+                probs = torch.softmax(logits, dim=-1)
+                score = probs[0, self.fever_label_idx].item()
+            else:
+                score = logits.squeeze(-1).item()
 
         return score
 
@@ -202,6 +225,11 @@ class E2RankReranker(BaseReranker):
 
         with torch.no_grad():
             outputs = self.model(**inputs)
-            scores = outputs.logits.squeeze(-1).cpu().tolist()
+            logits = outputs.logits
+            if self.use_nli_classification:
+                probs = torch.softmax(logits, dim=-1)
+                scores = probs[:, self.fever_label_idx].cpu().tolist()
+            else:
+                scores = logits.squeeze(-1).cpu().tolist()
 
         return scores if isinstance(scores, list) else [scores]
