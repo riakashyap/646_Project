@@ -69,7 +69,7 @@ class E2RankReranker(BaseReranker):
                     f"{self.model_path}/pytorch_model.bin",
                     map_location=self.device
                 )
-                self.model.load_state_dict(state_dict)
+                self.model.load_state_dict(state_dict, strict=False)
             except FileNotFoundError:
                 print(
                     f"Could not find pytorch_model.bin at {self.model_path}. "
