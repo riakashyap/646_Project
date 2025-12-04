@@ -50,7 +50,7 @@ class TestReranker(unittest.TestCase):
     #     reranking_block_map={8: 50, 16: 28, 24: 10}
     # )
     reranker = CrossEncoderReranker(
-        model_path="naver/trecdl22-crossencoder-debertav3",
+        model_path="reranker/models/naver/trecdl22-crossencoder-debertav3",
         batch_size=32  
     )
 

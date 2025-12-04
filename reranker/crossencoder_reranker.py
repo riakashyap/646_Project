@@ -23,7 +23,7 @@ from src.config import LOGGER as logger
 class CrossEncoderReranker(BaseReranker):
     def __init__(
         self,
-        model_path: str = "naver/trecdl22-crossencoder-debertav3",
+        model_path: str = "reranker/models/naver/trecdl22-crossencoder-debertav3",
         device: str = None,
         max_length: int = 512,
         batch_size: int = 32,
