@@ -1,0 +1,13 @@
+{
+    "time_elapsed": 18199.541606903076,
+    "accuracy": 0.65,
+    "support_preds": 86,
+    "refute_preds": 79,
+    "nei_preds": 35,
+    "failed_preds": 0,
+    "tpc": 90.99770803451538,
+    "avg_iters": 2.35,
+    "support_f1": 0.6989247311827957,
+    "refute_f1": 0.7262569832402235,
+    "weighted_f1": 0.7125908572115097
+}
