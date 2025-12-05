@@ -789,6 +789,9 @@ class GroupedDebertaV2ForSequenceClassification(DebertaV2PreTrainedModel):
                 if next_kv.size(0) == 0:
                     break
                 #print("Layer:", i, "result:", result, "logits[reranked_logit_ids]", logits[reranked_logit_ids][next_num_docs:])
+        if doc_ids.numel() > 0:
+            result = [doc_ids] + result
+        
         return torch.cat(result)
 
 def remap_state_dict(state_dict):

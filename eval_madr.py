@@ -39,7 +39,7 @@ def parse_arguments():
                         help='The filename containing a CoRAG execution.',
                         metavar='',
                         type=str,
-                        default="./logs/results_custom_no-think_100claims.json")
+                        default="./nb/assets/20251123T192328--metrics__100.json")
 
     return parser.parse_args()
 

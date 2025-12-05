@@ -21,7 +21,7 @@ from collections import Counter
 from datasets import load_dataset, Dataset, concatenate_datasets
 from datetime import datetime
 from pathlib import Path
-from reranker import E2RankReranker
+from reranker import E2RankReranker, CrossEncoderReranker
 from src import config
 from src.model_clients import LlamaCppClient
 from src.ragar_corag import RagarCorag
@@ -102,7 +102,7 @@ if __name__ == "__main__":
     reranker = None
     if args.reranker:
         try:
-            reranker = E2RankReranker()
+            reranker = CrossEncoderReranker()
         except (OSError, FileNotFoundError) as e:
             print(f"ERROR: Model files not found or download failed: {e}")
             reranker = None

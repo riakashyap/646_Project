@@ -34,7 +34,7 @@ import unittest
 from datasets import load_dataset
 import pytrec_eval
 import random
-from reranker import E2RankReranker
+from reranker import E2RankReranker, CrossEncoderReranker
 
 HAS_GPU = torch.cuda.is_available()
 
@@ -46,8 +46,12 @@ class TestReranker(unittest.TestCase):
     qrels: dict[str, dict[str, int]]
     bm25_ranklists_top50: dict[str, dict[str, float]]
     reranked_ranklists: dict[str, dict[str, float]]
-    reranker = E2RankReranker(
-        reranking_block_map={8: 50, 16: 28, 24: 10}
+    # reranker = E2RankReranker(
+    #     reranking_block_map={8: 50, 16: 28, 24: 10}
+    # )
+    reranker = CrossEncoderReranker(
+        model_path="reranker/models/naver/trecdl22-crossencoder-debertav3",
+        batch_size=32  
     )
 
     @classmethod
@@ -89,7 +93,7 @@ class TestReranker(unittest.TestCase):
         if os.path.exists(RERANKEDLISTS_PATH):
             with open(RERANKEDLISTS_PATH, "r", encoding="utf8") as f:
                 self.reranked_ranklists = json.load(f)
-
+        
     def test_fever_evaluation(self):
         expected = {
             "P_3": 0.107,
@@ -124,10 +128,18 @@ class TestReranker(unittest.TestCase):
     def test_reranker_evaluation(self):
         rerank_metrics = eval_on_fever(self.qrels, self.reranked_ranklists, max_k=50)
         rerank_metrics = {k: round(v, 3) for k, v in rerank_metrics.items()}
+        bm25_metrics = eval_on_fever(self.qrels, self.fever_ranklists, max_k=50)
+        bm25_metrics = {k: round(v, 3) for k, v in bm25_metrics.items()}
+
 
         self.assertTrue(
             all(0 <= v <= 1 for v in rerank_metrics.values()),
             f"All metrics not in valid range [0,1]. Got: {rerank_metrics}"
+        )
+        self.assertGreaterEqual(
+            rerank_metrics['MAP_10'], 
+            bm25_metrics['MAP_10'],
+            f"Reranker underperformed BM25 on MAP_10"
         )
         
     def test_compute_score(self):

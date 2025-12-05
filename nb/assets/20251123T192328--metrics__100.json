@@ -1,0 +1,1941 @@
+[
+    {
+        "claim_id": 0,
+        "claim": "In 2008, Jeff Ament released a solo record.",
+        "true_label": "SUPPORTS",
+        "predicted_label": "SUPPORTS",
+        "qa_pairs": [
+            [
+                "When was Jeff Ament's solo record released?",
+                "September 16, 2008."
+            ]
+        ],
+        "verdict_int": 1,
+        "verdict_raw": "The question-answer pair directly confirms the claim that Jeff Ament released a solo record in 2008, as it specifies the release date as September 16, 2008. Therefore, the claim is supported by the provided information. True."
+    },
+    {
+        "claim_id": 1,
+        "claim": "Franklin D. Roosevelt had a family that originated in New York.",
+        "true_label": "SUPPORTS",
+        "predicted_label": "SUPPORTS",
+        "qa_pairs": [
+            [
+                "What is the origin of Franklin D. Roosevelt's family?",
+                "The origin of Franklin D. Roosevelt's family can be traced back to the Roosevelt family, a prominent American family with roots in Dutch heritage. The family's history in the United States dates back to the 17th century, with early ancestors arriving in the New World. The Roosevelt family became well-known in American politics and society, with Franklin D. Roosevelt being one of its most notable members."
+            ]
+        ],
+        "verdict_int": 1,
+        "verdict_raw": "The question-answer pair directly supports the claim by stating that the Roosevelt family, including Franklin D. Roosevelt, has roots in Dutch heritage and a history in the United States dating back to the 17th century, with early ancestors arriving in the New World. This confirms that Franklin D. Roosevelt's family originated in New York, as New York was a significant settlement for early Dutch settlers. True.",
+        "r": "- misrepresented factual details: The explanation assumes that the Dutch heritage and 17th-century origins necessarily mean the family originated in New York, which is not explicitly stated in the evidence. The evidence mentions Dutch heritage and early ancestors arriving in the New World, but does not specify that New York was the origin or that the family originated there.  \n\n- introduced/misrepresented noun phrases altering meaning: The explanation rephrases \"early ancestors arriving in the New World\" as \"the family originated in New York,\" which alters the meaning by assuming a specific location without explicit support from the evidence.  \n\n- logic/reasoning inconsistencies: The explanation draws a direct connection between the 17th-century arrival in the New World and the family originating in New York, which is a logical leap not supported by the evidence. The evidence does not specify the exact location of the family's origin within the New World."
+    },
+    {
+        "claim_id": 2,
+        "claim": "A phylogenetic tree is a branching diagram.",
+        "true_label": "SUPPORTS",
+        "predicted_label": "SUPPORTS",
+        "qa_pairs": [
+            [
+                "What is the primary purpose of a phylogenetic tree according to the statement?",
+                "The primary purpose of a phylogenetic tree is to represent a hypothesis about the evolutionary ancestry of a set of genes, species, or other taxa."
+            ],
+            [
+                "What type of diagram is a phylogenetic tree described as in the statement?",
+                "Answer: A branching diagram or \"tree.\""
+            ]
+        ],
+        "verdict_int": 1,
+        "verdict_raw": "The question-answer pairs confirm the claim that a phylogenetic tree is a branching diagram. The second answer explicitly states that a phylogenetic tree is described as a \"branching diagram or 'tree'\". This directly supports the claim. The first question-answer pair provides context about the purpose of a phylogenetic tree, which is supplementary but does not contradict the claim. Therefore, the claim is fully confirmed. True."
+    },
+    {
+        "claim_id": 3,
+        "claim": "Steffi Graf is an athlete.",
+        "true_label": "SUPPORTS",
+        "predicted_label": "SUPPORTS",
+        "qa_pairs": [
+            [
+                "Who is considered an athlete in the context of the statement about Steffi Graf?",
+                "Steffi Graf is considered an athlete in the context of the statement."
+            ]
+        ],
+        "verdict_int": 1,
+        "verdict_raw": "The question-answer pair directly supports the claim by explicitly stating that Steffi Graf is considered an athlete in the context of the statement. This directly confirms the claim. True."
+    },
+    {
+        "claim_id": 4,
+        "claim": "Tommy Chong works in entertainment.",
+        "true_label": "SUPPORTS",
+        "predicted_label": "SUPPORTS",
+        "qa_pairs": [
+            [
+                "Who is Tommy Chong?",
+                "Tommy Chong is a Grammy Award-winning comedy duo member, along with Richard \"Cheech\" Marin, known for their films and stand-up routines based on the hippie and free love era, particularly the drug and counterculture movements, and their love for cannabis. He also directed the 1980 film \"Cheech & Chong's Next Movie\" and was a publicist for Brandie Knight."
+            ]
+        ],
+        "verdict_int": 1,
+        "verdict_raw": "The question-answer pair confirms that Tommy Chong is a Grammy Award-winning comedy duo member known for films and stand-up routines, and that he directed a film. These details support the claim that Tommy Chong works in entertainment. Therefore, the claim is True."
+    },
+    {
+        "claim_id": 5,
+        "claim": "Dangal (film) is set in Haryana.",
+        "true_label": "SUPPORTS",
+        "predicted_label": "NOT ENOUGH INFO",
+        "qa_pairs": [
+            [
+                "Where is the film Dangal set?",
+                "question too specific"
+            ],
+            [
+                "What region in Haryana is the film Dangal set in?",
+                "question too specific"
+            ],
+            [
+                "What is the significance of setting Dangal in Haryana?",
+                "The significance of setting Bharat Kesri Dangal in Haryana is that it commemorates the martyrdom day of Shaheed Bhagat Singh, Rajguru, and Sukhdev, and it is organized by the Haryana Sports and Youth Affairs department to promote freestyle wrestling in the state."
+            ],
+            [
+                "What historical event is associated with the setting of Dangal in Haryana?",
+                "The historical event associated with the setting of Dangal in Haryana is the martyrdom day of Shaheed Bhagat Singh, Rajguru, and Sukhdev."
+            ]
+        ],
+        "verdict_int": 2,
+        "verdict_raw": "The question-answer pairs provide information about the historical significance and event associated with the setting of Dangal in Haryana, but they do not directly confirm or deny the claim that the film is set in Haryana. While one answer mentions the film's setting in Haryana, it is accompanied by a note that the question is \"too specific,\" suggesting ambiguity. The other answers focus on the historical context rather than the film's actual setting. Therefore, the question-answer pairs are insufficient in definitively confirming or disproving the claim. Inconclusive.",
+        "r": "\"The question-answer pairs provide information about the historical significance and event associated with the setting of Dangal in Haryana, but they do not directly confirm or deny the claim that the film is set in Haryana.\"  \n- This sentence is unfaithful because it inaccurately states that the question-answer pairs \"do not directly confirm or deny\" the claim, when in fact, the answer to the question \"What region in Haryana is the film Dangal set in?\" is not provided, but the answer to \"What historical event is associated with the setting of Dangal in Haryana?\" does imply that the film is set in Haryana. The explanation incorrectly interprets the evidence as being inconclusive when it is not.  \n\n\"While one answer mentions the film's setting in Haryana, it is accompanied by a note that the question is 'too specific,' suggesting ambiguity.\"  \n- This sentence is unfaithful because it misrepresents the evidence. The note that the question is \"too specific\" is not about the film's setting, but about the question itself being too specific. The explanation incorrectly assumes that the note refers to the film's setting, which it does not.  \n\n\"The other answers focus on the historical context rather than the film's actual setting.\"  \n- This sentence is unfaithful because it is factually inaccurate. The answer that mentions the historical event does not focus on the film's actual setting, but the explanation incorrectly frames this as a focus on the historical context rather than the setting. The explanation confuses the content of the answer with the claim being made."
+    },
+    {
+        "claim_id": 6,
+        "claim": "Suriname left the Kingdom of Netherlands in 1975.",
+        "true_label": "SUPPORTS",
+        "predicted_label": "SUPPORTS",
+        "qa_pairs": [
+            [
+                "When did Suriname leave the Kingdom of the Netherlands?",
+                "Suriname left the Kingdom of the Netherlands on 25 November 1975."
+            ]
+        ],
+        "verdict_int": 1,
+        "verdict_raw": "The question-answer pair directly confirms the claim that Suriname left the Kingdom of Netherlands in 1975, specifying the exact date as 25 November 1975. Therefore, the claim is supported by the provided information. True."
+    },
+    {
+        "claim_id": 7,
+        "claim": "A subtype of anti-nuclear antibodies are anti-Ro antibodies.",
+        "true_label": "SUPPORTS",
+        "predicted_label": "SUPPORTS",
+        "qa_pairs": [
+            [
+                "Is the statement about anti-Ro antibodies being a subtype of anti-nuclear antibodies accurate?",
+                "Answer: Yes."
+            ]
+        ],
+        "verdict_int": 1,
+        "verdict_raw": "The question-answer pair directly supports the claim by affirming that anti-Ro antibodies are indeed a subtype of anti-nuclear antibodies. Since the answer confirms the accuracy of the statement, the claim is validated. True.",
+        "r": "The explanation does not contain any errors in terms of the labels provided. However, it is somewhat redundant and does not provide actionable feedback as requested. The explanation confirms the validity of the claim based on the question-answer pair but does not identify any specific errors in the explanation itself. Therefore, no errors of the specified types are present in the explanation."
+    },
+    {
+        "claim_id": 8,
+        "claim": "Aaliyah was a United States citizen.",
+        "true_label": "SUPPORTS",
+        "predicted_label": "NOT ENOUGH INFO",
+        "qa_pairs": [
+            [
+                "Was Aaliyah a United States citizen at the time of her death?",
+                "The sources do not explicitly state whether Aaliyah was a United States citizen at the time of her death. Therefore, the answer is: question too specific."
+            ],
+            [
+                "What was Aaliyah's country of citizenship?",
+                "The provided sources do not address Aaliyah's country of citizenship.  \nAnswer: question too specific"
+            ],
+            [
+                "When was Aaliyah's citizenship status determined?",
+                "question too specific"
+            ]
+        ],
+        "verdict_int": 2,
+        "verdict_raw": "The question-answer pairs do not provide sufficient information to confirm or disprove the claim that Aaliyah was a United States citizen. The answers indicate that the sources do not explicitly address her citizenship status, making it impossible to determine the truth of the claim based on the given information. Inconclusive."
+    },
+    {
+        "claim_id": 9,
+        "claim": "Idris Elba was in Thor: The Dark World.",
+        "true_label": "SUPPORTS",
+        "predicted_label": "SUPPORTS",
+        "qa_pairs": [
+            [
+                "Did Idris Elba appear in Thor: The Dark World as a cast member?",
+                "Answer: Yes."
+            ]
+        ],
+        "verdict_int": 1,
+        "verdict_raw": "The question-answer pair confirms that Idris Elba appeared in Thor: The Dark World as a cast member, which directly supports the claim. Therefore, the claim is true. True."
+    },
+    {
+        "claim_id": 10,
+        "claim": "Charles Marie de La Condamine died in 1774.",
+        "true_label": "SUPPORTS",
+        "predicted_label": "SUPPORTS",
+        "qa_pairs": [
+            [
+                "When did Charles Marie de La Condamine actually die?",
+                "13 February 1774."
+            ]
+        ],
+        "verdict_int": 1,
+        "verdict_raw": "The question-answer pair directly confirms the claim that Charles Marie de La Condamine died in 1774, as it specifies the exact date of his death as 13 February 1774. Therefore, the claim is supported by the provided information. True."
+    },
+    {
+        "claim_id": 11,
+        "claim": "Her's genre was that of a romantic science-fiction drama.",
+        "true_label": "SUPPORTS",
+        "predicted_label": "NOT ENOUGH INFO",
+        "qa_pairs": [
+            [
+                "What specific elements of \"Her's\" genre align with the characteristics of a romantic science-fiction drama?",
+                "question too specific"
+            ],
+            [
+                "What is the primary genre classification of \"Her's\"?",
+                "question too specific"
+            ],
+            [
+                "What is the basis for categorizing \"Her's\" as a romantic science-fiction drama?",
+                "The sources do not address the question."
+            ],
+            [
+                "What criteria were used to determine that \"Her's\" falls under the romantic science-fiction genre?",
+                "The question is too specific."
+            ],
+            [
+                "What is the definition of a romantic science-fiction drama?",
+                "question too specific"
+            ]
+        ],
+        "verdict_int": 2,
+        "verdict_raw": "The question-answer pairs do not provide sufficient information to confirm or disprove the claim that \"Her's\" genre was that of a romantic science-fiction drama. The answers either avoid the question or are deemed too specific, leaving the claim unsupported by direct evidence. Inconclusive."
+    },
+    {
+        "claim_id": 12,
+        "claim": "Nepal is a sovereign Himalayan state.",
+        "true_label": "SUPPORTS",
+        "predicted_label": "NOT ENOUGH INFO",
+        "qa_pairs": [
+            [
+                "What defines the sovereignty of Nepal in the context of its Himalayan region?",
+                "question too specific"
+            ],
+            [
+                "What is the historical basis for Nepal's sovereignty over the Himalayan region?",
+                "question too specific"
+            ],
+            [
+                "What is the current international recognition of Nepal's sovereignty as a Himalayan state?",
+                "The current international recognition of Nepal's sovereignty as a Himalayan state is affirmed through its established diplomatic relations with various countries, including Pakistan, and its status as a sovereign nation recognized by the international community."
+            ],
+            [
+                "What is the geographical extent of Nepal's Himalayan region?",
+                "Nepal's Himalayan region ranges from the Tibetan border in the north to the Terai lowlands in the south, encompassing areas such as the Himalayan ranges, the mountainous regions, and the inner terai."
+            ]
+        ],
+        "verdict_int": 2,
+        "verdict_raw": "The question-answer pairs partially confirm the claim that Nepal is a sovereign Himalayan state. The answer to the question about international recognition affirms Nepal's sovereignty as a Himalayan state through its diplomatic relations and international status. The answer regarding geographical extent supports the claim by describing Nepal's Himalayan region. However, the first two questions are deemed too specific, leaving gaps in the evaluation. The pairs do not fully address all aspects of sovereignty in the Himalayan context, such as legal or historical claims. Therefore, the verdict is Inconclusive."
+    },
+    {
+        "claim_id": 13,
+        "claim": "Louis Tomlinson was in a boy band.",
+        "true_label": "SUPPORTS",
+        "predicted_label": "SUPPORTS",
+        "qa_pairs": [
+            [
+                "When did Louis Tomlinson join a boy band?",
+                "Louis Tomlinson joined a boy band in 2010."
+            ]
+        ],
+        "verdict_int": 1,
+        "verdict_raw": "The question-answer pair confirms that Louis Tomlinson joined a boy band in 2010, which directly supports the claim that he was in a boy band. Therefore, the claim is true. True."
+    },
+    {
+        "claim_id": 14,
+        "claim": "The People vs. Larry Flynt is directed by Milos Forman.",
+        "true_label": "SUPPORTS",
+        "predicted_label": "SUPPORTS",
+        "qa_pairs": [
+            [
+                "Who directed the film \"The People vs. Larry Flynt\"?",
+                "Milo\u0161 Forman."
+            ]
+        ],
+        "verdict_int": 1,
+        "verdict_raw": "The question-answer pair directly confirms the claim that \"The People vs. Larry Flynt\" is directed by Milos Forman, as it explicitly states that the film was directed by Milo\u0161 Forman. Since the answer matches the claim, the statement is verified. True."
+    },
+    {
+        "claim_id": 15,
+        "claim": "Globally, Twitter has more than 25 offices.",
+        "true_label": "SUPPORTS",
+        "predicted_label": "NOT ENOUGH INFO",
+        "qa_pairs": [
+            [
+                "How many offices does Twitter actually have worldwide?",
+                "question too specific"
+            ],
+            [
+                "How many offices does Twitter have in different regions?",
+                "question too specific"
+            ],
+            [
+                "What regions does Twitter operate in?",
+                "question too specific"
+            ],
+            [
+                "What is the exact number of Twitter's global offices?",
+                "question too specific"
+            ],
+            [
+                "What countries are covered by Twitter's global offices?",
+                "question too specific"
+            ]
+        ],
+        "verdict_int": 2,
+        "verdict_raw": "The question-answer pairs do not provide any specific information about the number of Twitter's global offices, as all responses are labeled as \"question too specific.\" Without concrete data or numerical answers, the claim cannot be confirmed or refuted. Inconclusive."
+    },
+    {
+        "claim_id": 16,
+        "claim": "Adele has a song called Hello.",
+        "true_label": "SUPPORTS",
+        "predicted_label": "SUPPORTS",
+        "qa_pairs": [
+            [
+                "Is \"Hello\" one of Adele's songs?",
+                "Yes."
+            ]
+        ],
+        "verdict_int": 1,
+        "verdict_raw": "The question-answer pair directly confirms that \"Hello\" is one of Adele's songs, which aligns with the claim. Therefore, the claim is supported by the provided information. True."
+    },
+    {
+        "claim_id": 17,
+        "claim": "Bill Cosby was a comedian who did stand-up.",
+        "true_label": "SUPPORTS",
+        "predicted_label": "SUPPORTS",
+        "qa_pairs": [
+            [
+                "Who is being referred to as a comedian who did stand-up in the statement?",
+                "Ian Harvie"
+            ],
+            [
+                "When did Bill Cosby start doing stand-up comedy?",
+                "The provided sources do not specify when Bill Cosby started doing stand-up comedy. Therefore, the answer is: question too specific."
+            ],
+            [
+                "What is the significance of Bill Cosby's stand-up comedy career?",
+                "Bill Cosby's stand-up comedy career is significant for pioneering a conversational style of comedy that influenced the sitcom \"The Cosby Show,\" and for producing works like the 1983 film \"Bill Cosby: Himself,\" regarded as a landmark in stand-up comedy. His routines also contributed to the evolution of comedy albums and live performance films."
+            ],
+            [
+                "What is the relationship between Bill Cosby's stand-up comedy and his role as a comedian?",
+                "Bill Cosby's stand-up comedy is directly related to his role as a comedian, as it showcases his comedic routines and conversational style, which are central to his career as a comedian."
+            ]
+        ],
+        "verdict_int": 1,
+        "verdict_raw": "The question-answer pairs confirm that Bill Cosby was a comedian who did stand-up, as they describe his stand-up comedy career, its significance, and its relationship to his role as a comedian. While one question about the start date of his career is unanswered, the overall information supports the claim. Verdict: True.",
+        "r": "- misrepresented factual details: The explanation assumes that the question-answer pairs confirm Bill Cosby was a comedian who did stand-up without directly addressing the claim. The evidence provided in the Q&A pairs does not explicitly state that Bill Cosby was a comedian who did stand-up, but rather discusses his stand-up comedy career and its significance. The explanation conflates the discussion of his career with the assertion that he was a comedian who did stand-up.\n\n- introduced/misrepresented events not in evidence: The explanation references \"the provided sources do not specify when Bill Cosby started doing stand-up comedy\" as an unanswered question, but this is not an event or fact that is misrepresented. However, the explanation does not clarify that the lack of specificity does not negate the truth of the claim, which is a logical inconsistency.\n\n- logic/reasoning inconsistencies: The explanation concludes that the claim is \"True\" based on the Q&A pairs, but the evidence does not directly confirm the claim that Bill Cosby was a comedian who did stand-up. The Q&A pairs focus on his stand-up career and its significance, not on his role as a comedian in general. The conclusion assumes that the discussion of his stand-up career equates to him being a comedian who did stand-up, which may not be explicitly stated in the evidence.\n\n- irrelevant or unsupported information: The explanation does not address the specific claim that Bill Cosby was a comedian who did stand-up, but instead focuses on the discussion of his stand-up career. While the Q&A pairs do discuss his stand-up comedy, they do not directly state that he was a comedian who did stand-up, which is the core of the claim. The explanation therefore relies on inferred information rather than direct confirmation from the evidence."
+    },
+    {
+        "claim_id": 18,
+        "claim": "Priyanka Chopra advocates various causes.",
+        "true_label": "SUPPORTS",
+        "predicted_label": "NOT ENOUGH INFO",
+        "qa_pairs": [
+            [
+                "What specific causes does Priyanka Chopra advocate for?",
+                "question too specific"
+            ],
+            [
+                "What organizations is Priyanka Chopra associated with?",
+                "Priyanka Chopra is associated with Vinod Chopra Films and has produced the film Ventilator."
+            ],
+            [
+                "What issues does Priyanka Chopra focus on when advocating for causes?",
+                "question too specific"
+            ],
+            [
+                "What types of causes does Priyanka Chopra generally support?",
+                "question too specific"
+            ],
+            [
+                "What are the specific causes Priyanka Chopra has been known to advocate for?",
+                "question too specific"
+            ]
+        ],
+        "verdict_int": 2,
+        "verdict_raw": "The question-answer pairs do not fully confirm or disprove the claim that Priyanka Chopra advocates various causes. While the claim is general, the provided answers either avoid specific details or provide information unrelated to advocacy, such as her film associations. None of the answers directly address her advocacy work, making it impossible to verify the truthfulness of the claim based on the given information. Inconclusive."
+    },
+    {
+        "claim_id": 19,
+        "claim": "Buddy Holly's style was influenced by gospel music.",
+        "true_label": "SUPPORTS",
+        "predicted_label": "NOT ENOUGH INFO",
+        "qa_pairs": [
+            [
+                "What specific aspects of Buddy Holly's musical style are said to have been influenced by gospel music?",
+                "question too specific"
+            ],
+            [
+                "What role did gospel music play in shaping Buddy Holly's overall musical style?",
+                "question too specific"
+            ],
+            [
+                "What evidence supports the idea that Buddy Holly's musical style was influenced by gospel music?",
+                "question too specific"
+            ],
+            [
+                "What is the connection between Buddy Holly's early musical experiences and gospel music?",
+                "question too specific"
+            ],
+            [
+                "What period in Buddy Holly's career is associated with the alleged influence of gospel music?",
+                "The period in Buddy Holly's career associated with the alleged influence of gospel music is his early career, particularly his formative years and early recordings."
+            ]
+        ],
+        "verdict_int": 2,
+        "verdict_raw": "The question-answer pairs provide some context by indicating that Buddy Holly's early career, particularly his formative years and early recordings, is associated with the alleged influence of gospel music. However, the answers are not specific enough to confirm or refute the claim definitively. While the pair suggests a potential influence, it does not provide concrete evidence or detailed analysis to fully support or disprove the claim. Therefore, the question-answer pairs are insufficient in explaining the claim. Inconclusive."
+    },
+    {
+        "claim_id": 20,
+        "claim": "Canada used to be inhabited by various aboriginal peoples.",
+        "true_label": "SUPPORTS",
+        "predicted_label": "SUPPORTS",
+        "qa_pairs": [
+            [
+                "When did the aboriginal peoples first inhabit Canada?",
+                "The aboriginal peoples first inhabited Canada around 13,500 years ago, as evidenced by sites such as Old Crow Flats and Bluefish Caves."
+            ]
+        ],
+        "verdict_int": 1,
+        "verdict_raw": "The question-answer pair confirms that aboriginal peoples inhabited Canada as far back as 13,500 years ago, supporting the claim that Canada was once inhabited by various aboriginal peoples. The evidence provided by the answer aligns with the claim, offering a specific timeframe and archaeological examples. Therefore, the claim is confirmed.\n\nTrue"
+    },
+    {
+        "claim_id": 21,
+        "claim": "Boris Karloff was awarded two stars on the Hollywood Walk of Fame.",
+        "true_label": "SUPPORTS",
+        "predicted_label": "SUPPORTS",
+        "qa_pairs": [
+            [
+                "How many stars were awarded to Boris Karloff on the Hollywood Walk of Fame?",
+                "Answer: Two."
+            ]
+        ],
+        "verdict_int": 1,
+        "verdict_raw": "The question-answer pair directly confirms the claim that Boris Karloff was awarded two stars on the Hollywood Walk of Fame. The answer explicitly states \"Two,\" which matches the claim. Therefore, the claim is supported by the provided information. True."
+    },
+    {
+        "claim_id": 22,
+        "claim": "Anne Hathaway was nominated for a Best Actress Award.",
+        "true_label": "SUPPORTS",
+        "predicted_label": "SUPPORTS",
+        "qa_pairs": [
+            [
+                "When was Anne Hathaway nominated for a Best Actress Award?",
+                "Anne Hathaway was nominated for a Best Actress Award for her performance in \"Rachel Getting Married\" in 2008."
+            ]
+        ],
+        "verdict_int": 1,
+        "verdict_raw": "The question-answer pair directly supports the claim by providing specific information about Anne Hathaway's nomination for a Best Actress Award for her role in \"Rachel Getting Married\" in 2008. This confirms the claim. True."
+    },
+    {
+        "claim_id": 23,
+        "claim": "Bradford is the location of a theater.",
+        "true_label": "SUPPORTS",
+        "predicted_label": "NOT ENOUGH INFO",
+        "qa_pairs": [
+            [
+                "Is the theater located in Bradford a specific venue or facility?",
+                "question too specific"
+            ],
+            [
+                "What is the name of the theater located in Bradford?",
+                "The question is too specific."
+            ],
+            [
+                "When was the theater in Bradford established?",
+                "question too specific"
+            ],
+            [
+                "Who operates the theater located in Bradford?",
+                "question too specific"
+            ],
+            [
+                "What is the exact location of the theater in Bradford?",
+                "question too specific"
+            ]
+        ],
+        "verdict_int": 2,
+        "verdict_raw": "The question-answer pairs do not provide any specific information confirming or denying the existence of a theater in Bradford. All answers are labeled as \"question too specific,\" indicating that the provided information is insufficient to evaluate the claim. Therefore, the verdict is Inconclusive."
+    },
+    {
+        "claim_id": 24,
+        "claim": "Ron Swanson loves meat.",
+        "true_label": "SUPPORTS",
+        "predicted_label": "NOT ENOUGH INFO",
+        "qa_pairs": [
+            [
+                "Does Ron Swanson's love for meat stem from his personal preferences or cultural background?",
+                "question too specific"
+            ],
+            [
+                "What is Ron Swanson's cultural background?",
+                "question too specific"
+            ],
+            [
+                "What specific types of meat does Ron Swanson love?",
+                "question too specific"
+            ],
+            [
+                "What is the basis for the statement that Ron Swanson loves meat?",
+                "The basis for the statement that Ron Swanson loves meat is that he is described as loving meat in the provided information."
+            ]
+        ],
+        "verdict_int": 2,
+        "verdict_raw": "The question-answer pairs partially confirm the claim that Ron Swanson loves meat, as one answer directly states that the basis for the statement is that he is described as loving meat in the provided information. However, the other question-answer pairs either avoid addressing the claim or are deemed too specific, leaving gaps in the explanation. Thus, while there is some confirmation, the pairs do not fully elaborate on the claim. Inconclusive."
+    },
+    {
+        "claim_id": 25,
+        "claim": "Lisa Lopes was a member of a girl group based in the USA.",
+        "true_label": "SUPPORTS",
+        "predicted_label": "SUPPORTS",
+        "qa_pairs": [
+            [
+                "Which girl group was Lisa Lopes a member of?",
+                "TLC"
+            ]
+        ],
+        "verdict_int": 1,
+        "verdict_raw": "The claim that Lisa Lopes was a member of a girl group based in the USA is confirmed by the question-answer pair, as TLC, the group she was a member of, was indeed based in the USA. Therefore, the claim is true. True."
+    },
+    {
+        "claim_id": 26,
+        "claim": "Splatoon 2 is a third-person shooter.",
+        "true_label": "SUPPORTS",
+        "predicted_label": "SUPPORTS",
+        "qa_pairs": [
+            [
+                "What genre does Splatoon 2 primarily fall into?",
+                "Third-person shooter"
+            ]
+        ],
+        "verdict_int": 1,
+        "verdict_raw": "The question-answer pair directly states that Splatoon 2 primarily falls into the genre of third-person shooter, which aligns with the claim. Therefore, the claim is confirmed. True."
+    },
+    {
+        "claim_id": 27,
+        "claim": "Dwayne Johnson is a dual National.",
+        "true_label": "SUPPORTS",
+        "predicted_label": "NOT ENOUGH INFO",
+        "qa_pairs": [
+            [
+                "What specific country or countries does Dwayne Johnson hold dual nationality in?",
+                "question too specific"
+            ],
+            [
+                "Which countries does Dwayne Johnson hold dual nationality in?",
+                "question too specific"
+            ],
+            [
+                "What is the basis for asserting that Dwayne Johnson is a dual national?",
+                "question too specific"
+            ],
+            [
+                "What is the definition of a dual national in this context?",
+                "question too specific"
+            ],
+            [
+                "What evidence supports the assertion of Dwayne Johnson's dual nationality?",
+                "question too specific"
+            ]
+        ],
+        "verdict_int": 2,
+        "verdict_raw": "The question-answer pairs do not provide any specific information confirming or denying Dwayne Johnson's dual nationality. All responses indicate that the questions are too specific, implying that the necessary details are not available or not provided. Therefore, the claim cannot be fully confirmed or disproven based on the given pairs. Inconclusive."
+    },
+    {
+        "claim_id": 28,
+        "claim": "John Mayer plays music.",
+        "true_label": "SUPPORTS",
+        "predicted_label": "SUPPORTS",
+        "qa_pairs": [
+            [
+                "Does John Mayer play music?",
+                "Yes, John Mayer plays music. He was a composer and violinist, and he played the sitar in his musical collaborations."
+            ]
+        ],
+        "verdict_int": 1,
+        "verdict_raw": "The question-answer pair directly confirms the claim that John Mayer plays music, as it explicitly states \"Yes, John Mayer plays music\" and provides additional context about his musical roles. Therefore, the claim is fully supported by the provided information. True."
+    },
+    {
+        "claim_id": 29,
+        "claim": "Xi Jinping was a vice-president from 2008 to 2013.",
+        "true_label": "SUPPORTS",
+        "predicted_label": "NOT ENOUGH INFO",
+        "qa_pairs": [
+            [
+                "What position did Xi Jinping hold from 2008 to 2013?",
+                "The sources do not provide information on the specific position Xi Jinping held from 2008 to 2013. Therefore, the answer is: question too specific."
+            ]
+        ],
+        "verdict_int": 2,
+        "verdict_raw": "The question-answer pair indicates that the sources do not provide specific information about Xi Jinping's position from 2008 to 2013, leading to the conclusion that the question is too specific. Since the claim makes a specific assertion about his position during that time, and the available information does not confirm or deny it, the question-answer pairs are insufficient to evaluate the claim. Inconclusive."
+    },
+    {
+        "claim_id": 30,
+        "claim": "Superunknown debuted at number one on the Billboard 200.",
+        "true_label": "SUPPORTS",
+        "predicted_label": "NOT ENOUGH INFO",
+        "qa_pairs": [
+            [
+                "When did Superunknown debut on the Billboard 200?",
+                "March 8, 1994."
+            ]
+        ],
+        "verdict_int": 2,
+        "verdict_raw": "The claim that \"Superunknown debuted at number one on the Billboard 200\" is not fully confirmed by the provided question-answer pair, which only states the date of the debut (March 8, 1994) but does not specify the chart position. Without information on whether it debuted at number one, the claim cannot be verified. Inconclusive."
+    },
+    {
+        "claim_id": 31,
+        "claim": "Oz the Great and Powerful was released through the Disney Digital 3-D format in 2013.",
+        "true_label": "SUPPORTS",
+        "predicted_label": "SUPPORTS",
+        "qa_pairs": [
+            [
+                "When was \"Oz the Great and Powerful\" released in the Disney Digital 3-D format?",
+                "The film \"Oz the Great and Powerful\" was released in the Disney Digital 3-D format on March 8, 2013."
+            ]
+        ],
+        "verdict_int": 1,
+        "verdict_raw": "The question-answer pair directly confirms the claim that \"Oz the Great and Powerful\" was released through the Disney Digital 3-D format in 2013, specifying the exact release date as March 8, 2013. Therefore, the claim is fully supported by the provided information. True."
+    },
+    {
+        "claim_id": 32,
+        "claim": "Thomas Haden Church is a co-writer of the film Rolling Kansas.",
+        "true_label": "SUPPORTS",
+        "predicted_label": "SUPPORTS",
+        "qa_pairs": [
+            [
+                "Who is credited as the co-writer of the film \"Rolling Kansas\"?",
+                "Thomas Haden Church is credited as the co-writer of the film \"Rolling Kansas.\""
+            ]
+        ],
+        "verdict_int": 1,
+        "verdict_raw": "The question-answer pair directly confirms the claim that Thomas Haden Church is a co-writer of the film \"Rolling Kansas,\" as it explicitly states that he is credited as the co-writer. Therefore, the claim is supported by the provided information. True."
+    },
+    {
+        "claim_id": 33,
+        "claim": "Black Mirror is a science-fiction television series.",
+        "true_label": "SUPPORTS",
+        "predicted_label": "SUPPORTS",
+        "qa_pairs": [
+            [
+                "What genre does Black Mirror primarily belong to?",
+                "Black Mirror primarily belongs to the science fiction genre."
+            ]
+        ],
+        "verdict_int": 1,
+        "verdict_raw": "The question-answer pair directly confirms that Black Mirror primarily belongs to the science fiction genre, which aligns with the claim that Black Mirror is a science-fiction television series. Therefore, the claim is supported by the provided information. True."
+    },
+    {
+        "claim_id": 34,
+        "claim": "Jet Li was a person.",
+        "true_label": "SUPPORTS",
+        "predicted_label": "SUPPORTS",
+        "qa_pairs": [
+            [
+                "Is Jet Li a person?",
+                "Yes, Jet Li is a person. He is a martial arts actor mentioned in the first source."
+            ]
+        ],
+        "verdict_int": 1,
+        "verdict_raw": "The question-answer pair directly confirms the claim by explicitly stating that Jet Li is a person. The answer provides a clear affirmation of the claim and supports it with additional context. Therefore, the claim is fully confirmed.\n\nTrue",
+        "r": "None. The explanation is faithful to the claim and evidence. It correctly identifies that the question-answer pair confirms the claim and provides a reasonable justification for why the claim is supported by the evidence. There are no problematic sentences in the explanation that reduce faithfulness to the claim or evidence."
+    },
+    {
+        "claim_id": 35,
+        "claim": "Warren G. Harding died in 1923.",
+        "true_label": "SUPPORTS",
+        "predicted_label": "SUPPORTS",
+        "qa_pairs": [
+            [
+                "When did Warren G. Harding die?",
+                "August 2, 1923."
+            ]
+        ],
+        "verdict_int": 1,
+        "verdict_raw": "The question-answer pair directly confirms the claim that Warren G. Harding died in 1923, as it specifies the exact date of his death as August 2, 1923. Therefore, the claim is fully supported by the provided information. True."
+    },
+    {
+        "claim_id": 36,
+        "claim": "Jerry Lewis does humanitarian work.",
+        "true_label": "SUPPORTS",
+        "predicted_label": "SUPPORTS",
+        "qa_pairs": [
+            [
+                "What specific humanitarian work does Jerry Lewis engage in?",
+                "Jerry Lewis engaged in humanitarian work by serving as national chairman of the Muscular Dystrophy Association and hosting the live Labor Day broadcast of the Jerry Lewis MDA Telethon for 44 years."
+            ]
+        ],
+        "verdict_int": 1,
+        "verdict_raw": "The question-answer pair directly supports the claim that Jerry Lewis does humanitarian work by providing specific examples of his involvement, including his role as national chairman of the Muscular Dystrophy Association and hosting the MDA Telethon. These activities are clearly humanitarian in nature. Therefore, the claim is confirmed. True."
+    },
+    {
+        "claim_id": 37,
+        "claim": "Julia Louis-Dreyfus has a job.",
+        "true_label": "SUPPORTS",
+        "predicted_label": "NOT ENOUGH INFO",
+        "qa_pairs": [
+            [
+                "What specific job does Julia Louis-Dreyfus currently hold?",
+                "question too specific"
+            ],
+            [
+                "When did Julia Louis-Dreyfus start working?",
+                "The sources provided do not specify when Julia Louis-Dreyfus started working. Therefore, the answer is: question too specific."
+            ]
+        ],
+        "verdict_int": 2,
+        "verdict_raw": "The question-answer pairs do not provide sufficient information to confirm or disprove the claim that Julia Louis-Dreyfus has a job. While the claim is general, the provided answers are too vague or specific to determine its truthfulness definitively. Inconclusive.",
+        "r": "The explanation is faithful to the claim and evidence. However, there are no problematic sentences in the explanation that reduce its faithfulness to the claim/evidence. The explanation accurately reflects that the question-answer pairs do not provide sufficient information to confirm or disprove the claim, and it correctly identifies the answers as too vague or specific to determine the truthfulness of the claim. Therefore, there are no weaknesses in the explanation that reduce faithfulness to the claim or evidence."
+    },
+    {
+        "claim_id": 38,
+        "claim": "Jim Crow laws were enacted by white Democrats.",
+        "true_label": "SUPPORTS",
+        "predicted_label": "SUPPORTS",
+        "qa_pairs": [
+            [
+                "Who specifically enacted the Jim Crow laws and what role did white Democrats play in their implementation?",
+                "The Jim Crow laws were enacted by white Democratic-dominated state legislatures in the Southern United States during the late nineteenth century. White Democrats played a central role in their implementation, as they controlled the state legislatures and ensured the enforcement of these laws, which institutionalized racial segregation and discrimination."
+            ]
+        ],
+        "verdict_int": 1,
+        "verdict_raw": "The question-answer pair directly supports the claim that Jim Crow laws were enacted by white Democrats. The answer explicitly states that these laws were enacted by white Democratic-dominated state legislatures and that white Democrats played a central role in their implementation. This aligns fully with the claim. True."
+    },
+    {
+        "claim_id": 39,
+        "claim": "In 2009, Joe Biden became the Vice President.",
+        "true_label": "SUPPORTS",
+        "predicted_label": "REFUTES",
+        "qa_pairs": [
+            [
+                "When did Joe Biden become the Vice President?",
+                "Joe Biden became the Vice President of the United States in 1978."
+            ]
+        ],
+        "verdict_int": 0,
+        "verdict_raw": "The question-answer pair states that Joe Biden became the Vice President in 1978, which directly contradicts the claim that he became Vice President in 2009. Therefore, the claim is false. False."
+    },
+    {
+        "claim_id": 40,
+        "claim": "Jun Ji-hyun is in the South Korean film called Windstruck.",
+        "true_label": "SUPPORTS",
+        "predicted_label": "SUPPORTS",
+        "qa_pairs": [
+            [
+                "Is Jun Ji-hyun featured in the South Korean film \"Windstruck\"?",
+                "Answer: Yes."
+            ]
+        ],
+        "verdict_int": 1,
+        "verdict_raw": "The question-answer pair directly confirms that Jun Ji-hyun is featured in the South Korean film \"Windstruck,\" which aligns with the claim. Therefore, the claim is supported by the provided information. True.",
+        "r": "- logic/reasoning inconsistencies: The explanation assumes that the question-answer pair directly confirms the claim without providing specific evidence or details about Jun Ji-hyun's role or presence in the film \"Windstruck.\" The reasoning is based on the assertion that the answer \"Yes\" supports the claim, but this does not constitute a logical or evidential justification beyond the answer itself."
+    },
+    {
+        "claim_id": 41,
+        "claim": "Screenwriting is one of D. B. Weiss's professions.",
+        "true_label": "SUPPORTS",
+        "predicted_label": "SUPPORTS",
+        "qa_pairs": [
+            [
+                "Is D. B. Weiss known for screenwriting as one of his professions?",
+                "Yes. D. B. Weiss is known for screenwriting as one of his professions, having written episodes for HBO's *Game of Thrones*."
+            ]
+        ],
+        "verdict_int": 1,
+        "verdict_raw": "The question-answer pair directly confirms the claim by stating that D. B. Weiss is known for screenwriting as one of his professions, specifically mentioning his work on *Game of Thrones*. This directly supports the claim. \n\nTrue."
+    },
+    {
+        "claim_id": 42,
+        "claim": "Jared Padalecki grew up in the US.",
+        "true_label": "SUPPORTS",
+        "predicted_label": "SUPPORTS",
+        "qa_pairs": [
+            [
+                "Where was Jared Padalecki born and raised?",
+                "Jared Padalecki was born and raised in Texas."
+            ]
+        ],
+        "verdict_int": 1,
+        "verdict_raw": "The question-answer pair directly supports the claim that Jared Padalecki grew up in the US, as it states he was born and raised in Texas, which is a state in the United States. Therefore, the claim is confirmed. True."
+    },
+    {
+        "claim_id": 43,
+        "claim": "Birth of the Dragon's principal photography began in Vancouver, Canada.",
+        "true_label": "SUPPORTS",
+        "predicted_label": "NOT ENOUGH INFO",
+        "qa_pairs": [
+            [
+                "When did the principal photography of *Birth of the Dragon* begin?",
+                "The principal photography of *Birth of the Dragon* began on November 17, 2015."
+            ]
+        ],
+        "verdict_int": 2,
+        "verdict_raw": "The question-answer pair confirms that the principal photography of *Birth of the Dragon* began on November 17, 2015, but it does not specify the location. Therefore, the claim that it began in Vancouver, Canada, is not fully confirmed by the provided information. Inconclusive.",
+        "r": "The explanation contains the following problematic sentence: \"The question-answer pair confirms that the principal photography of *Birth of the Dragon* began on November 17, 2015, but it does not specify the location.\"\n\nThis sentence is unfaithful because it inaccurately states that the question-answer pair \"does not specify the location,\" which is factually incorrect based on the provided evidence. The question-answer pair only provides the start date of principal photography and does not mention the location at all. However, the explanation incorrectly implies that the location is not specified, which is not a factual error but an omission. The explanation's failure to recognize that the location is not mentioned in the evidence is a logical inaccuracy, as it leads to the incorrect conclusion that the claim about Vancouver is \"not fully confirmed,\" when in fact the evidence does not address the location at all. \n\nActional feedback: The explanation incorrectly assumes that the absence of location information in the evidence means the claim about Vancouver is unconfirmed, when in reality, the evidence is silent on the location. The explanation should acknowledge that the evidence does not provide information about the location, rather than asserting that the claim is \"not fully confirmed.\""
+    },
+    {
+        "claim_id": 44,
+        "claim": "Vera Farmiga has been dubbed as a scream queen.",
+        "true_label": "SUPPORTS",
+        "predicted_label": "SUPPORTS",
+        "qa_pairs": [
+            [
+                "What criteria were used to label Vera Farmiga as a scream queen?",
+                "question too specific"
+            ],
+            [
+                "What is the definition of a \"scream queen\" in the context of Vera Farmiga's career?",
+                "A \"scream queen\" refers to a female actress known for her roles in horror films, often characterized by their intense or frightening nature. In the context of Vera Farmiga's career, it describes her recognition for her roles in horror films such as \"The Conjuring\" and \"Orphan,\" which have contributed to her reputation in the horror genre."
+            ],
+            [
+                "What specific roles or films led to Vera Farmiga being associated with the \"scream queen\" label?",
+                "Vera Farmiga's roles in \"Joshua,\" \"Orphan,\" and the two \"Conjuring\" films led to her being associated with the \"scream queen\" label."
+            ]
+        ],
+        "verdict_int": 1,
+        "verdict_raw": "The question-answer pairs confirm that Vera Farmiga is associated with the \"scream queen\" label due to her roles in horror films like \"Orphan\" and the \"Conjuring\" series, which align with the definition of a \"scream queen\" as an actress known for intense or frightening roles. The answers provide specific examples and a clear definition supporting the claim. True."
+    },
+    {
+        "claim_id": 45,
+        "claim": "Absolute Beginners starred David Bowie.",
+        "true_label": "SUPPORTS",
+        "predicted_label": "SUPPORTS",
+        "qa_pairs": [
+            [
+                "Did David Bowie appear in the film \"Absolute Beginners\"?",
+                "Yes."
+            ]
+        ],
+        "verdict_int": 1,
+        "verdict_raw": "The question-answer pair confirms that David Bowie appeared in the film \"Absolute Beginners,\" which directly supports the claim that he starred in it. Therefore, the claim is true.  \nVerdict: True"
+    },
+    {
+        "claim_id": 46,
+        "claim": "Sarah Michelle Gellar was in a movie.",
+        "true_label": "SUPPORTS",
+        "predicted_label": "SUPPORTS",
+        "qa_pairs": [
+            [
+                "When was Sarah Michelle Gellar in a movie?",
+                "Sarah Michelle Gellar was in a movie in 1999 and 2009."
+            ]
+        ],
+        "verdict_int": 1,
+        "verdict_raw": "The question-answer pair confirms that Sarah Michelle Gellar was in a movie in both 1999 and 2009, which directly supports the claim that she was in a movie. Therefore, the claim is true. True."
+    },
+    {
+        "claim_id": 47,
+        "claim": "Taal was romantic.",
+        "true_label": "SUPPORTS",
+        "predicted_label": "NOT ENOUGH INFO",
+        "qa_pairs": [
+            [
+                "What specific aspects of Taal's behavior or actions indicate a romantic nature?",
+                "question too specific"
+            ],
+            [
+                "When did Taal display romantic behavior?",
+                "question too specific"
+            ],
+            [
+                "Who is Taal, and what context is being referred to in the statement?",
+                "question too specific"
+            ],
+            [
+                "What cultural or historical context is referenced in the statement about Taal being romantic?",
+                "question too specific"
+            ],
+            [
+                "What is the basis for the assertion that Taal was romantic?",
+                "The basis for the assertion that *Taal* was romantic is that it is a Bollywood musical romantic drama film."
+            ]
+        ],
+        "verdict_int": 2,
+        "verdict_raw": "The question-answer pairs provide context that the claim \"Taal was romantic\" refers to *Taal*, a Bollywood musical romantic drama film. The basis for the assertion is that it is a romantic film, which supports the claim. However, the pairs do not directly confirm or refute the claim with specific evidence about the film's romantic nature beyond its genre classification. Therefore, the question-answer pairs partially support the claim but do not fully confirm or disprove it. Inconclusive.",
+        "r": "The explanation contains the following weaknesses that reduce faithfulness to the claim and evidence:\n\n1. **\"The basis for the assertion is that it is a romantic film, which supports the claim.\"**  \n   - **Why it is unfaithful:** This sentence is factually inaccurate. The evidence provided in the QA-pair explicitly states that the basis for the assertion is that *Taal* is a \"Bollywood musical romantic drama film,\" not simply that it is a \"romantic film.\" The explanation misrepresents the evidence by omitting the specific genre classification and simplifying the basis of the claim.\n\n2. **\"The question-answer pairs do not directly confirm or refute the claim with specific evidence about the film's romantic nature beyond its genre classification.\"**  \n   - **Why it is unfaithful:** This sentence is logically inaccurate. The evidence explicitly states that the basis for the assertion is the film's classification as a \"romantic drama,\" which is a specific type of romantic nature. The explanation incorrectly suggests that the evidence does not provide specific evidence about the film's romantic nature, contradicting the provided QA-pair evidence."
+    },
+    {
+        "claim_id": 48,
+        "claim": "Her stars American actress Rooney Mara.",
+        "true_label": "SUPPORTS",
+        "predicted_label": "NOT ENOUGH INFO",
+        "qa_pairs": [
+            [
+                "Who is the American actress associated with the stars mentioned in the statement?",
+                "The American actress associated with the stars mentioned in the statement is Kelly Greyson."
+            ],
+            [
+                "What is the name of the American actress mentioned in the claim?",
+                "Elinor Fair"
+            ],
+            [
+                "What is the correct name of the American actress associated with the stars mentioned in the statement?",
+                "question too specific"
+            ],
+            [
+                "What is the correct name of the American actress associated with the stars mentioned in the statement?",
+                "question too specific"
+            ],
+            [
+                "When was the American actress associated with the stars mentioned in the statement born?",
+                "question too specific"
+            ]
+        ],
+        "verdict_int": 2,
+        "verdict_raw": "The question-answer pairs provide conflicting information, with some stating the actress's name as Kelly Greyson and others as Elinor Fair, while some answers are marked as \"question too specific.\" These inconsistencies do not confirm or disprove the claim that the American actress is Rooney Mara. Therefore, the question-answer pairs are insufficient in explaining the claim. Inconclusive."
+    },
+    {
+        "claim_id": 49,
+        "claim": "J. R. R. Tolkien created Gimli.",
+        "true_label": "SUPPORTS",
+        "predicted_label": "SUPPORTS",
+        "qa_pairs": [
+            [
+                "What evidence supports the assertion that J. R. R. Tolkien created the character Gimli?",
+                "The evidence supporting the assertion that J. R. R. Tolkien created the character Gimli includes his appearance in \"The Lord of the Rings,\" where he is described as a dwarf warrior and a key member of the Fellowship of the Ring, as well as his lineage from Gl\u00f3in, a character from Tolkien's earlier work, \"The Hobbit.\" Additionally, Gimli's role in the narrative, including his friendship with Legolas and participation in the War of the Ring, is detailed in Tolkien's writings."
+            ]
+        ],
+        "verdict_int": 1,
+        "verdict_raw": "The question-answer pair confirms that J. R. R. Tolkien created the character Gimli, providing evidence such as his appearance in \"The Lord of the Rings,\" his lineage from Gl\u00f3in, and his narrative role. These details directly support the claim. True."
+    },
+    {
+        "claim_id": 50,
+        "claim": "Super Street Fighter II Turbo is the oldest active singing game.",
+        "true_label": "REFUTES",
+        "predicted_label": "NOT ENOUGH INFO",
+        "qa_pairs": [
+            [
+                "When was Super Street Fighter II Turbo released?",
+                "Super Street Fighter II Turbo was released in 1994."
+            ],
+            [
+                "Who is considered the oldest active singing game according to the claim?",
+                "question too specific"
+            ],
+            [
+                "What is a singing game?",
+                "A singing game is a type of video game where players sing along to music, often using microphones, and compete or perform to achieve high scores or complete songs. Examples include \"We Sing\" and its sequels like \"We Sing Encore,\" as well as game shows like \"The Singing Bee.\""
+            ],
+            [
+                "What is the basis for considering Super Street Fighter II Turbo as a singing game?",
+                "question too specific"
+            ],
+            [
+                "What is the oldest active singing game according to the claim?",
+                "question too specific"
+            ]
+        ],
+        "verdict_int": 2,
+        "verdict_raw": "The question-answer pairs do not fully confirm or disprove the claim that Super Street Fighter II Turbo is the oldest active singing game. While the claim specifies the game was released in 1994, none of the answers directly address whether it qualifies as a singing game or if it is the oldest active one. The responses either avoid the question or provide definitions without confirming the claim's validity. Therefore, the evidence is insufficient to determine the truth of the claim. Inconclusive."
+    },
+    {
+        "claim_id": 51,
+        "claim": "Appian Way Productions is a film direction agency.",
+        "true_label": "REFUTES",
+        "predicted_label": "NOT ENOUGH INFO",
+        "qa_pairs": [
+            [
+                "What is the primary function or focus of Appian Way Productions?",
+                "The primary function or focus of Appian Way Productions is film production."
+            ]
+        ],
+        "verdict_int": 2,
+        "verdict_raw": "The question-answer pair directly addresses the claim by stating that the primary function of Appian Way Productions is film production, which aligns with the claim that it is a film direction agency. However, \"film production\" and \"film direction agency\" are not entirely synonymous, as film production encompasses a broader range of activities including financing, casting, and post-production, while a film direction agency specifically focuses on directing. Therefore, the answer does not fully confirm the claim. Inconclusive.",
+        "r": "The explanation contains the following problematic sentence: \"film production encompasses a broader range of activities including financing, casting, and post-production, while a film direction agency specifically focuses on directing.\"\n\nThis sentence is unfaithful because it introduces information not present in the evidence or the claim. The evidence only states that the primary function of Appian Way Productions is film production, and the claim is that it is a film direction agency. The explanation invents additional details about what film production and film direction agencies entail, which are not supported by the provided evidence. This introduces external knowledge that is not grounded in the given information, thereby reducing faithfulness to the claim and evidence."
+    },
+    {
+        "claim_id": 52,
+        "claim": "John Wick: Chapter 2 was theatrically released in AMC Theatres.",
+        "true_label": "REFUTES",
+        "predicted_label": "NOT ENOUGH INFO",
+        "qa_pairs": [
+            [
+                "Did AMC Theatres exclusively release John Wick: Chapter 2?",
+                "question too specific"
+            ],
+            [
+                "When was John Wick: Chapter 2 theatrically released?",
+                "February 10, 2017."
+            ],
+            [
+                "Where was John Wick: Chapter 2 theatrically released besides AMC Theatres?",
+                "Answer: Los Angeles and New York City."
+            ],
+            [
+                "Who distributed John Wick: Chapter 2?",
+                "The distribution information for John Wick: Chapter 2 is not provided in the given sources."
+            ],
+            [
+                "What is the exact release scope of John Wick: Chapter 2 in terms of theaters?",
+                "The exact release scope of John Wick: Chapter 2 in terms of theaters is that it was theatrically released in the United States on February 10, 2017."
+            ]
+        ],
+        "verdict_int": 2,
+        "verdict_raw": "The question-answer pairs provide information that John Wick: Chapter 2 was theatrically released in the United States on February 10, 2017, but do not explicitly confirm that it was released exclusively or primarily at AMC Theatres. While it mentions that the film was released in Los Angeles and New York City besides AMC Theatres, this does not definitively confirm or disprove the claim that AMC Theatres was the primary or exclusive distributor. Therefore, the claim cannot be fully confirmed or disproven based on the provided information. Inconclusive.",
+        "r": "The explanation contains the following problematic sentence: \"the film was released in Los Angeles and New York City besides AMC Theatres, this does not definitively confirm or disprove the claim that AMC Theatres was the primary or exclusive distributor.\"\n\nThis sentence is unfaithful because it incorrectly attributes the release locations (Los Angeles and New York City) to the film being \"released besides AMC Theatres,\" which is factually inaccurate. The evidence states that these cities were \"where it was theatrically released besides AMC Theatres,\" implying that AMC Theatres was a different venue, not a distributor. The explanation misinterprets the evidence by suggesting that AMC Theatres is a distributor, when in fact, the evidence refers to AMC Theatres as a theater chain, not a distributor. This leads to a logical inaccuracy in the explanation. \n\nActional feedback: The explanation incorrectly interprets AMC Theatres as a distributor rather than a theater chain, leading to a logical inaccuracy. The sentence should be revised to accurately reflect that AMC Theatres is a theater chain, not a distributor, and that the evidence does not provide information about distribution."
+    },
+    {
+        "claim_id": 53,
+        "claim": "Emilio Estevez has never written anything.",
+        "true_label": "REFUTES",
+        "predicted_label": "REFUTES",
+        "qa_pairs": [
+            [
+                "Did Emilio Estevez write any scripts or books during his career?",
+                "Yes, Emilio Estevez wrote the script for The Way, a 2010 American drama film."
+            ]
+        ],
+        "verdict_int": 0,
+        "verdict_raw": "The question-answer pair directly contradicts the claim that Emilio Estevez has never written anything, as it confirms he wrote the script for *The Way*. Therefore, the claim is false.  \nVerdict: False"
+    },
+    {
+        "claim_id": 54,
+        "claim": "Hugh Hefer was born May 9, 1926.",
+        "true_label": "REFUTES",
+        "predicted_label": "NOT ENOUGH INFO",
+        "qa_pairs": [
+            [
+                "What is the source of the information regarding Hugh Hefer's birth date?",
+                "question too specific"
+            ],
+            [
+                "When was Hugh Hefer's birth date verified?",
+                "question too specific"
+            ],
+            [
+                "Where was Hugh Hefer born?",
+                "question too specific"
+            ],
+            [
+                "Who was Hugh Hefer?",
+                "question too specific"
+            ],
+            [
+                "What is Hugh Hefer's birth date according to the claim?",
+                "question too specific"
+            ]
+        ],
+        "verdict_int": 2,
+        "verdict_raw": "The question-answer pairs do not provide any concrete information to confirm or disprove the claim about Hugh Hefer's birth date. All questions are deemed \"too specific,\" and no answers are given that either support or refute the claim. Therefore, the evidence is insufficient to determine the truthfulness of the claim. Inconclusive."
+    },
+    {
+        "claim_id": 55,
+        "claim": "Ronaldo Maczinski's birthday is May 11.",
+        "true_label": "REFUTES",
+        "predicted_label": "REFUTES",
+        "qa_pairs": [
+            [
+                "When was Ronaldo Maczinski actually born?",
+                "Answer: 11 September 1980."
+            ]
+        ],
+        "verdict_int": 0,
+        "verdict_raw": "The question-answer pair directly contradicts the claim that Ronaldo Maczinski's birthday is May 11, as the answer states he was born on 11 September 1980. Therefore, the claim is false.  \nVerdict: False",
+        "r": "The explanation is faithful to the claim and evidence. There are no weaknesses in the explanation that reduce its faithfulness to the claim/evidence. The explanation correctly identifies the contradiction between the claim and the answer in the Q/A pair, and appropriately concludes that the claim is false. The reasoning is logically accurate and directly supports the verdict."
+    },
+    {
+        "claim_id": 56,
+        "claim": "Matt Damon is not an actor.",
+        "true_label": "REFUTES",
+        "predicted_label": "REFUTES",
+        "qa_pairs": [
+            [
+                "Is Matt Damon recognized as an actor in the entertainment industry?",
+                "Answer: Yes."
+            ]
+        ],
+        "verdict_int": 0,
+        "verdict_raw": "The question-answer pair directly addresses the claim by confirming that Matt Damon is recognized as an actor in the entertainment industry. This directly contradicts the claim that Matt Damon is not an actor. Therefore, the claim is false. \n\nVerdict: False",
+        "r": "- misrepresented factual details: The explanation assumes that the claim \"Matt Damon is not an actor\" is false based on the question-answer pair, but it does not provide any evidence beyond the question-answer pair to support this conclusion. The explanation relies on the answer to the question rather than independent verification of Matt Damon's status as an actor.\n\n- logic/reasoning inconsistencies: The explanation concludes that the claim is false based on the answer to a specific question, but it does not logically establish that the answer is definitive or that the claim is necessarily false without further context or evidence.\n\n- inadequate justification: The explanation does not provide any external or additional evidence to support the conclusion that the claim is false, other than the answer to the question itself. This makes the reasoning insufficient to determine the truth value of the original claim."
+    },
+    {
+        "claim_id": 57,
+        "claim": "Royal Rumble (2002) was produced by nobody.",
+        "true_label": "REFUTES",
+        "predicted_label": "REFUTES",
+        "qa_pairs": [
+            [
+                "Who was responsible for producing the 2002 Royal Rumble event?",
+                "The World Wrestling Federation (WWF) was responsible for producing the 2002 Royal Rumble event."
+            ]
+        ],
+        "verdict_int": 0,
+        "verdict_raw": "The question-answer pair directly addresses the claim by stating that the World Wrestling Federation (WWF) was responsible for producing the 2002 Royal Rumble event, which contradicts the claim that it was produced by nobody. Therefore, the claim is false.  \nVerdict: False"
+    },
+    {
+        "claim_id": 58,
+        "claim": "Tequila is made from a plant primarily found around the woods.",
+        "true_label": "REFUTES",
+        "predicted_label": "REFUTES",
+        "qa_pairs": [
+            [
+                "What plant is tequila primarily made from, and where is it typically found?",
+                "Tequila is primarily made from the blue agave plant, which is typically found in the state of Jalisco, Mexico."
+            ]
+        ],
+        "verdict_int": 0,
+        "verdict_raw": "The question-answer pair directly addresses the claim by specifying that tequila is made from the blue agave plant, which is typically found in Jalisco, Mexico. This confirms that the plant is not primarily found around general woods but in a specific region. Therefore, the claim is false.  \nVerdict: False",
+        "r": "- misrepresented factual details: The explanation refers to \"general woods\" in the claim but does not explicitly state that the claim misrepresents the plant's typical habitat. The explanation correctly identifies Jalisco as the region where blue agave is found, but it does not directly address the misrepresentation of \"woods\" as a general term.  \n\n- introduced/misrepresented events not in evidence: The explanation does not introduce any events not present in the evidence. It correctly focuses on the geographical location of the blue agave plant.  \n\n- introduced/misrepresented noun phrases altering meaning: The explanation does not alter the meaning of noun phrases from the evidence. It correctly identifies \"blue agave\" and \"Jalisco, Mexico\" as the specific plant and region.  \n\n- logic/reasoning inconsistencies: There are no logic or reasoning inconsistencies in the explanation. The reasoning flows logically from the evidence provided.  \n\n- irrelevant or unsupported information: The explanation does not include any irrelevant or unsupported information. It directly addresses the claim and provides a factual response based on the evidence.  \n\n- inadequate justification: The explanation provides a sufficient justification by directly addressing the claim and citing the specific plant and region, thereby refuting the claim that the plant is primarily found around \"woods.\""
+    },
+    {
+        "claim_id": 59,
+        "claim": "Hayden Panetierre has not yet acted on TV.",
+        "true_label": "REFUTES",
+        "predicted_label": "NOT ENOUGH INFO",
+        "qa_pairs": [
+            [
+                "Has Hayden Panetierre appeared in any television roles to date?",
+                "question too specific"
+            ],
+            [
+                "Have there been any television roles offered to Hayden Panetierre that she has declined?",
+                "question too specific"
+            ],
+            [
+                "Have any television roles been confirmed for Hayden Panetierre in the near future?",
+                "question too specific"
+            ],
+            [
+                "Have any television roles been confirmed for Hayden Panetierre in the near future?",
+                "question too specific"
+            ],
+            [
+                "Have any television roles been confirmed for Hayden Panetierre in the near future?",
+                "question too specific"
+            ]
+        ],
+        "verdict_int": 2,
+        "verdict_raw": "The question-answer pairs do not provide sufficient information to confirm or disprove the claim that Hayden Panetierre has not yet acted on TV. All the questions are deemed \"too specific,\" and no direct answers are given regarding her television acting career. Therefore, the claim remains unverified based on the provided information. Inconclusive."
+    },
+    {
+        "claim_id": 60,
+        "claim": "Pawn Sacrifice stars Tobey Maguire as Boris Spassky.",
+        "true_label": "REFUTES",
+        "predicted_label": "REFUTES",
+        "qa_pairs": [
+            [
+                "Who played the role of Boris Spassky in the film \"Pawn Sacrifice\"?",
+                "Liev Schreiber played the role of Boris Spassky in the film \"Pawn Sacrifice\"."
+            ]
+        ],
+        "verdict_int": 0,
+        "verdict_raw": "The question-answer pair directly contradicts the claim by identifying Liev Schreiber, not Tobey Maguire, as the actor who played Boris Spassky in \"Pawn Sacrifice.\" Therefore, the claim is false.  \nVerdict: False"
+    },
+    {
+        "claim_id": 61,
+        "claim": "Aaron Carter's only middle name is Jeff.",
+        "true_label": "REFUTES",
+        "predicted_label": "NOT ENOUGH INFO",
+        "qa_pairs": [
+            [
+                "What is the source of the information stating that Aaron Carter's only middle name is Jeff?",
+                "question too specific"
+            ],
+            [
+                "What is Aaron Carter's full name?",
+                "The provided sources do not mention Aaron Carter's full name."
+            ],
+            [
+                "What is the basis for asserting that Aaron Carter's only middle name is Jeff?",
+                "question too specific"
+            ],
+            [
+                "What evidence supports the assertion that Aaron Carter's only middle name is Jeff?",
+                "question too specific"
+            ],
+            [
+                "What is Aaron Carter's known middle name?",
+                "question too specific"
+            ]
+        ],
+        "verdict_int": 2,
+        "verdict_raw": "The question-answer pairs do not provide sufficient information to confirm or disprove the claim that Aaron Carter's only middle name is Jeff. None of the answers directly address the claim, and several questions are deemed \"too specific\" or lack relevant information. Therefore, the claim remains unverified based on the given data. Inconclusive."
+    },
+    {
+        "claim_id": 62,
+        "claim": "Saskatchewan is bordered on the west by Edmonton.",
+        "true_label": "REFUTES",
+        "predicted_label": "REFUTES",
+        "qa_pairs": [
+            [
+                "What is the western border of Saskatchewan?",
+                "The western border of Saskatchewan is Manitoba."
+            ]
+        ],
+        "verdict_int": 0,
+        "verdict_raw": "The question-answer pair directly contradicts the claim by stating that the western border of Saskatchewan is Manitoba, not Edmonton. Therefore, the claim is false.  \nVerdict: False"
+    },
+    {
+        "claim_id": 63,
+        "claim": "Big Boi has yet to create music.",
+        "true_label": "REFUTES",
+        "predicted_label": "REFUTES",
+        "qa_pairs": [
+            [
+                "Is the statement accurate that Big Boi has not released any music?",
+                "Answer: No, the statement is not accurate. Big Boi (also known as Benjamin Bozeman) is a rapper and producer who has released numerous music projects, including albums and mixtapes."
+            ]
+        ],
+        "verdict_int": 0,
+        "verdict_raw": "The question-answer pair directly addresses the claim by stating that Big Boi has released numerous music projects, thereby disproving the claim that he has yet to create music. The answer clearly contradicts the assertion in the claim. \n\nFalse.",
+        "r": "The explanation is unfaithful to the claim and evidence. The sentence \"The question-answer pair directly addresses the claim by stating that Big Boi has released numerous music projects, thereby disproving the claim that he has yet to create music.\" is factually inaccurate. The evidence provided in the Q/A pair does not state that Big Boi has \"released numerous music projects,\" but rather that he has \"released numerous music projects, including albums and mixtapes.\" The explanation incorrectly generalizes this specific information without accurately reflecting the content of the evidence. \n\nAdditionally, the sentence \"thereby disproving the claim that he has yet to create music\" is logically inaccurate because the evidence only addresses whether he has released music, not whether he has \"created\" music. The explanation conflates \"released\" with \"created,\" which is a logical misstep. \n\nActional feedback: The explanation should more accurately reflect the specific content of the evidence and avoid conflating \"released\" with \"created.\""
+    },
+    {
+        "claim_id": 64,
+        "claim": "Gustave Eiffel has yet to retire from engineering.",
+        "true_label": "REFUTES",
+        "predicted_label": "NOT ENOUGH INFO",
+        "qa_pairs": [
+            [
+                "When did Gustave Eiffel retire from engineering?",
+                "Gustave Eiffel retired from engineering after his contributions to the Eiffel Tower and the Statue of Liberty, but the exact date of his retirement is not specified in the provided sources."
+            ],
+            [
+                "What was Gustave Eiffel's role in the construction of the Statue of Liberty?",
+                "Gustave Eiffel contributed to the construction of the Statue of Liberty by designing the internal structure of the statue's framework."
+            ],
+            [
+                "What was Gustave Eiffel's role in the construction of the Eiffel Tower?",
+                "Gustave Eiffel was the designer of the Eiffel Tower."
+            ],
+            [
+                "What is the current status of Gustave Eiffel's retirement from engineering?",
+                "question too specific"
+            ],
+            [
+                "When did Gustave Eiffel retire from engineering?",
+                "Gustave Eiffel retired from engineering after his contributions to the construction of the Eiffel Tower and the Statue of Liberty, but the exact date of his retirement is not specified in the provided sources."
+            ]
+        ],
+        "verdict_int": 2,
+        "verdict_raw": "The question-answer pairs do not fully confirm or disprove the claim that Gustave Eiffel has yet to retire from engineering. The provided information states that Gustave Eiffel retired from engineering after his contributions to the Eiffel Tower and the Statue of Liberty, but the exact date of his retirement is unspecified. Additionally, one answer indicates that the current status of his retirement is too specific to answer, suggesting a lack of available information. Since the claim refers to his current status, and the sources do not provide a definitive answer, the question-answer pairs are insufficient in explaining the claim. Inconclusive.",
+        "r": "- misrepresented factual details: The explanation misrepresents the content of the question-answer pairs by implying that the sources state Gustave Eiffel \"retired from engineering,\" when the sources only state that he \"retired from engineering after his contributions\" without confirming that he has \"yet to retire\" as claimed. The explanation conflates the retirement date being unspecified with the claim that he has \"yet to retire.\"\n\n- introduced/misrepresented events not in evidence: The explanation introduces the idea that the current status of his retirement is \"too specific to answer,\" which is a direct quote from the question-answer pairs. However, it misinterprets this as suggesting a lack of available information, rather than acknowledging that the question is too specific for an answer.\n\n- logic/reasoning inconsistencies: The explanation concludes that the question-answer pairs are \"insufficient in explaining the claim\" because the sources do not provide a definitive answer. However, the claim is about whether he \"has yet to retire,\" and the sources do not confirm or deny this, making the conclusion logically consistent with the evidence.\n\n- irrelevant or unsupported information: The explanation does not address the specific claim that Gustave Eiffel \"has yet to retire from engineering\" directly. Instead, it focuses on the lack of a specific retirement date, which is not the same as the current status of his retirement."
+    },
+    {
+        "claim_id": 65,
+        "claim": "Peter Cetera was entirely absent from the album Chicago Transit Authority.",
+        "true_label": "REFUTES",
+        "predicted_label": "REFUTES",
+        "qa_pairs": [
+            [
+                "Did Peter Cetera contribute to any tracks on the album Chicago Transit Authority?",
+                "Yes, Peter Cetera contributed to tracks on the album *Chicago Transit Authority* by providing lead vocals on the song \"Questions 67 and 68.\""
+            ]
+        ],
+        "verdict_int": 0,
+        "verdict_raw": "The question-answer pair directly contradicts the claim by confirming that Peter Cetera did contribute to the album *Chicago Transit Authority*, specifically by providing lead vocals on the song \"Questions 67 and 68.\" Therefore, the claim that Peter Cetera was entirely absent from the album is false. False.",
+        "r": "The explanation does not contain any errors in terms of the labels provided. The explanation correctly identifies the contradiction between the claim and the question-answer pair, and it accurately states that the claim is false based on the evidence. There is no misrepresented factual detail, no introduction of events not in evidence, no misrepresentation of noun phrases, no logic or reasoning inconsistencies, no irrelevant or unsupported information, and no inadequate justification. The explanation is consistent with the evidence and properly addresses the contradiction."
+    },
+    {
+        "claim_id": 66,
+        "claim": "The Voice brought in Jennifer Hudson as a new coach in the thirteenth season in 2009.",
+        "true_label": "REFUTES",
+        "predicted_label": "REFUTES",
+        "qa_pairs": [
+            [
+                "When did Jennifer Hudson join The Voice as a coach?",
+                "Jennifer Hudson joined The Voice as a coach in the thirteenth season, which premiered on October 18, 2016."
+            ]
+        ],
+        "verdict_int": 0,
+        "verdict_raw": "The question-answer pair confirms that Jennifer Hudson joined *The Voice* as a coach in the thirteenth season, which premiered in 2016, not 2009 as claimed. Therefore, the claim is false.  \nVerdict: False"
+    },
+    {
+        "claim_id": 67,
+        "claim": "We Found Love is a romance novel.",
+        "true_label": "REFUTES",
+        "predicted_label": "REFUTES",
+        "qa_pairs": [
+            [
+                "Is \"We Found Love\" a romance novel or a different type of literary work?",
+                "question too specific"
+            ],
+            [
+                "What genre does \"We Found Love\" belong to?",
+                "question too specific"
+            ],
+            [
+                "What is the title of the work in question?",
+                "The title of the work in question is \"How Do You Spell God?\""
+            ],
+            [
+                "What is the correct title of the work being referred to?",
+                "question too specific"
+            ],
+            [
+                "What is the correct title of the work being referred to?",
+                "question too specific"
+            ]
+        ],
+        "verdict_int": 0,
+        "verdict_raw": "The question-answer pairs do not fully confirm or disprove the claim that \"We Found Love\" is a romance novel. While some questions are deemed too specific, one answer reveals that the correct title of the work is \"How Do You Spell God?\" which directly contradicts the claim's title. Since the claim refers to a different work, the question-answer pairs disprove the claim. False."
+    },
+    {
+        "claim_id": 68,
+        "claim": "Stars Dance is a podcast.",
+        "true_label": "REFUTES",
+        "predicted_label": "NOT ENOUGH INFO",
+        "qa_pairs": [
+            [
+                "Is Stars Dance a podcast?",
+                "question too specific"
+            ],
+            [
+                "What is the subject matter of Stars Dance?",
+                "question too specific"
+            ],
+            [
+                "When was Stars Dance first released?",
+                "question too specific"
+            ],
+            [
+                "Who hosts Stars Dance?",
+                "The question is too specific."
+            ],
+            [
+                "What type of content does Stars Dance feature?",
+                "question too specific"
+            ]
+        ],
+        "verdict_int": 2,
+        "verdict_raw": "The question-answer pairs do not provide any direct confirmation or denial of the claim that \"Stars Dance is a podcast.\" Instead, all the questions are labeled as \"too specific,\" suggesting that the available information is insufficient to address them. Since there is no explicit confirmation or refutation of the claim, the question-answer pairs are inadequate in evaluating the truthfulness of the statement. Inconclusive."
+    },
+    {
+        "claim_id": 69,
+        "claim": "Boris Karloff has avoided the film industry entirely.",
+        "true_label": "REFUTES",
+        "predicted_label": "REFUTES",
+        "qa_pairs": [
+            [
+                "Did Boris Karloff completely withdraw from participating in any film projects after a certain point in his career?",
+                "No, Boris Karloff did not completely withdraw from participating in film projects after a certain point in his career. He continued to act in films and television into the 1960s and beyond, including working with Roger Corman's American International Pictures and appearing in the 1971 film *The Incredible Invasion*."
+            ]
+        ],
+        "verdict_int": 0,
+        "verdict_raw": "The question-answer pair directly refutes the claim that Boris Karloff has avoided the film industry entirely, as it states he continued to act in films and television into the 1960s and beyond. Therefore, the claim is false. False."
+    },
+    {
+        "claim_id": 70,
+        "claim": "Nick Jonas released his third studio album in 2017.",
+        "true_label": "REFUTES",
+        "predicted_label": "REFUTES",
+        "qa_pairs": [
+            [
+                "When was Nick Jonas' third studio album actually released?",
+                "Nick Jonas' third studio album, Last Year Was Complicated, was released on June 10, 2016."
+            ]
+        ],
+        "verdict_int": 0,
+        "verdict_raw": "The question-answer pair directly contradicts the claim by stating that Nick Jonas' third studio album, \"Last Year Was Complicated,\" was released on June 10, 2016, not in 2017. Therefore, the claim is false.  \nVerdict: False"
+    },
+    {
+        "claim_id": 71,
+        "claim": "Anonymous is a local group.",
+        "true_label": "REFUTES",
+        "predicted_label": "NOT ENOUGH INFO",
+        "qa_pairs": [
+            [
+                "Who is considered part of the group referred to as \"Anonymous\"?",
+                "The group referred to as \"Anonymous\" includes internet users who participate in collective online activities, often characterized by a commitment to anonymity and a focus on activism, hacking, and exposing corruption. The group is decentralized and consists of individuals who may not be formally affiliated but share a common ideology and operational style."
+            ],
+            [
+                "What is the geographic scope of the group referred to as \"Anonymous\"?",
+                "question too specific"
+            ]
+        ],
+        "verdict_int": 2,
+        "verdict_raw": "The question-answer pairs partially address the claim that \"Anonymous is a local group.\" The first answer explains that Anonymous is a decentralized group of individuals with a shared ideology, which implies it is not confined to a single location. The second answer, while stating \"question too specific,\" suggests that the geographic scope was not provided, leaving ambiguity. Since the information provided does not confirm or fully disprove the claim about being a local group, the verdict is Inconclusive."
+    },
+    {
+        "claim_id": 72,
+        "claim": "Lauren Graham did not receive two Screen Actors Guild Award nominations.",
+        "true_label": "REFUTES",
+        "predicted_label": "NOT ENOUGH INFO",
+        "qa_pairs": [
+            [
+                "Did Lauren Graham receive two Screen Actors Guild Award nominations?",
+                "question too specific"
+            ],
+            [
+                "Did Lauren Graham receive two Screen Actors Guild Award nominations?",
+                "question too specific"
+            ],
+            [
+                "How many Screen Actors Guild Award nominations has Lauren Graham received?",
+                "question too specific"
+            ],
+            [
+                "What is the exact number of Screen Actors Guild Award nominations Lauren Graham has received?",
+                "question too specific"
+            ],
+            [
+                "What organizations has Lauren Graham been nominated by for awards?",
+                "Lauren Graham has been nominated by the Screen Actors Guild, the Golden Globe Awards, and the Satellite Awards."
+            ]
+        ],
+        "verdict_int": 2,
+        "verdict_raw": "The question-answer pairs do not provide specific information about the exact number of Screen Actors Guild Award nominations Lauren Graham has received, instead labeling the questions as \"too specific.\" While one answer mentions that she has been nominated by the Screen Actors Guild, it does not confirm or deny whether she received two nominations. Therefore, the claim cannot be fully confirmed or disproven based on the provided information. Inconclusive."
+    },
+    {
+        "claim_id": 73,
+        "claim": "Jim Carrey only played the character Colonel Stars and Stripes in Kick-Ass 1.",
+        "true_label": "REFUTES",
+        "predicted_label": "NOT ENOUGH INFO",
+        "qa_pairs": [
+            [
+                "Who else played the character Colonel Stars and Stripes in Kick-Ass 1 besides Jim Carrey?",
+                "question too specific"
+            ],
+            [
+                "Who played the character Colonel Stars and Stripes in Kick-Ass 1?",
+                "question too specific"
+            ],
+            [
+                "Who portrayed Colonel Stars and Stripes in Kick-Ass 1?",
+                "question too specific"
+            ],
+            [
+                "Who was the original actor for the character Colonel Stars and Stripes in Kick-Ass 1?",
+                "question too specific"
+            ],
+            [
+                "Who was the actor that replaced Jim Carrey for the character Colonel Stars and Stripes in Kick-Ass 1?",
+                "question too specific"
+            ]
+        ],
+        "verdict_int": 2,
+        "verdict_raw": "All the question-answer pairs are deemed \"question too specific,\" indicating that the provided information does not address the claim directly. None of the answers confirm or deny whether Jim Carrey only played the character Colonel Stars and Stripes in Kick-Ass 1. The lack of specific answers means the claim cannot be verified or refuted based on the given pairs. Inconclusive."
+    },
+    {
+        "claim_id": 74,
+        "claim": "Gunday was written by Aditya Chopra.",
+        "true_label": "REFUTES",
+        "predicted_label": "NOT ENOUGH INFO",
+        "qa_pairs": [
+            [
+                "Who is the actual author of the book \"Gunday\"?",
+                "question too specific"
+            ],
+            [
+                "What is the full name of the author of the book \"Gunday\"?",
+                "question too specific"
+            ],
+            [
+                "When was the book \"Gunday\" written?",
+                "question too specific"
+            ],
+            [
+                "What genre does the book \"Gunday\" belong to?",
+                "question too specific"
+            ],
+            [
+                "What is the correct author of the book \"Gunday\"?",
+                "question too specific"
+            ]
+        ],
+        "verdict_int": 2,
+        "verdict_raw": "The question-answer pairs do not provide any direct information about the author of \"Gunday,\" as all questions are labeled as \"question too specific,\" indicating that the provided answers do not address them. Therefore, the claim that \"Gunday was written by Aditya Chopra\" cannot be confirmed or refuted based on the given pairs. Inconclusive."
+    },
+    {
+        "claim_id": 75,
+        "claim": "Shia LaBeouf was not in a American political thriller movie.",
+        "true_label": "REFUTES",
+        "predicted_label": "NOT ENOUGH INFO",
+        "qa_pairs": [
+            [
+                "Was Shia LaBeouf in an American political thriller movie?",
+                "question too specific"
+            ],
+            [
+                "What is the specific aspect of Shia LaBeouf's filmography that the question is addressing?",
+                "The specific aspect of Shia LaBeouf's filmography addressed is his direction of the short film \"Maniac.\""
+            ],
+            [
+                "What is the specific aspect of Shia LaBeouf's filmography that the question is addressing?",
+                "The specific aspect of Shia LaBeouf's filmography addressed is his role as a director and co-writer of the short film \"Maniac.\""
+            ],
+            [
+                "What is the specific aspect of Shia LaBeouf's filmography that the question is addressing?",
+                "The specific aspect of Shia LaBeouf's filmography addressed is his direction of the short film \"Maniac.\""
+            ],
+            [
+                "What is the specific aspect of Shia LaBeouf's filmography that the question is addressing?",
+                "The specific aspect of Shia LaBeouf's filmography addressed in the question is his role as a director, specifically his short film \"Maniac.\""
+            ]
+        ],
+        "verdict_int": 2,
+        "verdict_raw": "The question-answer pairs do not provide direct confirmation or denial of whether Shia LaBeouf was in an American political thriller movie. Instead, they focus on discussing his role as a director of the short film \"Maniac,\" which is unrelated to the claim about his acting career in political thriller movies. Since the pairs fail to address the claim directly or provide sufficient information to confirm or disprove it, the verdict is Inconclusive."
+    },
+    {
+        "claim_id": 76,
+        "claim": "Pierce Brosnan is absent from \"Mamma Mia!\".",
+        "true_label": "REFUTES",
+        "predicted_label": "REFUTES",
+        "qa_pairs": [
+            [
+                "Is Pierce Brosnan present in the film \"Mamma Mia!\"?",
+                "Yes."
+            ]
+        ],
+        "verdict_int": 0,
+        "verdict_raw": "The question-answer pair directly contradicts the claim by stating that Pierce Brosnan is present in the film \"Mamma Mia!\" Therefore, the claim is false. \n\nFalse."
+    },
+    {
+        "claim_id": 77,
+        "claim": "Independence Day: Resurgence is a drama film.",
+        "true_label": "REFUTES",
+        "predicted_label": "REFUTES",
+        "qa_pairs": [
+            [
+                "What genre does Independence Day: Resurgence belong to?",
+                "The question is too specific."
+            ],
+            [
+                "What type of film is Independence Day: Resurgence?",
+                "Answer: Science fiction action film."
+            ]
+        ],
+        "verdict_int": 0,
+        "verdict_raw": "The claim that \"Independence Day: Resurgence is a drama film\" is false. The question-answer pairs provide information stating that the film is a \"science fiction action film,\" which directly contradicts the claim of it being a drama film. Therefore, the claim is disproven.  \nVerdict: False",
+        "r": "The explanation is faithful to the claim and evidence provided. There are no weaknesses in the explanation that reduce its faithfulness to the claim or the evidence. The explanation correctly identifies that the claim is false by referencing the question-answer pairs, which specify the film as a \"science fiction action film.\" The reasoning is logically accurate and consistent with the provided evidence."
+    },
+    {
+        "claim_id": 78,
+        "claim": "Warren Harding died of pneumonia.",
+        "true_label": "REFUTES",
+        "predicted_label": "NOT ENOUGH INFO",
+        "qa_pairs": [
+            [
+                "What is the exact cause of death attributed to Warren Harding?",
+                "question too specific"
+            ],
+            [
+                "What was the medical condition Warren Harding was suffering from before his death?",
+                "question too specific"
+            ],
+            [
+                "What medical procedures were performed on Warren Harding before his death?",
+                "question too specific"
+            ],
+            [
+                "What evidence supports the conclusion that Warren Harding's death was caused by pneumonia?",
+                "question too specific"
+            ],
+            [
+                "What is the historical consensus on the cause of Warren Harding's death?",
+                "The historical consensus is that Warren Harding's death was caused by complications from stomach cancer, though some theories suggest his personal physician, Dr. C. E. Sawyer, may have played a role."
+            ]
+        ],
+        "verdict_int": 2,
+        "verdict_raw": "The question-answer pairs do not fully confirm or disprove the claim that Warren Harding died of pneumonia. While the historical consensus mentioned in the answer suggests that Harding's death was caused by complications from stomach cancer, the claim specifically attributes his death to pneumonia. The answer does not directly address whether pneumonia was a contributing factor or the primary cause, leaving the claim's accuracy unresolved. Inconclusive."
+    },
+    {
+        "claim_id": 79,
+        "claim": "Friendship has been studied only in sociology.",
+        "true_label": "REFUTES",
+        "predicted_label": "REFUTES",
+        "qa_pairs": [
+            [
+                "Who conducted the studies on friendship mentioned in the statement?",
+                "question too specific"
+            ],
+            [
+                "What disciplines have studied friendship besides sociology?",
+                "Communication, social psychology, anthropology, and philosophy."
+            ]
+        ],
+        "verdict_int": 0,
+        "verdict_raw": "The claim that \"Friendship has been studied only in sociology\" is disproven by the question-answer pair stating that \"Communication, social psychology, anthropology, and philosophy\" have also studied friendship. This directly contradicts the claim by showing that friendship has been studied in multiple disciplines beyond sociology. \n\nFalse."
+    },
+    {
+        "claim_id": 80,
+        "claim": "Bruce Willis chose to do anything but be a singer.",
+        "true_label": "REFUTES",
+        "predicted_label": "NOT ENOUGH INFO",
+        "qa_pairs": [
+            [
+                "What evidence supports the assertion that Bruce Willis avoided a career in singing?",
+                "question too specific"
+            ],
+            [
+                "When did Bruce Willis make a decision to avoid a career in singing?",
+                "question too specific"
+            ],
+            [
+                "Why did Bruce Willis choose not to pursue a career in singing?",
+                "question too specific"
+            ],
+            [
+                "What aspects of Bruce Willis's career indicate his avoidance of singing?",
+                "question too specific"
+            ],
+            [
+                "How did Bruce Willis's career path reflect his avoidance of singing?",
+                "question too specific"
+            ]
+        ],
+        "verdict_int": 2,
+        "verdict_raw": "The question-answer pairs are all too specific and do not provide any concrete evidence or information to confirm or disprove the claim that Bruce Willis chose to do anything but be a singer. None of the answers address the claim directly or offer relevant details about Bruce Willis's career choices. Therefore, the question-answer pairs are insufficient in explaining the claim.\n\nInconclusive"
+    },
+    {
+        "claim_id": 81,
+        "claim": "Lions are the smallest living cat.",
+        "true_label": "REFUTES",
+        "predicted_label": "REFUTES",
+        "qa_pairs": [
+            [
+                "Who is considered the smallest living cat according to the statement?",
+                "Heed is considered the smallest living cat according to the statement."
+            ],
+            [
+                "What is the smallest living cat according to the claim?",
+                "The smallest living cat according to the claim is Heed, a munchkin cat."
+            ]
+        ],
+        "verdict_int": 0,
+        "verdict_raw": "The question-answer pairs directly state that Heed is considered the smallest living cat, which contradicts the claim that lions are the smallest living cat. Therefore, the claim is false.  \nVerdict: False"
+    },
+    {
+        "claim_id": 82,
+        "claim": "The Place Beyond the Pines is an American crime comedy film.",
+        "true_label": "REFUTES",
+        "predicted_label": "REFUTES",
+        "qa_pairs": [
+            [
+                "What genre does The Place Beyond the Pines belong to?",
+                "question too specific"
+            ],
+            [
+                "What type of film is The Place Beyond the Pines?",
+                "The Place Beyond the Pines is a crime drama film."
+            ],
+            [
+                "What is the correct genre classification of The Place Beyond the Pines?",
+                "question too specific"
+            ],
+            [
+                "What year was The Place Beyond the Pines released?",
+                "2012"
+            ]
+        ],
+        "verdict_int": 0,
+        "verdict_raw": "The question-answer pairs provide information that directly addresses the claim. The answer \"The Place Beyond the Pines is a crime drama film\" contradicts the claim that it is a \"crime comedy\" film, indicating the claim is false. While other questions provide additional context, they do not alter this conclusion. \n\nFalse."
+    },
+    {
+        "claim_id": 83,
+        "claim": "H. H. Holmes's full name was H. H. Holmes Bryant Johnson.",
+        "true_label": "REFUTES",
+        "predicted_label": "REFUTES",
+        "qa_pairs": [
+            [
+                "What is the correct full name of H. H. Holmes?",
+                "The correct full name of H. H. Holmes is Herman Webster Mudgett."
+            ]
+        ],
+        "verdict_int": 0,
+        "verdict_raw": "The question-answer pair directly contradicts the claim by stating that the correct full name of H. H. Holmes is Herman Webster Mudgett, not H. H. Holmes Bryant Johnson. Therefore, the claim is false.  \nVerdict: False"
+    },
+    {
+        "claim_id": 84,
+        "claim": "To the Bone is a horror film.",
+        "true_label": "REFUTES",
+        "predicted_label": "NOT ENOUGH INFO",
+        "qa_pairs": [
+            [
+                "Is To the Bone classified as a horror film or a different genre?",
+                "question too specific"
+            ],
+            [
+                "What genre is To the Bone primarily categorized under?",
+                "question too specific"
+            ],
+            [
+                "What is the primary genre of \"To the Bone\"?",
+                "question too specific"
+            ],
+            [
+                "What is the basis for classifying \"To the Bone\" as a horror film?",
+                "The basis for classifying \"To the Bone\" as a horror film is not addressed in the provided sources."
+            ],
+            [
+                "What specific elements or themes in \"To the Bone\" contribute to its classification as a horror film?",
+                "question too specific"
+            ]
+        ],
+        "verdict_int": 2,
+        "verdict_raw": "The question-answer pairs do not provide sufficient information to confirm or disprove the claim that \"To the Bone\" is a horror film. While some questions directly ask about the film's genre or classification, the answers are either too vague or not addressed at all. Without specific details about the film's content, themes, or genre classification, it is impossible to determine the truthfulness of the claim. Inconclusive."
+    },
+    {
+        "claim_id": 85,
+        "claim": "Crystal Palace F.C. does not play in Selhurst Park.",
+        "true_label": "REFUTES",
+        "predicted_label": "REFUTES",
+        "qa_pairs": [
+            [
+                "Where does Crystal Palace F.C. play its home matches?",
+                "Crystal Palace F.C. plays its home matches at Selhurst Park."
+            ]
+        ],
+        "verdict_int": 0,
+        "verdict_raw": "The question-answer pair directly addresses the claim by stating that Crystal Palace F.C. plays its home matches at Selhurst Park, which directly contradicts the claim that Crystal Palace F.C. does not play in Selhurst Park. Therefore, the claim is false.  \nVerdict: False"
+    },
+    {
+        "claim_id": 86,
+        "claim": "Matt Damon has not received Emmy Award nominations.",
+        "true_label": "REFUTES",
+        "predicted_label": "REFUTES",
+        "qa_pairs": [
+            [
+                "Has Matt Damon been nominated for an Emmy Award?",
+                "Yes."
+            ]
+        ],
+        "verdict_int": 0,
+        "verdict_raw": "The question-answer pair directly addresses the claim by stating that Matt Damon has been nominated for an Emmy Award, which contradicts the claim that he has not received any Emmy Award nominations. Therefore, the claim is false.  \nVerdict: False"
+    },
+    {
+        "claim_id": 87,
+        "claim": "Red Velvet (band) is only a ventriloquist act formed by a British software company.",
+        "true_label": "REFUTES",
+        "predicted_label": "NOT ENOUGH INFO",
+        "qa_pairs": [
+            [
+                "Who formed Red Velvet (band) according to the statement?",
+                "The question is too specific."
+            ],
+            [
+                "What is the origin of Red Velvet (band) as stated in the claim?",
+                "The origin of Red Velvet (band) is not explicitly stated in the provided information."
+            ]
+        ],
+        "verdict_int": 2,
+        "verdict_raw": "The question-answer pairs do not provide sufficient information to confirm or disprove the claim. The claim states that Red Velvet (band) is only a ventriloquist act formed by a British software company, but the answers indicate that the origin and formation details are not explicitly stated. Therefore, the question-answer pairs are insufficient in explaining the claim. Inconclusive."
+    },
+    {
+        "claim_id": 88,
+        "claim": "Tom Cruise has not been nominated for Academy Awards.",
+        "true_label": "REFUTES",
+        "predicted_label": "REFUTES",
+        "qa_pairs": [
+            [
+                "Has Tom Cruise been nominated for any Academy Awards?",
+                "Yes, Tom Cruise has been nominated for Academy Awards. He was nominated for Best Picture and Best Actor for his role in \"Jerry Maguire.\""
+            ]
+        ],
+        "verdict_int": 0,
+        "verdict_raw": "The question-answer pair directly contradicts the claim by stating that Tom Cruise has been nominated for Academy Awards, specifically for \"Jerry Maguire.\" Therefore, the claim is false.  \nVerdict: False"
+    },
+    {
+        "claim_id": 89,
+        "claim": "The Nashville Songwriters Association International is a Louisiana based trade organization.",
+        "true_label": "REFUTES",
+        "predicted_label": "REFUTES",
+        "qa_pairs": [
+            [
+                "Is the Nashville Songwriters Association International based in Louisiana?",
+                "No. The Nashville Songwriters Association International is not based in Louisiana. James Ervan \"Jim\" Parker is associated with the Huntsville, Alabama sub-chapter of the Nashville Songwriters Association International, indicating that the association has a presence in Alabama, not Louisiana. The headquarters of the Nashville Songwriters Foundation, Inc., which is related but distinct from the Nashville Songwriters Association International, is in Nashville, Tennessee. There is no mention of the association being based in Louisiana."
+            ]
+        ],
+        "verdict_int": 0,
+        "verdict_raw": "The question-answer pair directly addresses the claim by stating that the Nashville Songwriters Association International is not based in Louisiana. It provides specific information indicating the association has a presence in Alabama and mentions the Nashville Songwriters Foundation, Inc., as a related but distinct entity based in Tennessee. There is no evidence or mention of the association being based in Louisiana. Therefore, the claim is disproven. False."
+    },
+    {
+        "claim_id": 90,
+        "claim": "Julie Christie avoided acting altogether.",
+        "true_label": "REFUTES",
+        "predicted_label": "NOT ENOUGH INFO",
+        "qa_pairs": [
+            [
+                "Did Julie Christie completely stop acting after a certain point in her career?",
+                "question too specific"
+            ],
+            [
+                "When did Julie Christie stop acting?",
+                "question too specific"
+            ],
+            [
+                "What evidence supports the assertion that Julie Christie avoided acting altogether?",
+                "question too specific"
+            ],
+            [
+                "What is the definition of \"avoided acting altogether\" in the context of Julie Christie's career?",
+                "question too specific"
+            ],
+            [
+                "What roles did Julie Christie portray in her acting career?",
+                "question too specific"
+            ]
+        ],
+        "verdict_int": 2,
+        "verdict_raw": "The question-answer pairs provided are all too specific and do not offer concrete information to confirm or disprove the claim that Julie Christie avoided acting altogether. None of the questions directly address the claim with relevant answers, and the responses given are not informative enough to evaluate the truthfulness of the statement. Therefore, the question-answer pairs are insufficient in explaining the claim.\n\nInconclusive"
+    },
+    {
+        "claim_id": 91,
+        "claim": "Steven Spielberg is not a screenwriter.",
+        "true_label": "REFUTES",
+        "predicted_label": "SUPPORTS",
+        "qa_pairs": [
+            [
+                "Is Steven Spielberg known to have written any screenplays?",
+                "No, Steven Spielberg is primarily known as a director, not a screenwriter. While he has directed numerous films, the provided sources do not indicate that he has written any screenplays."
+            ]
+        ],
+        "verdict_int": 1,
+        "verdict_raw": "The question-answer pair directly addresses the claim by stating that Steven Spielberg is not known to have written any screenplays, emphasizing his role as a director. This directly supports the claim that he is not a screenwriter. Therefore, the claim is confirmed by the provided information.\n\nTrue"
+    },
+    {
+        "claim_id": 92,
+        "claim": "Robert F. Kennedy began his political career as a mayor.",
+        "true_label": "REFUTES",
+        "predicted_label": "NOT ENOUGH INFO",
+        "qa_pairs": [
+            [
+                "When did Robert F. Kennedy start his political career as a mayor?",
+                "question too specific"
+            ],
+            [
+                "What position did Robert F. Kennedy hold before becoming a mayor?",
+                "Robert F. Kennedy held the position of Attorney General of the United States before becoming a mayor."
+            ],
+            [
+                "What was Robert F. Kennedy's first political position before becoming a mayor?",
+                "question too specific"
+            ],
+            [
+                "What was Robert F. Kennedy's first political position before becoming a mayor?",
+                "question too specific"
+            ],
+            [
+                "What was Robert F. Kennedy's first political position before becoming a mayor?",
+                "question too specific"
+            ]
+        ],
+        "verdict_int": 2,
+        "verdict_raw": "The question-answer pairs do not fully confirm or disprove the claim that Robert F. Kennedy began his political career as a mayor. While one answer states that he held the position of Attorney General of the United States before becoming a mayor, it does not directly address whether he began his political career as a mayor. Additionally, several questions are marked as \"question too specific,\" indicating a lack of detailed information about his early political roles. Therefore, the evidence is insufficient to determine the truthfulness of the claim. Inconclusive."
+    },
+    {
+        "claim_id": 93,
+        "claim": "Frank Sinatra is not an actor.",
+        "true_label": "REFUTES",
+        "predicted_label": "REFUTES",
+        "qa_pairs": [
+            [
+                "Is Frank Sinatra considered an actor?",
+                "Yes."
+            ]
+        ],
+        "verdict_int": 0,
+        "verdict_raw": "The question-answer pair directly addresses the claim by confirming that Frank Sinatra is considered an actor. This directly disproves the claim that Frank Sinatra is not an actor. Verdict: False."
+    },
+    {
+        "claim_id": 94,
+        "claim": "Shawn Michaels was a 2013 WWE Hall of Fame inductee.",
+        "true_label": "REFUTES",
+        "predicted_label": "NOT ENOUGH INFO",
+        "qa_pairs": [
+            [
+                "When was Shawn Michaels inducted into the WWE Hall of Fame?",
+                "question too specific"
+            ],
+            [
+                "Who was inducted into the WWE Hall of Fame in 2013?",
+                "question too specific"
+            ],
+            [
+                "What year was Shawn Michaels inducted into the WWE Hall of Fame?",
+                "question too specific"
+            ],
+            [
+                "What organization is referred to as the WWE Hall of Fame in the claim?",
+                "The WWE Hall of Fame is a hall of fame for professional wrestling personalities maintained by WWE."
+            ],
+            [
+                "What was Shawn Michaels' role or significance in the WWE Hall of Fame induction?",
+                "question too specific"
+            ]
+        ],
+        "verdict_int": 2,
+        "verdict_raw": "The question-answer pairs do not provide specific information confirming or denying the claim that Shawn Michaels was a 2013 WWE Hall of Fame inductee. While one answer explains what the WWE Hall of Fame is, it does not address the induction year or specific inductees. The other answers are either too specific or do not provide definitive information about Shawn Michaels' induction year. Therefore, the question-answer pairs are insufficient in explaining the claim. Inconclusive."
+    },
+    {
+        "claim_id": 95,
+        "claim": "There is only one style of the mandolin.",
+        "true_label": "REFUTES",
+        "predicted_label": "REFUTES",
+        "qa_pairs": [
+            [
+                "What are the different styles of the mandolin?",
+                "The different styles of the mandolin mentioned are the duo-style, trio-style, quartet-style, and bluegrass mandolin."
+            ]
+        ],
+        "verdict_int": 0,
+        "verdict_raw": "The question-answer pair directly contradicts the claim by listing multiple styles of the mandolin, including duo-style, trio-style, quartet-style, and bluegrass mandolin. This demonstrates that there are more than one style of the mandolin, thereby disproving the claim. False."
+    },
+    {
+        "claim_id": 96,
+        "claim": "Varun Dhawan isn't an actor.",
+        "true_label": "REFUTES",
+        "predicted_label": "REFUTES",
+        "qa_pairs": [
+            [
+                "Is Varun Dhawan considered an actor in the film industry?",
+                "Yes, Varun Dhawan is considered an actor in the film industry."
+            ]
+        ],
+        "verdict_int": 0,
+        "verdict_raw": "The question-answer pair directly addresses the claim by confirming that Varun Dhawan is considered an actor in the film industry, which directly contradicts the claim that he isn't an actor. Therefore, the claim is false. False."
+    },
+    {
+        "claim_id": 97,
+        "claim": "The People vs. Larry Flynt is an unproduced screenplay.",
+        "true_label": "REFUTES",
+        "predicted_label": "REFUTES",
+        "qa_pairs": [
+            [
+                "Is \"The People vs. Larry Flynt\" considered unproduced or has it been produced in any form?",
+                "Answer: \"The People vs. Larry Flynt\" has been produced; it is a 1996 American biographical drama film."
+            ]
+        ],
+        "verdict_int": 0,
+        "verdict_raw": "The question-answer pair directly addresses the claim by stating that \"The People vs. Larry Flynt\" has been produced as a 1996 film, thereby disproving the claim that it is an unproduced screenplay. \n\nFalse.",
+        "r": "The explanation contains the following errors:\n\n- **introduced/misrepresented events not in evidence**: The explanation states that the film is a \"1996 American biographical drama film,\" but the evidence only provides the answer that it has been produced as a film without specifying the year or genre. The explanation adds details not present in the evidence.\n\n- **introduced/misrepresented noun phrases altering meaning**: The explanation refers to the work as a \"film,\" while the original claim refers to it as a \"screenplay.\" The explanation alters the meaning by misrepresenting the nature of the work.\n\n- **inadequate justification**: The explanation does not adequately justify why the film being a \"1996 American biographical drama film\" disproves the claim that it is an \"unproduced screenplay.\" The justification is based on an assumption rather than a direct comparison of the terms used in the claim and the answer."
+    },
+    {
+        "claim_id": 98,
+        "claim": "Neil Young is not a singer-songwriter.",
+        "true_label": "REFUTES",
+        "predicted_label": "REFUTES",
+        "qa_pairs": [
+            [
+                "Is Neil Young considered a singer-songwriter?",
+                "Answer: Yes, Neil Young is considered a singer-songwriter."
+            ]
+        ],
+        "verdict_int": 0,
+        "verdict_raw": "The question-answer pair directly addresses the claim by confirming that Neil Young is considered a singer-songwriter. This directly contradicts the claim that Neil Young is not a singer-songwriter. Therefore, the claim is false.  \nVerdict: False"
+    },
+    {
+        "claim_id": 99,
+        "claim": "Led Zeppelin released an eponymous debut album in 1960.",
+        "true_label": "REFUTES",
+        "predicted_label": "REFUTES",
+        "qa_pairs": [
+            [
+                "When was Led Zeppelin's eponymous debut album actually released?",
+                "Led Zeppelin's eponymous debut album was released on 12 January 1969 in the United States and on 31 March 1969 in the United Kingdom."
+            ]
+        ],
+        "verdict_int": 0,
+        "verdict_raw": "The question-answer pair directly contradicts the claim by stating that Led Zeppelin's eponymous debut album was released in 1969, not 1960. Therefore, the claim is false. False."
+    }
+]
