@@ -774,8 +774,15 @@ class GroupedDebertaV2ForSequenceClassification(DebertaV2PreTrainedModel):
             if i == next_stopping_layer:
                 pooled_output = self.pooler(next_kv)
                 pooled_output = self.dropout(pooled_output)
-                logits = self.classifier(pooled_output).squeeze(-1)
-                reranked_logit_ids = logits.argsort(dim=-1, descending=True)
+                logits = self.classifier(pooled_output)
+                if logits.shape[-1] == 1: 
+                    # Binary classification (original implementation)
+                    scores = logits.squeeze(-1)
+                else:
+                    # Multi-classification: use idx=0 (support idx == 0)
+                    probs = torch.softmax(logits, dim=-1)
+                    scores = probs[:, 0]
+                reranked_logit_ids = scores.argsort(dim=-1, descending=True)
                 result = [doc_ids[reranked_logit_ids][next_num_docs:]] + result
                 #result = list(reversed((len(result)+reranked_logit_ids)[next_num_docs:].detach().cpu().numpy().tolist())) + result
                 #reranked_logit_ids = reranked_logit_ids[:next_num_docs]

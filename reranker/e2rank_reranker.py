@@ -32,12 +32,18 @@ class E2RankReranker(BaseReranker):
         max_length: int = 512,
         use_layerwise: bool = True,
         reranking_block_map: Dict[int, int] = None,
+        use_nli_classification: bool = False,
+        fever_label_idx: int = 0, # "SUPPORTS" label
         **kwargs
     ):
         super().__init__(model_path, device, **kwargs)
 
         self.max_length = max_length
         self.use_layerwise = use_layerwise
+        self.use_nli_classification = use_nli_classification     
+        self.fever_label_idx = fever_label_idx 
+        # future refernce: print(config.id2label) after config = AutoConfig.from_pretrained to see which idx is SUPPORTS
+        # {0: 'entailment', 1: 'neutral', 2: 'contradiction'} for "MoritzLaurer/DeBERTa-v3-large-mnli-fever-anli-ling-wanli"
 
         # Progressively reduce candidates: Layers : Top-K Docs to keep
         if reranking_block_map is None:
@@ -61,6 +67,12 @@ class E2RankReranker(BaseReranker):
         try:
             self.tokenizer = AutoTokenizer.from_pretrained(self.model_path)
             config = AutoConfig.from_pretrained(self.model_path)
+            num_labels = getattr(config, 'num_labels', 1)
+
+            if self.use_nli_classification and num_labels != 3:
+                logger.error(f"use_nli_classification flag TRUE but model has {num_labels} labels (expected 3)")
+            elif not self.use_nli_classification and num_labels != 1:
+                logger.error(f"Binanry reranking mode but model has {num_labels} labels (expected 1)")
 
             self.model = GroupedDebertaV2ForSequenceClassification(config)
 
@@ -71,7 +83,6 @@ class E2RankReranker(BaseReranker):
                 )
                 
                 state_dict = remap_state_dict(state_dict)
-                self.model.load_state_dict(state_dict, strict=False)
             except FileNotFoundError:
                 print(
                     f"Could not find pytorch_model.bin at {self.model_path}. "
@@ -81,7 +92,7 @@ class E2RankReranker(BaseReranker):
                     self.model_path
                 )
                 state_dict = remap_state_dict(base_model.state_dict()) 
-                self.model.load_state_dict(state_dict, strict=False)
+            self.model.load_state_dict(state_dict, strict=False)
 
             self.model.to(self.device)
             self.model.eval()
@@ -112,7 +123,10 @@ class E2RankReranker(BaseReranker):
 
         doc_ids, doc_texts = zip(*documents)
 
-        pairs = [[f"Query: {query}\n", f"Document: {text}\n"] for text in doc_texts]
+        if self.use_nli_classification:
+            pairs = [[text, query] for text in doc_texts] # found doc before query worked better for nli
+        else:
+            pairs = [[f"Query: {query}\n", f"Document: {text}\n"] for text in doc_texts]
 
         inputs = self.tokenizer(
             pairs,
@@ -131,7 +145,10 @@ class E2RankReranker(BaseReranker):
                 )
                 reranked_indices = reranked_indices.cpu().tolist()[:top_k]
 
-                final_pairs = [[f"Query: {query}\n", f"Document: {doc_texts[idx]}\n"] for idx in reranked_indices]
+                if self.use_nli_classification:
+                    final_pairs = [[doc_texts[idx], query] for idx in reranked_indices]
+                else:
+                    final_pairs = [[f"Query: {query}\n", f"Document: {doc_texts[idx]}\n"] for idx in reranked_indices]
                 final_inputs = self.tokenizer(
                     final_pairs,
                     padding=True,
@@ -141,8 +158,12 @@ class E2RankReranker(BaseReranker):
                 ).to(self.device)
 
                 final_outputs = self.model(**final_inputs)
-                final_logits = final_outputs.logits.squeeze(-1)
-                final_scores = final_logits.cpu().tolist()
+                final_logits = final_outputs.logits
+                if self.use_nli_classification:
+                    probs = torch.softmax(final_logits, dim=-1)
+                    final_scores = probs[:, self.fever_label_idx].cpu().tolist()
+                else:
+                    final_scores = final_logits.squeeze(-1).cpu().tolist()
 
                 # Handle single document case (k=1)
                 if not isinstance(final_scores, list):
@@ -155,8 +176,12 @@ class E2RankReranker(BaseReranker):
             else:
                 # Standard full-model reranking for small sets
                 outputs = self.model(**inputs)
-                logits = outputs.logits.squeeze(-1)
-                scores = logits.cpu().tolist()
+                logits = outputs.logits
+                if self.use_nli_classification:
+                    probs = torch.softmax(logits, dim=-1)
+                    scores = probs[:, self.fever_label_idx].cpu().tolist()
+                else:
+                    scores = logits.squeeze(-1).cpu().tolist()
 
                 # Sort by score descending
                 scored_docs = list(zip(doc_ids, doc_texts, scores))
@@ -166,7 +191,10 @@ class E2RankReranker(BaseReranker):
         return results
 
     def compute_score(self, query: str, document: str) -> float:
-        pair = [[f"Query: {query}\n", f"Document: {document}\n"]]
+        if self.use_nli_classification:
+            pair = [[document, query]]
+        else:
+            pair = [[f"Query: {query}\n", f"Document: {document}\n"]]
 
         inputs = self.tokenizer(
             pair,
@@ -178,7 +206,12 @@ class E2RankReranker(BaseReranker):
 
         with torch.no_grad():
             outputs = self.model(**inputs)
-            score = outputs.logits.squeeze(-1).item()
+            logits = outputs.logits
+            if self.use_nli_classification:
+                probs = torch.softmax(logits, dim=-1)
+                score = probs[0, self.fever_label_idx].item()
+            else:
+                score = logits.squeeze(-1).item()
 
         return score
 
@@ -190,7 +223,10 @@ class E2RankReranker(BaseReranker):
         if not documents:
             return []
 
-        pairs = [[f"Query: {query}\n", f"Document: {doc}\n"] for doc in documents]
+        if self.use_nli_classification:
+            pairs = [[doc, query] for doc in documents] 
+        else:
+            pairs = [[f"Query: {query}\n", f"Document: {doc}\n"] for doc in documents]
 
         inputs = self.tokenizer(
             pairs,
@@ -202,6 +238,11 @@ class E2RankReranker(BaseReranker):
 
         with torch.no_grad():
             outputs = self.model(**inputs)
-            scores = outputs.logits.squeeze(-1).cpu().tolist()
+            logits = outputs.logits
+            if self.use_nli_classification:
+                probs = torch.softmax(logits, dim=-1)
+                scores = probs[:, self.fever_label_idx].cpu().tolist()
+            else:
+                scores = logits.squeeze(-1).cpu().tolist()
 
         return scores if isinstance(scores, list) else [scores]
