@@ -2,6 +2,7 @@
 Copyright:
 
   Copyright © 2025 Eric
+  Copyright © 2025 Ananya-Jha-code
 
   You should have received a copy of the MIT license along with this file.
   If not, see https://mit-license.org/
