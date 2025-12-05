@@ -15,7 +15,7 @@ Code:
 
 import torch
 from typing import List, Tuple, Optional
-from transformers import AutoTokenizer, AutoModelForSequenceClassification
+from transformers import AutoTokenizer, AutoModelForSequenceClassification, AutoConfig
 from .reranker import BaseReranker
 from src.config import LOGGER as logger
 
@@ -27,12 +27,16 @@ class CrossEncoderReranker(BaseReranker):
         device: str = None,
         max_length: int = 512,
         batch_size: int = 32,
+        use_nli_classification: bool = False,
+        fever_label_idx: int = 0, # "SUPPORTS" label
         **kwargs
     ):
         super().__init__(model_path, device, **kwargs)
         
         self.max_length = max_length
         self.batch_size = batch_size
+        self.use_nli_classification = use_nli_classification     
+        self.fever_label_idx = fever_label_idx 
         
         logger.info(f"Initializing CrossEncoder Reranker on {self.device}")
         logger.info(f"Model: {self.model_path}")
@@ -41,15 +45,22 @@ class CrossEncoderReranker(BaseReranker):
     
     def _load_model(self):
         try:
+            self.tokenizer = AutoTokenizer.from_pretrained(self.model_path)
+            config = AutoConfig.from_pretrained(self.model_path)
+            num_labels = getattr(config, 'num_labels', 1)
+
+            if self.use_nli_classification and num_labels != 3:
+                logger.error(f"use_nli_classification flag TRUE but model has {num_labels} labels (expected 3)")
+            elif not self.use_nli_classification and num_labels != 1:
+                logger.error(f"Binanry reranking mode but model has {num_labels} labels (expected 1)")
+
             try:
-                self.tokenizer = AutoTokenizer.from_pretrained(self.model_path)
                 self.model = AutoModelForSequenceClassification.from_pretrained(
                     self.model_path,
                     local_files_only=True
                 )
             except FileNotFoundError as e:
-                logger.indo(f"Error finding local model, downloading from HuggingFace hub")
-                self.tokenizer = AutoTokenizer.from_pretrained(self.model_path)
+                logger.info(f"Error finding local model, downloading from HuggingFace hub")
                 self.model = AutoModelForSequenceClassification.from_pretrained(
                     self.model_path
                 )
@@ -59,11 +70,13 @@ class CrossEncoderReranker(BaseReranker):
         except Exception as e:
             print(f"Error loading Cross Encoder model: {str(e)}")
             raise
-        
             
     
     def compute_score(self, query: str, document: str) -> float:
-        pair = [[f"Query: {query}\n", f"Document: {document}\n"]]
+        if self.use_nli_classification:
+            pair = [[document, query]]
+        else:
+            pair = [[f"Query: {query}\n", f"Document: {document}\n"]]
         
         inputs = self.tokenizer(
             pair,
@@ -75,7 +88,12 @@ class CrossEncoderReranker(BaseReranker):
         
         with torch.no_grad():
             outputs = self.model(**inputs)
-            score = outputs.logits.squeeze(-1).item()
+            logits = outputs.logits
+            if self.use_nli_classification:
+                probs = torch.softmax(logits, dim=-1)
+                score = probs[0, self.fever_label_idx].item()
+            else:
+                score = logits.squeeze(-1).item()
         return score
     
     def batch_compute_scores(
@@ -91,8 +109,10 @@ class CrossEncoderReranker(BaseReranker):
         for i in range(0, len(documents), self.batch_size):
             batch_docs = documents[i:i + self.batch_size]
             
-            pairs = [[f"Query: {query}\n", f"Document: {doc}\n"] 
-                     for doc in batch_docs]
+            if self.use_nli_classification:
+                pairs = [[doc, query] for doc in batch_docs] 
+            else:
+                pairs = [[f"Query: {query}\n", f"Document: {doc}\n"] for doc in batch_docs]
             
             inputs = self.tokenizer(
                 pairs,
@@ -104,7 +124,13 @@ class CrossEncoderReranker(BaseReranker):
             
             with torch.no_grad():
                 outputs = self.model(**inputs)
-                batch_scores = outputs.logits.squeeze(-1).cpu().tolist()
+                logits = outputs.logits
+                
+                if self.use_nli_classification:
+                    probs = torch.softmax(logits, dim=-1)
+                    batch_scores = probs[:, self.fever_label_idx].cpu().tolist()
+                else:
+                    batch_scores = logits.squeeze(-1).cpu().tolist()
             
             if not isinstance(batch_scores, list):
                 batch_scores = [batch_scores]
