@@ -10,25 +10,30 @@ from pathlib import Path
 from tqdm import tqdm
 from sklearn.preprocessing import StandardScaler
 import random
-from src.config import INDEX_DIR, DATA_DIR
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
+from src.config import INDEX_DIR, DATA_DIR
 
-from .e2rank_reranker import E2RankReranker, CrossEncoderReranker  
-from .weightfunc.consensus_weight import ConsensusWeightFunction
-from .weightfunc.credibility_weight import CredibilityWeightFunction
-from .weightfunc.temporal_weight import TemporalWeightFunction
-from .combine_weights import NeuralCombinerTrainer
+from reranker import E2RankReranker, CrossEncoderReranker  
+from reranker.weightfunc.consensus_weight import ConsensusWeightFunction
+from reranker.weightfunc.credibility_weight import CredibilityWeightFunction
+from reranker.weightfunc.temporal_weight import TemporalWeightFunction
+from reranker.combine_weights import NeuralCombinerTrainer
 
-
-def prepare_training_data(max_samples=1000, negatives_per_positive=3):
+def prepare_training_data(max_samples=500, negatives_per_positive=3, batch_size=16):
     print("Loading FEVER dataset...")
     ds = load_dataset("fever", "v1.0", cache_dir=DATA_DIR, split="labelled_dev")
+    ds = [
+        example for example in ds 
+        if example["label"] in ["SUPPORTS", "REFUTES"] and example.get("evidence_wiki_url")
+    ]
+    ds.reverse()
+    print(f"Reversed dataset to train on last {max_samples} valid claims")
     
     searcher = LuceneSearcher(str(INDEX_DIR))
     searcher.set_bm25(1.2, 0.75)
     
-    reranker = CrossEncoderReranker()
+    reranker = E2RankReranker()
     consensus_fn = ConsensusWeightFunction(sim_method="dense")
     credibility_fn = CredibilityWeightFunction(wikipedia_only=True)
     temporal_fn = TemporalWeightFunction(for_fever=True)
@@ -37,16 +42,17 @@ def prepare_training_data(max_samples=1000, negatives_per_positive=3):
     claim_data = []  
     valid_claims = 0
     
-    for i, example in enumerate(tqdm(ds, desc="Processing claims", total=len(ds))):
+    batch_claims = []
+    batch_doc_pairs = []
+    batch_metadata = []
+    
+    for i, example in enumerate(tqdm(ds, desc="Processing claims")):
         if valid_claims >= max_samples:
             break
         
         claim = example["claim"]
         label = example["label"]
         evidence_url = example.get("evidence_wiki_url")
-        
-        if label not in ["SUPPORTS", "REFUTES"] or not evidence_url:
-            continue
         
         hits = searcher.search(claim, k=50)
         doc_pairs = []
@@ -58,34 +64,52 @@ def prepare_training_data(max_samples=1000, negatives_per_positive=3):
         if not doc_pairs:
             continue
         
-        reranked = reranker.rerank(claim, doc_pairs, top_k=50)
-        consensus_weights = consensus_fn.compute_weights(claim, reranked)
-        credibility_weights = credibility_fn.compute_weights(claim, reranked)
-        temporal_weights = temporal_fn.compute_weights(claim, reranked)
+        batch_claims.append(claim)
+        batch_doc_pairs.append(doc_pairs)
+        batch_metadata.append(evidence_url)
         
-        doc_features = []
-        relevant_idx = None
-        
-        for j, (doc_id, doc_text, rerank_score) in enumerate(reranked):
-            features = np.array([
-                consensus_weights[j],
-                credibility_weights[j],
-                temporal_weights[j],
-                rerank_score
-            ])
+        # Process batch when full or at end
+        if len(batch_claims) == batch_size or (valid_claims + len(batch_claims) >= max_samples):
+            # Batch rerank
+            reranked_batch = []
+            for claim, doc_pairs in zip(batch_claims, batch_doc_pairs):
+                reranked = reranker.rerank(claim, doc_pairs, top_k=50)
+                reranked_batch.append(reranked)
             
-            doc_features.append(features)
-            all_features.append(features)
+            # Batch compute weights
+            for claim, reranked, evidence_url in zip(batch_claims, reranked_batch, batch_metadata):
+                consensus_weights = consensus_fn.compute_weights(claim, reranked)
+                credibility_weights = credibility_fn.compute_weights(claim, reranked)
+                temporal_weights = temporal_fn.compute_weights(claim, reranked)
+                
+                doc_features = []
+                relevant_idx = None
+                
+                for j, (doc_id, doc_text, rerank_score) in enumerate(reranked):
+                    features = np.array([
+                        consensus_weights[j],
+                        credibility_weights[j],
+                        temporal_weights[j],
+                        rerank_score
+                    ])
+                    
+                    doc_features.append(features)
+                    all_features.append(features)
+                    
+                    if doc_id == evidence_url:
+                        relevant_idx = j
+                
+                if relevant_idx is not None:
+                    claim_data.append({
+                        'features': doc_features,
+                        'relevant_idx': relevant_idx
+                    })
+                    valid_claims += 1
             
-            if doc_id == evidence_url:
-                relevant_idx = j
-        
-        if relevant_idx is not None:
-            claim_data.append({
-                'features': doc_features,
-                'relevant_idx': relevant_idx
-            })
-            valid_claims += 1
+            # Clear batch
+            batch_claims = []
+            batch_doc_pairs = []
+            batch_metadata = []
     
     print(f"\nCollected {valid_claims} claims with evidence")
     print(f"Total feature vectors: {len(all_features)}")
@@ -119,30 +143,26 @@ def prepare_training_data(max_samples=1000, negatives_per_positive=3):
     train_pairs = training_pairs[:split_idx]
     val_pairs = training_pairs[split_idx:]
     
-    print(f"\nTrain: {len(train_pairs)} pairs")
-    print(f"Val:   {len(val_pairs)} pairs")
+    print(f"\nTrain:\t{len(train_pairs)} pairs")
+    print(f"Val:\t{len(val_pairs)} pairs")
     
-    output_dir = Path("reranker/models")
-    output_dir.mkdir(exist_ok=True, parents=True)
-    
-    with open("models/neural_combiner_train.pkl", "wb") as f:
+    with open("reranker/models/neural_combiner_train.pkl", "wb") as f:
         pickle.dump(train_pairs, f)
-    with open("models/neural_combiner_val.pkl", "wb") as f:
+    with open("reranker/models/neural_combiner_val.pkl", "wb") as f:
         pickle.dump(val_pairs, f)
-    with open("models/feature_scaler.pkl", "wb") as f:
+    with open("reranker/models/feature_scaler.pkl", "wb") as f:
         pickle.dump(scaler, f)
     print(f"Saved training and validation data in folder reranker/models/")
     
     return train_pairs, val_pairs, scaler
 
-
 def train_neural_combiner():
     print("Loading training data...")
-    with open("models/neural_combiner_train.pkl", "rb") as f:
+    with open("reranker/models/neural_combiner_train.pkl", "rb") as f:
         train_data = pickle.load(f)
-    with open("models/neural_combiner_val.pkl", "rb") as f:
+    with open("reranker/models/neural_combiner_val.pkl", "rb") as f:
         val_data = pickle.load(f)
-    with open("models/feature_scaler.pkl", "rb") as f:
+    with open("reranker/models/feature_scaler.pkl", "rb") as f:
         scaler = pickle.load(f)
     
     print(f"Train:\t{len(train_data)} examples")
@@ -165,11 +185,11 @@ def train_neural_combiner():
         batch_size=128
     )
     
-    model_path = "models/neural_combiner.pt"
+    model_path = "reranker/models/neural_combiner.pt"
     trainer.save_model(str(model_path))
     print(f"Model saved to {model_path}")
 
 if __name__ == "__main__":
-    train_data, val_data = prepare_training_data(max_samples=1000)
+    prepare_training_data(max_samples=500)
     train_neural_combiner()
     

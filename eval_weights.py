@@ -12,13 +12,11 @@ Commentary:
 
   Evaluations:
   1. Baseline comparisons (BM25 only, reranker only)
-  2. Individual weight functions (consensus tfidf/dense, credibility)
-     - Skip temporal for FEVER (no reliable date extraction)
-  3. Combined weight functions with different strategies:
+  2. Combined weight functions with different strategies:
      - Neural LTR (learned combination)
      - Additive (simple average)
      - Harmonic (F-measure style, penalizes low scores)
-  4. For each combination strategy, test both:
+  3. For each combination strategy, test both:
      - Consensus TF-IDF (CPU-friendly)
      - Consensus Dense (GPU, better quality)
 
@@ -144,7 +142,11 @@ class WeightFunctionEvaluator:
         
         # Reranker
         if self.use_gpu:
-            self.reranker = CrossEncoderReranker()
+            # self.reranker = E2RankReranker(reranking_block_map={8: 50, 16: 28, 24: 10})
+            self.reranker = CrossEncoderReranker(
+                model_path="reranker/models/naver/trecdl22-crossencoder-debertav3",
+                batch_size=32  
+            )
             print(f"Loaded crossencoder reranker")
         else:
             self.reranker = None
@@ -376,36 +378,19 @@ class WeightFunctionEvaluator:
         results["BM25 Only"] = self.evaluate_baseline_bm25()
         results["Reranker Only"] = self.evaluate_baseline_reranker()
         
-        results["BM25 + TF-IDF+Others (Harmonic)"] = self.evaluate_bm25_combined_strategy("tfidf", "harmonic")
-        results["BM25 + TF-IDF+Others (Additive)"] = self.evaluate_bm25_combined_strategy("tfidf", "additive")
-        
-        if self.use_gpu:
-            results["BM25 + Dense+Others (Harmonic)"] = self.evaluate_bm25_combined_strategy("dense", "harmonic")
-            results["BM25 + Dense+Others (Additive)"] = self.evaluate_bm25_combined_strategy("dense", "additive")
-    
-        
         results["TF-IDF + Others (Harmonic)"] = self.evaluate_combined_strategy("tfidf", "harmonic")
         results["TF-IDF + Others (Additive)"] = self.evaluate_combined_strategy("tfidf", "additive")
         
         results["Dense + Others (Harmonic)"] = self.evaluate_combined_strategy("dense", "harmonic")
         results["Dense + Others (Additive)"] = self.evaluate_combined_strategy("dense", "additive")
         
-        if os.path.exists("reranker/models/neural_combiner.pt"):
-            results["BM25 + TF-IDF+Others (Neural LTR)"] = self.evaluate_bm25_combined_strategy(
-                "tfidf", "neural", "reranker/models/neural_combiner.pt"
-            )
-            results["BM25 + Dense+Others (Neural LTR)"] = self.evaluate_bm25_combined_strategy(
-                "dense", "neural", "reranker/models/neural_combiner.pt"
-            )
-        
+        path_to_model = "reranker/models/neural_combiner.pt"             
+        if os.path.exists(path_to_model):
             results["Dense + Others (Neural LTR)"] = self.evaluate_combined_strategy(
-                "dense", "neural", "reranker/models/neural_combiner.pt"
-            )
-            results["TF-IDF + Others (Neural LTR)"] = self.evaluate_combined_strategy(
-                "tfidf", "neural", "reranker/models/neural_combiner.pt"
+                "dense", "neural", path_to_model
             )
         else:
-            print("No LTR model found... Run ltr_train.py first to train the model")
+            print("No LTR model found. Run ltr_train.py first to train the model")
         
         self._print_comparison_table(results)
         

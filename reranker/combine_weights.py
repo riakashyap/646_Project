@@ -136,7 +136,7 @@ class WeightCombiner:
         return weighted_docs
 
 class NeuralCombiner(nn.Module):
-    def __init__(self, n_features: int, hidden_dim: int = 32):
+    def __init__(self, n_features: int, hidden_dim: int = 64):
         super().__init__()
         
         self.net = nn.Sequential(
