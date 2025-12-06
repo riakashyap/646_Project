@@ -62,10 +62,10 @@ def parse_arguments():
                         help='Use the original MADR prompts. This option does nothing without including --debate-stop or --debate-verdict.',
                         action='store_true')
     parser.add_argument('-n', '--num-claims',
-                        help='The number of claims to process.',
+                        help='Turns on benchmarking mode and runs a number of claims equal to the argument.',
                         metavar='',
                         type=int,
-                        default=100)
+                        default=-1)
     parser.add_argument('--reranker',
                         help='Enable reranking after BM25 retrieval.',
                         action='store_true')
@@ -100,37 +100,11 @@ def setup_fever(num_claims: int):
     refutes = split.filter(lambda row: row["label"] == "REFUTES").select(range(half))
     return concatenate_datasets([supports, refutes])
 
-if __name__ == "__main__":
-    args = parse_arguments()
-    # load these later to enable fast --help and --version
-    from reranker import E2RankReranker, CrossEncoderReranker
-    from src.ragar_corag import RagarCorag
-
-    ragar_dir = config.RAGAR_DIR
-    madr_dir = config.MADR_DIR
-    if args.ragar_orig:
-        ragar_dir = config.RAGAR_ORIG_DIR
-        config.LOGGER.info("Using original RAGAR prompts.")
-    if args.madr_orig:
-        madr_dir = config.MADR_ORIG_DIR
-        config.LOGGER.info("Using original MADR prompts.")
-    prompt_files = get_prompt_files(ragar_dir, madr_dir)
-
-    reranker = None
-    if args.reranker:
-        try:
-            reranker = CrossEncoderReranker()
-        except (OSError, FileNotFoundError) as e:
-            print(f"ERROR: Model files not found or download failed: {e}")
-            reranker = None
-
+def benchmark(mc, corag, args):
     fever_labels = {0: "REFUTES", 1: "SUPPORTS", 2: "NOT ENOUGH INFO", 3: "NONE"}
     fever_split = setup_fever(args.num_claims)
 
     # Setup CoRAG system here
-    mc = LlamaCppClient(prompt_files, think_mode_bool=args.think)
-    corag = RagarCorag(mc, args.debate_stop, args.debate_verdict, reranker=reranker)
-
     # Run pipeline on claims
     golds = []
     outputs = []
@@ -172,3 +146,36 @@ if __name__ == "__main__":
         with open(to_write, "w") as file:
             json.dump(metrics, file, indent=4)
         print(f"Wrote {to_write}.")
+
+
+if __name__ == "__main__":
+    args = parse_arguments()
+    # load these later to enable fast --help and --version
+    from reranker import E2RankReranker, CrossEncoderReranker
+    from src.ragar_corag import RagarCorag
+
+    ragar_dir = config.RAGAR_DIR
+    madr_dir = config.MADR_DIR
+    if args.ragar_orig:
+        ragar_dir = config.RAGAR_ORIG_DIR
+        config.LOGGER.info("Using original RAGAR prompts.")
+    if args.madr_orig:
+        madr_dir = config.MADR_ORIG_DIR
+        config.LOGGER.info("Using original MADR prompts.")
+    prompt_files = get_prompt_files(ragar_dir, madr_dir)
+
+    reranker = None
+    if args.reranker:
+        try:
+            reranker = CrossEncoderReranker()
+        except (OSError, FileNotFoundError) as e:
+            print(f"ERROR: Model files not found or download failed: {e}")
+            reranker = None
+
+    mc = LlamaCppClient(prompt_files, think_mode_bool=args.think)
+    corag = RagarCorag(mc, args.debate_stop, args.debate_verdict, reranker=reranker)
+
+    if args.num_claims > 0:
+        config.LOGGER.info("Enabling benchmarking mode.")
+        benchmark(mc, corag, args)
+        exit(0)
