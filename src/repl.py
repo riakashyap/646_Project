@@ -63,15 +63,15 @@ class Repl(code.InteractiveConsole):
                 self.loading_thread = threading.Thread(target=self.obnoxious_load)
                 self.loading_thread.start()
 
-                out, time = self.runsource(source)
+                result = self.runsource(source)
 
                 self.loading = False
                 self.loading_thread.join()
 
-                if not out:
+                if not result:
                     break
-                if isinstance(out, dict):
-                    self.respond(out, time)
+                if isinstance(result[0], dict):
+                    self.respond(*result)
                 else:
                     print()
             except EOFError:
