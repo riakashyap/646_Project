@@ -36,8 +36,8 @@ class Repl(code.InteractiveConsole):
         if source.strip().lower() in ["quit", "exit", "bye"]:
             return False
         out = True
+        start = time.time()
         if len(source) > 0:
-            start = time.time()
             out = self.corag.run(source)
         return out, time.time() - start
 
@@ -72,6 +72,8 @@ class Repl(code.InteractiveConsole):
                     break
                 if isinstance(out, dict):
                     self.respond(out, time)
+                else:
+                    print()
             except EOFError:
                 print(exitmsg)
                 break

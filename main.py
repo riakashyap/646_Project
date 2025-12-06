@@ -26,8 +26,6 @@ from src import repl
 from src.model_clients import LlamaCppClient
 from src.utils import get_prompt_files, compute_metrics
 from tqdm import tqdm
-from types import ModuleType
-from typing import Optional
 import argparse
 import json
 import os
@@ -101,7 +99,6 @@ def benchmark(mc, corag, args):
     fever_labels = {0: "REFUTES", 1: "SUPPORTS", 2: "NOT ENOUGH INFO", 3: "NONE"}
     fever_split = setup_fever(args.num_claims)
 
-    # Setup CoRAG system here
     # Run pipeline on claims
     golds = []
     outputs = []
