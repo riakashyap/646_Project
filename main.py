@@ -1,4 +1,11 @@
 #!/usr/bin/env python3
+BANNER = """\
+    _/_/_/_/    _/_/    _/_/_/    _/        _/_/_/_/
+   _/        _/    _/  _/    _/  _/        _/
+  _/_/_/    _/_/_/_/  _/_/_/    _/        _/_/_/
+ _/        _/    _/  _/    _/  _/        _/
+_/        _/    _/  _/_/_/    _/_/_/_/  _/_/_/_/"""
+VERSION = "v1.0.0"
 """
 Copyright:
 
@@ -21,22 +28,29 @@ from collections import Counter
 from datasets import load_dataset, Dataset, concatenate_datasets
 from datetime import datetime
 from pathlib import Path
-from reranker import E2RankReranker, CrossEncoderReranker
 from src import config
 from src.model_clients import LlamaCppClient
-from src.ragar_corag import RagarCorag
 from src.utils import get_prompt_files, compute_metrics
 from tqdm import tqdm
 import argparse
 import json
 import time
 
+class BannerVersion(argparse.Action):
+    def __call__(self, parser, namespace, values, option_string=None):
+        print(BANNER)
+        print(f"version {VERSION}")
+        parser.exit()
 
 def parse_arguments():
     parser = argparse.ArgumentParser(
         usage='%(prog)s [args] -- prog'
     )
 
+    parser.add_argument('-v', '--version',
+                        action=BannerVersion,
+                        nargs=0,
+                        help="show the version number")
     parser.add_argument('-t', '--think',
                         help='Whether the Qwen model should think before '
                         'answering. Affects runtime.',
@@ -88,6 +102,9 @@ def setup_fever(num_claims: int):
 
 if __name__ == "__main__":
     args = parse_arguments()
+    # load these later to enable fast --help and --version
+    from reranker import E2RankReranker, CrossEncoderReranker
+    from src.ragar_corag import RagarCorag
 
     ragar_dir = config.RAGAR_DIR
     madr_dir = config.MADR_DIR
