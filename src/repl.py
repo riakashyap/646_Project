@@ -37,14 +37,15 @@ class Repl(code.InteractiveConsole):
             return False
         out = True
         if len(source) > 0:
+            start = time.time()
             out = self.corag.run(source)
-        return out
+        return out, time.time() - start
 
-    def respond(self, out):
+    def respond(self, out, time):
         claim = out["claim"]
         verdict = out["verdict_raw"]
         verdict_bool = out["verdict"]
-        print(f"\nWe considered the claim: {claim}")
+        print(f"\nWe spent {round(time, 2)} seconds considering the claim: {claim}.")
         print(f"\nThe questions we posed and answered were:")
         for e in out["qa_pairs"]:
             print(f"\tQuestion: {e[0]}\n\t\t{e[1]}")
@@ -62,7 +63,7 @@ class Repl(code.InteractiveConsole):
                 self.loading_thread = threading.Thread(target=self.obnoxious_load)
                 self.loading_thread.start()
 
-                out = self.runsource(source)
+                out, time = self.runsource(source)
 
                 self.loading = False
                 self.loading_thread.join()
@@ -70,7 +71,7 @@ class Repl(code.InteractiveConsole):
                 if not out:
                     break
                 if isinstance(out, dict):
-                    self.respond(out)
+                    self.respond(out, time)
             except EOFError:
                 print(exitmsg)
                 break
