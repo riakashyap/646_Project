@@ -37,9 +37,6 @@ PAGES_DIR = WIKI_DIR / "wiki-pages"
 TRACE_PATH = LOGS_DIR / "trace.log"
 EVAL_OUT_FNAME_BASE = "metrics"
 
-REPL_HISTFILE = os.path.join(LOGS_DIR, 'repl.history')
-REPL_HISTFILE_SIZE = 1000
-
 CLAIMS_PATH = DATA_DIR / "fever-claims.json"
 QRELS_PATH = DATA_DIR / "fever-qrel.json"
 RANKLISTS_PATH = DATA_DIR / "fever-ranklist.json"

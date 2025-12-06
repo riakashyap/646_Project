@@ -33,12 +33,6 @@ import json
 import os
 import time
 
-readline: Optional[ModuleType]
-try:
-    import readline
-except ImportError:
-    readline = None
-
 class BannerVersion(argparse.Action):
     def __call__(self, parser, namespace, values, option_string=None):
         print(config.BANNER)
@@ -183,12 +177,5 @@ if __name__ == "__main__":
         benchmark(mc, corag, args)
         exit(0)
 
-    if readline and os.path.exists(config.REPL_HISTFILE):
-        readline.read_history_file(config.REPL_HISTFILE)
-
     repl = repl.Repl(corag)
     repl.interact(banner=config.BANNER, exitmsg="Goodbye.")
-
-    if readline:
-        readline.set_history_length(config.REPL_HISTFILE_SIZE)
-        readline.write_history_file(config.REPL_HISTFILE)
