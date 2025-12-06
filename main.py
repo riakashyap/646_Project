@@ -1,11 +1,4 @@
 #!/usr/bin/env python3
-BANNER = """\
-    _/_/_/_/    _/_/    _/_/_/    _/        _/_/_/_/
-   _/        _/    _/  _/    _/  _/        _/
-  _/_/_/    _/_/_/_/  _/_/_/    _/        _/_/_/
- _/        _/    _/  _/    _/  _/        _/
-_/        _/    _/  _/_/_/    _/_/_/_/  _/_/_/_/"""
-VERSION = "v1.0.0"
 """
 Copyright:
 
@@ -29,17 +22,27 @@ from datasets import load_dataset, Dataset, concatenate_datasets
 from datetime import datetime
 from pathlib import Path
 from src import config
+from src import repl
 from src.model_clients import LlamaCppClient
 from src.utils import get_prompt_files, compute_metrics
 from tqdm import tqdm
+from types import ModuleType
+from typing import Optional
 import argparse
 import json
+import os
 import time
+
+readline: Optional[ModuleType]
+try:
+    import readline
+except ImportError:
+    readline = None
 
 class BannerVersion(argparse.Action):
     def __call__(self, parser, namespace, values, option_string=None):
-        print(BANNER)
-        print(f"version {VERSION}")
+        print(config.BANNER)
+        print(f"version {config.VERSION}")
         parser.exit()
 
 def parse_arguments():
@@ -179,3 +182,13 @@ if __name__ == "__main__":
         config.LOGGER.info("Enabling benchmarking mode.")
         benchmark(mc, corag, args)
         exit(0)
+
+    if readline and os.path.exists(config.REPL_HISTFILE):
+        readline.read_history_file(config.REPL_HISTFILE)
+
+    repl = repl.Repl(corag)
+    repl.interact(banner=config.BANNER, exitmsg="Goodbye.")
+
+    if readline:
+        readline.set_history_length(config.REPL_HISTFILE_SIZE)
+        readline.write_history_file(config.REPL_HISTFILE)
