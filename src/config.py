@@ -19,6 +19,14 @@ from pathlib import Path
 import os
 import logging
 
+BANNER = """\
+    _/_/_/_/    _/_/    _/_/_/    _/        _/_/_/_/
+   _/        _/    _/  _/    _/  _/        _/
+  _/_/_/    _/_/_/_/  _/_/_/    _/        _/_/_/
+ _/        _/    _/  _/    _/  _/        _/
+_/        _/    _/  _/_/_/    _/_/_/_/  _/_/_/_/"""
+VERSION = "v1.0.0"
+
 SCRIPT_DIR = Path(__file__).resolve().parent
 DATA_DIR = SCRIPT_DIR.parent / "data"
 LOGS_DIR = SCRIPT_DIR.parent / "logs"
