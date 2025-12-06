@@ -70,10 +70,10 @@ def parse_arguments():
                         help='Enable reranking after BM25 retrieval.',
                         action='store_true')
     parser.add_argument('--debate-stop',
-                        help='Refines the stop_check agent with MADR. Overrides -r.',
+                        help='Refines the stop_check agent with MADR.',
                         action='store_true')
     parser.add_argument('--debate-verdict',
-                        help='Refines the verdict agent with MADR. Overrides -r.',
+                        help='Refines the verdict agent with MADR.',
                         action='store_true')
     parser.add_argument('-l', '--log-trace',
                         help='Output a trace to the log file (define in config.py). Overrides --num-claims to 2.',
